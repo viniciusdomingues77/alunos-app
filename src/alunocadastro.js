@@ -33,6 +33,8 @@ export default function AlunoCadastro () {
   const [successfullySubmitted, setSuccessfullySubmitted] = React.useState(
     false
   )
+
+  const [idAluno, setidAluno] = React.useState(0)
   const { register, handleSubmit, control } = useForm()
 
   const [selectedDate, setSelectedDate] = React.useState(
@@ -44,12 +46,32 @@ export default function AlunoCadastro () {
   // }
   const classes = useStyles()
   const submitForm = async data => {
-    // const result = await postQuestion({ title: data.title,
-    //     content: data.content,
-    //     userName: 'Fred', created: new Date() });
-    console.log('data ' + data.nome)
-    console.log('data ' + data.dtnascimento)
-    //setSuccessfullySubmitted(result ? true : false)
+    console.log('data.nome ' + data.nome)
+    console.log('data.dtnascimento ' + data.dtnascimento)
+    console.log('data.email ' + data.email)
+    console.log('data.telcelular ' + data.telcelular)
+    console.log('data.telfixo ' + data.telfixo)
+    console.log('data.endereco ' + data.endereco)
+    console.log('data.cep ' + data.cep)
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idaluno: 0,
+        nome: data.nome,
+        email: data.email,
+        dtnascimento: data.dtnascimento,
+        foto: 'string',
+        telcelular: data.telcelular,
+        telfixo: data.telfixo,
+        endereco: data.endereco,
+        cep: data.cep
+      })
+    }
+
+    fetch('https://localhost:44363/api/aluno/', requestOptions)
+      .then(response => response.json())
+      .then(data => console.log('data res ' + data))
   }
   return (
     <form onSubmit={handleSubmit(submitForm)}>
@@ -177,23 +199,91 @@ export default function AlunoCadastro () {
             />
           </Grid>
           <Grid item xs={4}>
-            <MuiThemeProvider>
-              <InputMask mask='(99)9999-9999' disabled={false} maskChar=' '>
-                {() => <TextField label='Tel.Fixo' name='telfixo' fullWidth />}
-              </InputMask>
-            </MuiThemeProvider>
+            <Controller
+              name='telfixo'
+              control={control}
+              defaultValue=''
+              render={({
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
+                <MuiThemeProvider>
+                  <InputMask
+                    mask='(99)9999-9999'
+                    disabled={false}
+                    maskChar=' '
+                    value={value}
+                    onChange={onChange}
+                  >
+                    {() => (
+                      <TextField
+                        label='Tel.Fixo'
+                        name='telfixo'
+                        fullWidth
+                        error={!!error}
+                        helperText={error ? error.message : null}
+                      />
+                    )}
+                  </InputMask>
+                </MuiThemeProvider>
+              )}
+            />
           </Grid>
           <Grid item xs={1}></Grid>
 
           <Grid item xs={6}>
-            <TextField label='Endereço' name='endereco' fullWidth />
+            <Controller
+              name='endereco'
+              control={control}
+              defaultValue=''
+              render={({
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
+                <TextField
+                  required
+                  label='Endereço'
+                  name='endereco'
+                  type='text'
+                  fullWidth
+                  value={value}
+                  onChange={onChange}
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                />
+              )}
+            />
           </Grid>
           <Grid item xs={4}>
-            <MuiThemeProvider>
-              <InputMask mask='99999-999' disabled={false} maskChar=' '>
-                {() => <TextField label='CEP' name='cep' fullWidth />}
-              </InputMask>
-            </MuiThemeProvider>
+            <Controller
+              name='cep'
+              control={control}
+              defaultValue=''
+              render={({
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
+                <MuiThemeProvider>
+                  <InputMask
+                    mask='99999-999'
+                    disabled={false}
+                    maskChar=' '
+                    value={value}
+                    onChange={onChange}
+                  >
+                    {() => (
+                      <TextField
+                        label='CEP'
+                        name='cep'
+                        fullWidth
+                        error={!!error}
+                        helperText={error ? error.message : null}
+                      />
+                    )}
+                  </InputMask>
+                </MuiThemeProvider>
+              )}
+            />
           </Grid>
           <Grid item xs={2}></Grid>
         </Grid>
