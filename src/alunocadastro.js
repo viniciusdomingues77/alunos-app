@@ -22,7 +22,8 @@ import Fab from '@material-ui/core/Fab'
 import blue from '@material-ui/core/colors/blue'
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { useStateWithCallbackLazy } from 'use-state-with-callback'
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
@@ -37,10 +38,7 @@ const useStyles = makeStyles(theme => ({
     width: theme.spacing(12),
     height: theme.spacing(12)
   },
-  // button: {
-  //   // color: blue[900],
-  //   marginTop: 10
-  // },
+
   input: {
     display: 'none'
   },
@@ -55,16 +53,19 @@ export default function AlunoCadastro () {
   const [successfullySubmitted, setSuccessfullySubmitted] = React.useState(
     false
   )
-
+  const { promiseInProgress } = usePromiseTracker()
   const [idAluno, setidAluno] = React.useState(0)
   const [selectedFile, setselectedFile] = React.useState(null)
-  const [Saving, setSaving] = React.useStateWithCallbackLazy(false)
+  const [Saving, setSaving] = React.useState(false)
   //https://www.robinwieruch.de/react-usestate-callback
-  const { register, handleSubmit, control } = useForm()
+  const { register, handleSubmit, control, reset } = useForm()
 
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
-  )
+  React.useLayoutEffect(() => {
+    if (!promiseInProgress) {
+      reset()
+    }
+  }, [promiseInProgress])
+
   function handleUploadClick (event) {
     console.log('handleUploadClick')
     console.log(event.target.files[0])
@@ -83,17 +84,7 @@ export default function AlunoCadastro () {
 
   const classes = useStyles()
 
-  useEffect(() => {}, Saving)
-
-  const submitForm = data => {
-    console.log('SAVING ' + Saving)
-    console.log('data.nome ' + data.nome)
-    console.log('data.dtnascimento ' + data.dtnascimento)
-    console.log('data.email ' + data.email)
-    console.log('data.telcelular ' + data.telcelular)
-    console.log('data.telfixo ' + data.telfixo)
-    console.log('data.endereco ' + data.endereco)
-    console.log('data.cep ' + data.cep)
+  const submitForm = (data, event) => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -109,18 +100,11 @@ export default function AlunoCadastro () {
         cep: data.cep
       })
     }
-
-    fetch('https://localhost:44363/api/aluno/', requestOptions)
-      .then(response => response.json())
-      .then(data => console.log('data res ' + data), setSaving(false))
-  }
-
-  function Salvando () {
-    if (Saving) {
-      return <LinearProgress />
-    } else {
-      return ''
-    }
+    trackPromise(
+      fetch('https://localhost:44363/api/aluno/', requestOptions)
+        .then(response => response.json())
+        .then(d => console.log('data res ' + d))
+    )
   }
 
   return (
@@ -158,6 +142,7 @@ export default function AlunoCadastro () {
             <Grid container spacing={3}>
               <Grid item xs={8}>
                 <Controller
+                 
                   name='nome'
                   control={control}
                   defaultValue=''
@@ -167,9 +152,9 @@ export default function AlunoCadastro () {
                     fieldState: { error }
                   }) => (
                     <TextField
+                      name='nome'
                       required
                       label='Nome'
-                      name='nome'
                       fullWidth
                       value={value}
                       onChange={onChange}
@@ -213,25 +198,24 @@ export default function AlunoCadastro () {
                     field: { onChange, value },
                     fieldState: { error }
                   }) => (
-                    <MuiThemeProvider>
-                      <InputMask
-                        mask='99/99/9999'
-                        disabled={false}
-                        maskChar=' '
-                        value={value}
-                        onChange={onChange}
-                      >
-                        {() => (
-                          <TextField
-                            label='Dt.Nascimento'
-                            fullWidth
-                            helperText={error ? error.message : null}
-                            error={!!error}
-                            name='dtnascimento'
-                          />
-                        )}
-                      </InputMask>
-                    </MuiThemeProvider>
+                    // <MuiThemeProvider>
+                    <InputMask
+                      mask='99/99/9999'
+                      disabled={false}
+                      maskChar=' '
+                      value={value}
+                      onChange={onChange}
+                    >
+                      {() => (
+                        <TextField
+                          label='Dt.Nascimento'
+                          fullWidth
+                          helperText={error ? error.message : null}
+                          error={!!error}
+                        />
+                      )}
+                    </InputMask>
+                    // </MuiThemeProvider>
                   )}
                 />
               </Grid>
@@ -288,7 +272,6 @@ export default function AlunoCadastro () {
                         {() => (
                           <TextField
                             label='Tel.Fixo'
-                            name='telfixo'
                             fullWidth
                             error={!!error}
                             helperText={error ? error.message : null}
@@ -312,7 +295,6 @@ export default function AlunoCadastro () {
                     <TextField
                       required
                       label='Endereço'
-                      name='endereco'
                       type='text'
                       fullWidth
                       value={value}
@@ -343,7 +325,6 @@ export default function AlunoCadastro () {
                         {() => (
                           <TextField
                             label='CEP'
-                            name='cep'
                             fullWidth
                             error={!!error}
                             helperText={error ? error.message : null}
@@ -362,7 +343,7 @@ export default function AlunoCadastro () {
           <Grid item xs={12}></Grid>
           <Grid item xs={12}></Grid>
           <Grid item xs={12}>
-            <Salvando />
+            {promiseInProgress && <LinearProgress />}
           </Grid>
           <Grid item xs={12}></Grid>
         </Grid>
