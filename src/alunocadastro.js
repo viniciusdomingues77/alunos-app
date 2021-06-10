@@ -9,7 +9,7 @@ import Icon from '@material-ui/core/Icon'
 import SaveIcon from '@material-ui/icons/Save'
 import Button from '@material-ui/core/Button'
 import InputMask from 'react-input-mask'
-import { useForm, Controller } from 'react-hook-form'
+
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -57,12 +57,11 @@ export default function AlunoCadastro () {
   const [idAluno, setidAluno] = React.useState(0)
   const [selectedFile, setselectedFile] = React.useState(null)
   const [Saving, setSaving] = React.useState(false)
-  //https://www.robinwieruch.de/react-usestate-callback
-  const { register, handleSubmit, control, reset } = useForm()
 
   React.useLayoutEffect(() => {
+    console.log('promiseInProgress ' + promiseInProgress)
     if (!promiseInProgress) {
-      reset()
+      ClearFields()
     }
   }, [promiseInProgress])
 
@@ -84,20 +83,22 @@ export default function AlunoCadastro () {
 
   const classes = useStyles()
 
-  const submitForm = (data, event) => {
+  const submitForm = event => {
+    event.preventDefault()
+
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         idaluno: 0,
-        nome: data.nome,
-        email: data.email,
-        dtnascimento: data.dtnascimento,
+        nome: Nome,
+        email: Email,
+        dtnascimento: DTNascimento,
         foto: selectedFile,
-        telcelular: data.telcelular,
-        telfixo: data.telfixo,
-        endereco: data.endereco,
-        cep: data.cep
+        telcelular: TelCelular,
+        telfixo: TelFixo,
+        endereco: Endereco,
+        cep: CEP
       })
     }
     trackPromise(
@@ -107,8 +108,49 @@ export default function AlunoCadastro () {
     )
   }
 
+  function ClearFields () {
+    setNome('')
+    setEmail('')
+    setDTNascimento('')
+    setTelCelular('')
+    setTelFixo('')
+    setEndereco('')
+    setCEP('')
+    setselectedFile(null)
+  }
+
+  const [Nome, setNome] = React.useState('')
+  const [Email, setEmail] = React.useState('')
+  const [DTNascimento, setDTNascimento] = React.useState('')
+  const [TelCelular, setTelCelular] = React.useState('')
+  const [TelFixo, setTelFixo] = React.useState('')
+  const [Endereco, setEndereco] = React.useState('')
+  const [CEP, setCEP] = React.useState('')
+
+  const handleNomeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNome(e.currentTarget.value)
+  }
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value)
+  }
+  const handleDTNascimentoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setDTNascimento(e.currentTarget.value)
+  }
+  const handleTelCelularChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTelCelular(e.currentTarget.value)
+  }
+  const handleTelFixoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTelFixo(e.currentTarget.value)
+  }
+  const handleEnderecoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEndereco(e.currentTarget.value)
+  }
+  const handleCEPChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCEP(e.currentTarget.value)
+  }
+
   return (
-    <form onSubmit={handleSubmit(submitForm)}>
+    <form onSubmit={submitForm}>
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs={2}>
@@ -141,199 +183,97 @@ export default function AlunoCadastro () {
           <Grid item xs={10}>
             <Grid container spacing={3}>
               <Grid item xs={8}>
-                <Controller
-                 
+                <TextField
                   name='nome'
-                  control={control}
-                  defaultValue=''
-                  rules={{ required: 'O nome é obrigatório' }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      name='nome'
-                      required
-                      label='Nome'
-                      fullWidth
-                      value={value}
-                      onChange={onChange}
-                      error={!!error}
-                      helperText={error ? error.message : null}
-                    />
-                  )}
+                  required
+                  label='Nome'
+                  fullWidth
+                  value={Nome}
+                  onChange={handleNomeChange}
                 />
               </Grid>
               <Grid item xs={4}>
-                <Controller
+                <TextField
+                  required
+                  label='Email'
                   name='email'
-                  control={control}
-                  defaultValue=''
-                  rules={{ required: 'O email é obrigatório' }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      required
-                      label='Email'
-                      name='email'
-                      type='email'
-                      fullWidth
-                      value={value}
-                      onChange={onChange}
-                      error={!!error}
-                      helperText={error ? error.message : null}
-                    />
-                  )}
+                  type='email'
+                  fullWidth
+                  value={Email}
+                  onChange={handleEmailChange}
                 />
               </Grid>
 
               <Grid item xs={3}>
-                <Controller
-                  name='dtnascimento'
-                  control={control}
-                  defaultValue=''
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    // <MuiThemeProvider>
-                    <InputMask
-                      mask='99/99/9999'
-                      disabled={false}
-                      maskChar=' '
-                      value={value}
-                      onChange={onChange}
-                    >
-                      {() => (
-                        <TextField
-                          label='Dt.Nascimento'
-                          fullWidth
-                          helperText={error ? error.message : null}
-                          error={!!error}
-                        />
-                      )}
-                    </InputMask>
-                    // </MuiThemeProvider>
-                  )}
-                />
+                <MuiThemeProvider>
+                  <InputMask
+                    mask='99/99/9999'
+                    disabled={false}
+                    maskChar=' '
+                    value={DTNascimento}
+                    onChange={handleDTNascimentoChange}
+                  >
+                    {() => <TextField label='Dt.Nascimento' fullWidth />}
+                  </InputMask>
+                </MuiThemeProvider>
               </Grid>
               <Grid item xs={1}></Grid>
 
               <Grid item xs={4}>
-                <Controller
-                  name='telcelular'
-                  control={control}
-                  defaultValue=''
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <MuiThemeProvider>
-                      <InputMask
-                        mask='(99)99999-9999'
-                        disabled={false}
-                        maskChar=' '
-                        value={value}
-                        onChange={onChange}
-                      >
-                        {() => (
-                          <TextField
-                            label='Tel.Celular'
-                            name='telcelular'
-                            fullWidth
-                            error={!!error}
-                            helperText={error ? error.message : null}
-                          />
-                        )}
-                      </InputMask>
-                    </MuiThemeProvider>
-                  )}
-                />
+                <MuiThemeProvider>
+                  <InputMask
+                    mask='(99)99999-9999'
+                    disabled={false}
+                    maskChar=' '
+                    value={TelCelular}
+                    onChange={handleTelCelularChange}
+                  >
+                    {() => (
+                      <TextField
+                        label='Tel.Celular'
+                        name='telcelular'
+                        fullWidth
+                      />
+                    )}
+                  </InputMask>
+                </MuiThemeProvider>
               </Grid>
               <Grid item xs={4}>
-                <Controller
-                  name='telfixo'
-                  control={control}
-                  defaultValue=''
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <MuiThemeProvider>
-                      <InputMask
-                        mask='(99)9999-9999'
-                        disabled={false}
-                        maskChar=' '
-                        value={value}
-                        onChange={onChange}
-                      >
-                        {() => (
-                          <TextField
-                            label='Tel.Fixo'
-                            fullWidth
-                            error={!!error}
-                            helperText={error ? error.message : null}
-                          />
-                        )}
-                      </InputMask>
-                    </MuiThemeProvider>
-                  )}
-                />
+                <MuiThemeProvider>
+                  <InputMask
+                    mask='(99)9999-9999'
+                    disabled={false}
+                    maskChar=' '
+                    value={TelFixo}
+                    onChange={handleTelFixoChange}
+                  >
+                    {() => <TextField label='Tel.Fixo' fullWidth />}
+                  </InputMask>
+                </MuiThemeProvider>
               </Grid>
 
               <Grid item xs={8}>
-                <Controller
-                  name='endereco'
-                  control={control}
-                  defaultValue=''
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      required
-                      label='Endereço'
-                      type='text'
-                      fullWidth
-                      value={value}
-                      onChange={onChange}
-                      error={!!error}
-                      helperText={error ? error.message : null}
-                    />
-                  )}
+                <TextField
+                  required
+                  label='Endereço'
+                  type='text'
+                  fullWidth
+                  value={Endereco}
+                  onChange={handleEnderecoChange}
                 />
               </Grid>
               <Grid item xs={4}>
-                <Controller
-                  name='cep'
-                  control={control}
-                  defaultValue=''
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <MuiThemeProvider>
-                      <InputMask
-                        mask='99999-999'
-                        disabled={false}
-                        maskChar=' '
-                        value={value}
-                        onChange={onChange}
-                      >
-                        {() => (
-                          <TextField
-                            label='CEP'
-                            fullWidth
-                            error={!!error}
-                            helperText={error ? error.message : null}
-                          />
-                        )}
-                      </InputMask>
-                    </MuiThemeProvider>
-                  )}
-                />
+                <MuiThemeProvider>
+                  <InputMask
+                    mask='99999-999'
+                    disabled={false}
+                    maskChar=' '
+                    value={CEP}
+                    onChange={handleCEPChange}
+                  >
+                    {() => <TextField label='CEP' fullWidth />}
+                  </InputMask>
+                </MuiThemeProvider>
               </Grid>
               <Grid item xs={2}></Grid>
             </Grid>
