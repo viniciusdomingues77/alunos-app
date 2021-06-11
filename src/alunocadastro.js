@@ -24,6 +24,8 @@ import CancelPresentationIcon from '@material-ui/icons/CancelPresentation'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
 import MsgSucesso from './msgsucesso'
+import Snackbar from '@material-ui/core/Snackbar'
+import { Alert } from '@material-ui/lab'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
@@ -58,6 +60,9 @@ export default function AlunoCadastro () {
   React.useLayoutEffect(() => {
     console.log('promiseInProgress ' + promiseInProgress)
     if (!promiseInProgress) {
+      if (SubmitSuccess) {
+        setOpenSuccess({ open: true, vertical: 'top', horizontal: 'center' })
+      }
       ClearFields()
     }
   }, [promiseInProgress])
@@ -76,16 +81,17 @@ export default function AlunoCadastro () {
     reader.onerror = err => {}
 
     reader.readAsDataURL(file)
+    event.target.value = null
   }
 
   const classes = useStyles()
 
   const submitForm = event => {
-    if (!ValidaTodososCampos) {
+    event.preventDefault()
+    console.log('submit')
+    if (!ValidaTodososCampos()) {
       return
     }
-
-    event.preventDefault()
 
     const requestOptions = {
       method: 'POST',
@@ -111,10 +117,11 @@ export default function AlunoCadastro () {
           return response
         })
         .then(response => response.json())
-        .then(d => console.log('data res ' + d),setSubmitSuccess(true))
+        .then(d => console.log('data res ' + d), setSubmitSuccess(true))
         .catch(function (error) {
           console.log('catch error' + error)
           setSubmitSuccess(false)
+          setOpenError(true)
         })
     )
   }
@@ -133,6 +140,7 @@ export default function AlunoCadastro () {
     setDTNascimentoError(false)
     setTelCelularError(false)
   }
+
   const [SubmitSuccess, setSubmitSuccess] = React.useState(false)
 
   const [Nome, setNome] = React.useState('')
@@ -144,9 +152,11 @@ export default function AlunoCadastro () {
   const [TelCelular, setTelCelular] = React.useState('')
   const [TelCelularError, setTelCelularError] = React.useState(false)
   const [TelFixo, setTelFixo] = React.useState('')
+  const [TelFixoError, setTelFixoError] = React.useState(false)
   const [Endereco, setEndereco] = React.useState('')
   const [CEP, setCEP] = React.useState('')
-
+  const [CEPError, setCEPError] = React.useState(false)
+  
   const handleNomeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNome(e.currentTarget.value)
   }
@@ -172,8 +182,10 @@ export default function AlunoCadastro () {
   function handleNomeError () {
     if (Nome.length <= 5) {
       setNomeError(true)
+      // return true;
     } else {
       setNomeError(false)
+      // return false;
     }
   }
 
@@ -182,8 +194,10 @@ export default function AlunoCadastro () {
     var result = validacao.test(Email)
     if (result) {
       setEmailError(false)
+      // return false;
     } else {
       setEmailError(true)
+      // return true;
     }
   }
 
@@ -192,8 +206,10 @@ export default function AlunoCadastro () {
     var result = validacao.test(DTNascimento)
     if (result) {
       setDTNascimentoError(false)
+      // return false;
     } else {
       setDTNascimentoError(true)
+      // return true;
     }
   }
 
@@ -202,21 +218,87 @@ export default function AlunoCadastro () {
     var result = validacao.test(TelCelular)
     if (result) {
       setTelCelularError(false)
+      // return false;
     } else {
       setTelCelularError(true)
+      // return true;
+    }
+  }
+
+  function handleTelFixoError () {
+    const regex = /[0-9]/
+    var result = regex.test(TelFixo)
+
+    if (!result) {
+      setTelFixoError(false)
+      // return false;
+    } else {
+      var validacao = /^(?:(?:\+|00)?(55)\s?)?(?:(?:\(?[1-9][0-9]\)?)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/
+      var result = validacao.test(TelFixo)
+      if (result) {
+        setTelFixoError(false)
+        // return false;
+      } else {
+        setTelFixoError(true)
+        // return true;
+      }
+    }
+  }
+
+  function handleCEPError () {
+    const regex = /[0-9]/
+    var result = regex.test(CEP)
+
+    if (!result) {
+      setCEPError(false)
+      // return false;
+    } else {
+      var validacao = /[0-9]{5}-[0-9]{3}/
+      var result = validacao.test(CEP)
+      if (result) {
+        setCEPError(false)
+        // return false;
+      } else {
+        setCEPError(true)
+        // return true ;
+      }
     }
   }
 
   function ValidaTodososCampos () {
-    if (NomeError || EmailError || DTNascimentoError || DTNascimentoError) {
+    console.log('handleCEPError() ' + handleCEPError())
+    if (NomeError || EmailError || TelCelularError  || DTNascimentoError ) {
       return false
     } else {
       return true
     }
   }
+  const [openSuccess, setOpenSuccess] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center'
+  })
+  const [openError, setOpenError] = React.useState(false)
+
+  const { vertical, horizontal, open } = openSuccess
+  const { openErr } = openError
+
+  const handleCloseError = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenError(false)
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenSuccess({ open: false, vertical: 'top', horizontal: 'center' })
+  }
 
   return (
-    <form onSubmit={submitForm}>
+    <form onSubmit={submitForm} >
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs={2}>
@@ -234,7 +316,6 @@ export default function AlunoCadastro () {
                   accept='image/*'
                   className={classes.input}
                   id='contained-button-file'
-                  multiple
                   type='file'
                   onChange={handleUploadClick}
                 />
@@ -340,9 +421,15 @@ export default function AlunoCadastro () {
                     maskChar=' '
                     value={TelFixo}
                     onChange={handleTelFixoChange}
+                    
                   >
                     {() => <TextField label='Tel.Fixo' fullWidth />}
                   </InputMask>
+                  {TelFixoError && (
+                    <FormHelperText id='component-error-text' error>
+                      Telefone fixo inválido.Este campo não é obrigatório
+                    </FormHelperText>
+                  )}
                 </MuiThemeProvider>
               </Grid>
 
@@ -366,6 +453,7 @@ export default function AlunoCadastro () {
                   >
                     {() => <TextField label='CEP' fullWidth />}
                   </InputMask>
+                   
                 </MuiThemeProvider>
               </Grid>
               <Grid item xs={2}></Grid>
@@ -373,9 +461,28 @@ export default function AlunoCadastro () {
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12}></Grid>
           <Grid item xs={12}>
-            {/* {SubmitSuccess && <MsgSucesso />} */}
+            <Snackbar
+              open={openError}
+              autoHideDuration={6000}
+              onClose={handleCloseError}
+            >
+              <Alert onClose={handleCloseError} severity='error'>
+                Não foi possível realizar a operação. Contacte o desenvolvedor
+              </Alert>
+            </Snackbar>
+          </Grid>
+          <Grid item xs={12}>
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+              anchorOrigin={{ vertical, horizontal }}
+            >
+              <Alert onClose={handleClose} severity='success'>
+                Operação realizada com sucesso!
+              </Alert>
+            </Snackbar>
           </Grid>
           <Grid item xs={12}>
             {promiseInProgress && <LinearProgress />}
