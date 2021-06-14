@@ -14,7 +14,9 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-
+import Avatar from '@material-ui/core/Avatar'
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
+import LinearProgress from '@material-ui/core/LinearProgress'
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -23,6 +25,8 @@ const useStyles1 = makeStyles((theme) => ({
 }));
 
 function TablePaginationActions(props) {
+
+  
   const classes = useStyles1();
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
@@ -96,21 +100,10 @@ function createData(name, calories, fat) {
   return { name, calories, fat };
 }
 
-const rows = [
-  createData("Cupcake", 305, 3.7),
-  createData("Donut", 452, 25.0),
-  createData("Eclair", 262, 16.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Gingerbread", 356, 16.0),
-  createData("Honeycomb", 408, 3.2),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Jelly Bean", 375, 0.0),
-  createData("KitKat", 518, 26.0),
-  createData("Lollipop", 392, 0.2),
-  createData("Marshmallow", 318, 0),
-  createData("Nougat", 360, 19.0),
-  createData("Oreo", 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
+
+
+// const rows = Alunos
+// .sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
 const useStyles2 = makeStyles({
   table: {
@@ -119,6 +112,24 @@ const useStyles2 = makeStyles({
 });
 
 export default function AlunosLista() {
+  const { promiseInProgress } = usePromiseTracker()
+  const [Alunos, setAlunos] = React.useState([]);
+  const rows = Alunos
+    React.useEffect(() => {
+  const apiUrl = `https://localhost:44363/api/Aluno`
+  trackPromise(
+
+  fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+      console.log(data)
+      setAlunos(data)
+    })
+  )
+},[]);
+  
+  
+  
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -136,6 +147,10 @@ export default function AlunosLista() {
   };
 
   return (
+    
+    <React.Fragment>
+      {promiseInProgress && <LinearProgress />}
+    
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="custom pagination table">
         <TableBody>
@@ -143,16 +158,23 @@ export default function AlunosLista() {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
+            <TableRow key={row.idaluno}>
+              <TableCell style={{ width: 70 }}>
+                <Avatar src={row.foto}></Avatar>
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.calories}
+              <TableCell align="left" style={{ width: 70 }}>
+                {row.idaluno}
+              </TableCell> 
+              <TableCell align="left">
+                {row.nome}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.fat}
+              <TableCell align="left">
+                {row.telcelular}
               </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                {row.email}
+              </TableCell>
+             
             </TableRow>
           ))}
 
@@ -166,7 +188,7 @@ export default function AlunosLista() {
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
+              colSpan={5}
               count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}
@@ -182,5 +204,6 @@ export default function AlunosLista() {
         </TableFooter>
       </Table>
     </TableContainer>
+    </React.Fragment>     
   );
 }

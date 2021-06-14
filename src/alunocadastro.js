@@ -23,7 +23,6 @@ import blue from '@material-ui/core/colors/blue'
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
-import MsgSucesso from './msgsucesso'
 import Snackbar from '@material-ui/core/Snackbar'
 import { Alert } from '@material-ui/lab'
 const useStyles = makeStyles(theme => ({
@@ -157,25 +156,25 @@ export default function AlunoCadastro () {
   const [CEP, setCEP] = React.useState('')
   const [CEPError, setCEPError] = React.useState(false)
   
-  const handleNomeChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleNomeChange = (e) => {
     setNome(e.currentTarget.value)
   }
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e) => {
     setEmail(e.currentTarget.value)
   }
-  const handleDTNascimentoChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleDTNascimentoChange = (e) => {
     setDTNascimento(e.currentTarget.value)
   }
-  const handleTelCelularChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleTelCelularChange = (e) => {
     setTelCelular(e.currentTarget.value)
   }
-  const handleTelFixoChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleTelFixoChange = (e) => {
     setTelFixo(e.currentTarget.value)
   }
-  const handleEnderecoChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleEnderecoChange = (e) => {
     setEndereco(e.currentTarget.value)
   }
-  const handleCEPChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleCEPChange = (e) => {
     setCEP(e.currentTarget.value)
   }
 
@@ -190,8 +189,10 @@ export default function AlunoCadastro () {
   }
 
   function handleEmailError () {
-    var validacao = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i
+    var validacao = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
     var result = validacao.test(Email)
+    console.log('result' + result)
+    console.log('email' + Email)
     if (result) {
       setEmailError(false)
       // return false;

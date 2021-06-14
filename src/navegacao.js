@@ -24,6 +24,7 @@ import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
 import logo from "./logomarcio.jpg";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import Aluno from "./aluno";
+
 import Home from "./home";
 const drawerWidth = 240;
 

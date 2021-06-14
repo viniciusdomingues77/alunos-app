@@ -13,6 +13,8 @@ import PropTypes from 'prop-types'
 import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
 import AlunoCadastro from './alunocadastro'
+import PersonIcon from "@material-ui/icons/Person";
+import AlunoDetalhe from "./alunodetalhe";
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -85,36 +87,22 @@ export default function Aluno () {
               icon={<ListIcon />}
               {...a11yProps(1)}
             />
+            <Tab
+              label='Aluno'
+              icon={<PersonIcon />}
+              {...a11yProps(1)}
+            />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
           <AlunoCadastro />
         </TabPanel>
-        <TabPanel value={value} index={1}></TabPanel>
-        {/* <CabecalhoModulo titulo="Aluno" /> */}
-        {/* <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="fullWidth"
-          indicatorColor="primary"
-          textColor="primary"
-          aria-label="icon tabs example"
-        >
-          <Tab icon={<AssignmentIndIcon />} label="Cadastro de aluno">
-            
-          </Tab>
-          <Tab icon={<ListIcon />} label="Lista de alunos cadastrados">
-            
-          </Tab>
-        </Tabs> */}
-        {/* <TabPanel value={value} index={0}>
-          Item One
-        </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel> */}
-
-        {/* <AlunosLista /> */}
+        <AlunosLista /> 
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <AlunoDetalhe/>
+        </TabPanel>
       </Paper>
     </div>
   )
