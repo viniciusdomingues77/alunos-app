@@ -19,6 +19,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
+import BarraProgresso from "./barradeprogresso";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -50,8 +52,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AlunoDetalhe() {
+  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
   const [openError, setOpenError] = React.useState(false);
-
+  const { promiseInProgress } = usePromiseTracker();
+  React.useLayoutEffect(() => {
+    console.log("promiseInProgress " + promiseInProgress);
+    if (!promiseInProgress) {
+      if (SubmitSuccess) {
+        setOpenSuccess({ open: true, vertical: "top", horizontal: "center" });
+        setSubmitSuccess(false);
+      }
+    }
+  }, [promiseInProgress]);
   const handleNomeChange = (e) => {
     setNome(e.currentTarget.value);
   };
@@ -82,7 +94,7 @@ export default function AlunoDetalhe() {
       // return false;
     }
   }
-  const [SubmitSuccess, setSubmitSuccess] = React.useState(false);
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -94,14 +106,14 @@ export default function AlunoDetalhe() {
     vertical: "top",
     horizontal: "center",
   });
-
+  const [SubmitSuccess, setSubmitSuccess] = React.useState(false);
   const submitForm = (event) => {
     event.preventDefault();
     console.log("submit");
     if (!ValidaTodososCampos()) {
       return;
     }
-
+    setTextoBarraProgresso("Salvando aluno");
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -126,7 +138,7 @@ export default function AlunoDetalhe() {
           return response;
         })
         .then((response) => response.json())
-        .then((d) => console.log("data res " + d), setSubmitSuccess(true))
+        .then((d) => setSubmitSuccess(true))
         .catch(function (error) {
           console.log("catch error" + error);
           setSubmitSuccess(false);
@@ -253,7 +265,6 @@ export default function AlunoDetalhe() {
     setEmailError(false);
     setDTNascimentoError(false);
     setTelCelularError(false);
-    // setValue("");
   }
 
   const classes = useStyles();
@@ -271,7 +282,7 @@ export default function AlunoDetalhe() {
   const [Endereco, setEndereco] = React.useState("");
   const [CEP, setCEP] = React.useState("");
   const [CEPError, setCEPError] = React.useState(false);
-  const { promiseInProgress } = usePromiseTracker();
+
   const [Alunos, setAlunos] = React.useState([]);
   const [AlunoSel, setAlunoSel] = React.useState([]);
   const [value, setValue] = React.useState("");
@@ -279,13 +290,24 @@ export default function AlunoDetalhe() {
   const [item, setItem] = React.useState(null);
   const [selectedFile, setselectedFile] = React.useState(null);
   React.useEffect(() => {
+    setTextoBarraProgresso("Listando alunos");
     const apiUrl = `https://localhost:44363/api/aluno/identificacao`;
     trackPromise(
       fetch(apiUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response;
+        })
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
           setAlunos(data);
+        })
+        .catch(function (error) {
+          console.log("catch error" + error);
+          setOpenError(true);
         })
     );
   }, []);
@@ -314,17 +336,25 @@ export default function AlunoDetalhe() {
             value={value}
             id="autocomplete"
             onChange={(event, newValue) => {
+              setSubmitSuccess(false);
               setValue(newValue);
               if (newValue) {
                 console.log("new value " + newValue);
                 const values = newValue.split("-");
                 if (values[0] > 0) {
                   ClearFields();
+                  setTextoBarraProgresso("Carregando aluno");
                   const apiUrl =
                     `https://localhost:44363/api/aluno/aluno?idaluno=` +
                     values[0];
                   trackPromise(
                     fetch(apiUrl)
+                      .then((response) => {
+                        if (!response.ok) {
+                          throw Error(response.statusText);
+                        }
+                        return response;
+                      })
                       .then((res) => res.json())
                       .then((data) => {
                         console.log(data);
@@ -337,6 +367,10 @@ export default function AlunoDetalhe() {
                         setTelFixo(data.telfixo);
                         setEndereco(data.endereco);
                         setCEP(data.cep);
+                      })
+                      .catch(function (error) {
+                        console.log("catch error" + error);
+                        setOpenError(true);
                       })
                   );
                 }
@@ -566,7 +600,9 @@ export default function AlunoDetalhe() {
             </Snackbar>
           </Grid>
           <Grid item xs={12}>
-            {promiseInProgress && <LinearProgress />}
+            {promiseInProgress && (
+              <BarraProgresso titulo={TextoBarraProgresso} />
+            )}
           </Grid>
         </Grid>
         <Grid container spacing={3}>

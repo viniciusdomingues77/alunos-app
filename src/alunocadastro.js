@@ -25,6 +25,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
+import BarraProgresso from "./barradeprogresso";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -322,6 +323,7 @@ export default function AlunoCadastro() {
                   id="contained-button-file"
                   type="file"
                   onChange={handleUploadClick}
+                  disabled={promiseInProgress}
                 />
                 <label htmlFor="contained-button-file">
                   <Fab component="span" className={classes.buttonupload}>
@@ -342,6 +344,7 @@ export default function AlunoCadastro() {
                   value={Nome}
                   onChange={handleNomeChange}
                   onBlur={handleNomeError}
+                  disabled={promiseInProgress}
                 />
                 {NomeError && (
                   <FormHelperText id="component-error-text" error>
@@ -359,6 +362,7 @@ export default function AlunoCadastro() {
                   value={Email}
                   onChange={handleEmailChange}
                   onBlur={handleEmailError}
+                  disabled={promiseInProgress}
                 />
                 {EmailError && (
                   <FormHelperText id="component-error-text" error>
@@ -377,9 +381,15 @@ export default function AlunoCadastro() {
                     value={DTNascimento}
                     onChange={handleDTNascimentoChange}
                     onBlur={handleDTNascimentoError}
+                    disabled={promiseInProgress}
                   >
                     {() => (
-                      <TextField label="Dt.Nascimento" fullWidth required />
+                      <TextField
+                        label="Dt.Nascimento"
+                        fullWidth
+                        required
+                        disabled={promiseInProgress}
+                      />
                     )}
                   </InputMask>
                   {DTNascimentoError && (
@@ -400,6 +410,7 @@ export default function AlunoCadastro() {
                     value={TelCelular}
                     onChange={handleTelCelularChange}
                     onBlur={handleTelCelularError}
+                    disabled={promiseInProgress}
                   >
                     {() => (
                       <TextField
@@ -407,6 +418,7 @@ export default function AlunoCadastro() {
                         name="telcelular"
                         fullWidth
                         required
+                        disabled={promiseInProgress}
                       />
                     )}
                   </InputMask>
@@ -425,8 +437,15 @@ export default function AlunoCadastro() {
                     maskChar=" "
                     value={TelFixo}
                     onChange={handleTelFixoChange}
+                    disabled={promiseInProgress}
                   >
-                    {() => <TextField label="Tel.Fixo" fullWidth />}
+                    {() => (
+                      <TextField
+                        label="Tel.Fixo"
+                        fullWidth
+                        disabled={promiseInProgress}
+                      />
+                    )}
                   </InputMask>
                   {TelFixoError && (
                     <FormHelperText id="component-error-text" error>
@@ -443,6 +462,7 @@ export default function AlunoCadastro() {
                   fullWidth
                   value={Endereco}
                   onChange={handleEnderecoChange}
+                  disabled={promiseInProgress}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -453,8 +473,15 @@ export default function AlunoCadastro() {
                     maskChar=" "
                     value={CEP}
                     onChange={handleCEPChange}
+                    disabled={promiseInProgress}
                   >
-                    {() => <TextField label="CEP" fullWidth />}
+                    {() => (
+                      <TextField
+                        label="CEP"
+                        fullWidth
+                        disabled={promiseInProgress}
+                      />
+                    )}
                   </InputMask>
                 </MuiThemeProvider>
               </Grid>
@@ -487,7 +514,7 @@ export default function AlunoCadastro() {
             </Snackbar>
           </Grid>
           <Grid item xs={12}>
-            {promiseInProgress && <LinearProgress />}
+            {promiseInProgress && <BarraProgresso titulo="Cadastrando aluno" />}
           </Grid>
         </Grid>
         <Grid container spacing={3}>

@@ -24,6 +24,7 @@ import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
 import logo from "./logomarcio.jpg";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import Aluno from "./aluno";
+import Agenda from "./agenda";
 
 import Home from "./home";
 const drawerWidth = 240;
@@ -167,7 +168,7 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText primary="Alunos" />
             </ListItem>
-            <ListItem button key={"Agenda"}>
+            <ListItem button key={"Agenda"} component={Link} to={"/agenda"}>
               <ListItemIcon>
                 <EventIcon></EventIcon>
               </ListItemIcon>
@@ -187,6 +188,7 @@ export default function MiniDrawer() {
           <Switch>
             <Route exact path="/" render={() => <Home />} />
             <Route path="/aluno" render={() => <Aluno />} />
+            <Route path="/agenda" render={() => <Agenda />} />
           </Switch>
         </main>
       </BrowserRouter>
