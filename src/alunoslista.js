@@ -14,9 +14,11 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import Avatar from '@material-ui/core/Avatar'
-import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import Avatar from "@material-ui/core/Avatar";
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import DialogoConfirmacao from "./dialogoconfirmacao";
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -25,8 +27,6 @@ const useStyles1 = makeStyles((theme) => ({
 }));
 
 function TablePaginationActions(props) {
-
-  
   const classes = useStyles1();
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
@@ -100,8 +100,6 @@ function createData(name, calories, fat) {
   return { name, calories, fat };
 }
 
-
-
 // const rows = Alunos
 // .sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
@@ -112,24 +110,58 @@ const useStyles2 = makeStyles({
 });
 
 export default function AlunosLista() {
-  const { promiseInProgress } = usePromiseTracker()
+  const [openDialogoExc, setopenDialogoExc] = React.useState(false);
+  const { promiseInProgress } = usePromiseTracker();
   const [Alunos, setAlunos] = React.useState([]);
-  const rows = Alunos
-    React.useEffect(() => {
-  const apiUrl = `https://localhost:44363/api/Aluno`
-  trackPromise(
+  const [textoExc, settextoExc] = React.useState("");
+  const [idalunoExc, setidalunoExc] = React.useState(0);
+  function handleClickOpen(idaluno, nome) {
+    settextoExc("Confirma a exclusão do aluno " + nome + " id " + idaluno);
+    setopenDialogoExc(true);
+    setidalunoExc(idaluno);
+  }
 
-  fetch(apiUrl)
-      .then(res => res.json())
-      .then(data => {
-      console.log(data)
-      setAlunos(data)
-    })
-  )
-},[]);
-  
-  
-  
+  const handleConfimrExclusao = () => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        idaluno: idalunoExc,
+      }),
+    };
+    trackPromise(
+      fetch("https://localhost:44363/api/aluno/deletar", requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response;
+        })
+        .then((response) => response.json())
+        .then((d) => console.log("data res " + d))
+        .catch(function (error) {
+          console.log("catch error" + error);
+        })
+    );
+  };
+
+  const handleClose = () => {
+    setopenDialogoExc(false);
+  };
+
+  const rows = Alunos;
+  React.useEffect(() => {
+    const apiUrl = `https://localhost:44363/api/Aluno`;
+    trackPromise(
+      fetch(apiUrl)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAlunos(data);
+        })
+    );
+  }, []);
+
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -147,63 +179,74 @@ export default function AlunosLista() {
   };
 
   return (
-    
     <React.Fragment>
       {promiseInProgress && <LinearProgress />}
-    
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="custom pagination table">
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.idaluno}>
-              <TableCell style={{ width: 70 }}>
-                <Avatar src={row.foto}></Avatar>
-              </TableCell>
-              <TableCell align="left" style={{ width: 70 }}>
-                {row.idaluno}
-              </TableCell> 
-              <TableCell align="left">
-                {row.nome}
-              </TableCell>
-              <TableCell align="left">
-                {row.telcelular}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="left">
-                {row.email}
-              </TableCell>
-             
-            </TableRow>
-          ))}
 
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="custom pagination table">
+          <TableBody>
+            {(rowsPerPage > 0
+              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rows
+            ).map((row) => (
+              <TableRow key={row.idaluno}>
+                <TableCell style={{ width: 70 }}>
+                  <Avatar src={row.foto}></Avatar>
+                </TableCell>
+                <TableCell align="left" style={{ width: 70 }}>
+                  {row.idaluno}
+                </TableCell>
+                <TableCell align="left">{row.nome}</TableCell>
+                <TableCell align="left">{row.telcelular}</TableCell>
+                <TableCell style={{ width: 160 }} align="left">
+                  {row.email}
+                </TableCell>
+                <TableCell style={{ width: 60 }} align="left">
+                  <IconButton
+                    color="primary"
+                    aria-label="Remove Aluno"
+                    component="span"
+                    onClick={() => handleClickOpen(row.idaluno, row.nome)}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={5}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: { "aria-label": "rows per page" },
+                  native: true,
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={5}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { "aria-label": "rows per page" },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-    </React.Fragment>     
+          </TableFooter>
+        </Table>
+      </TableContainer>
+      <DialogoConfirmacao
+        open={openDialogoExc}
+        titulo={"Atenção"}
+        texto={textoExc}
+        handleClose={handleClose}
+        handleConfirmar={handleConfimrExclusao}
+      />
+    </React.Fragment>
   );
 }
