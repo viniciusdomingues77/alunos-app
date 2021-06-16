@@ -17,6 +17,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import AlunoDetalhe from "./alunodetalhe";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
+import Agendamento from "./agendamentoaluno";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -88,7 +89,9 @@ export default function Agenda() {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}></TabPanel>
-        <TabPanel value={value} index={1}></TabPanel>
+        <TabPanel value={value} index={1}>
+          <Agendamento />
+        </TabPanel>
       </Paper>
     </div>
   );
