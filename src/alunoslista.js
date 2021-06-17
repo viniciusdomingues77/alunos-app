@@ -105,10 +105,6 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name, calories, fat) {
-  return { name, calories, fat };
-}
-
 // const rows = Alunos
 // .sort((a, b) => (a.calories < b.calories ? -1 : 1));
 

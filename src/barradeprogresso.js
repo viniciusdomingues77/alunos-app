@@ -16,17 +16,18 @@ const useStyles = makeStyles((theme) => ({
 export default function BarraProgresso(props) {
   const classes = useStyles();
   return (
-    <React.Fragment>
-      <Grid container spacing={0}>
-        <Grid item xs={12} className={classes.titulobarra}>
-          <Typography variant="caption" display="block" gutterBottom>
-            {props.titulo}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <LinearProgress />
-        </Grid>
-      </Grid>
-    </React.Fragment>
+    <LinearProgress />
+    // <React.Fragment>
+    //   <Grid container spacing={0}>
+    //     <Grid item xs={12}>
+    //       <LinearProgress />
+    //     </Grid>
+    //     <Grid item xs={12} className={classes.titulobarra}>
+    //       <Typography variant="caption" display="block" gutterBottom>
+    //         {props.titulo}
+    //       </Typography>
+    //     </Grid>
+    //   </Grid>
+    // </React.Fragment>
   );
 }

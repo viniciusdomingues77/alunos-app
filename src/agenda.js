@@ -18,15 +18,17 @@ import AlunoDetalhe from "./alunodetalhe";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import Agendamento from "./agendamentoaluno";
+import AgendaLista from "./agendalista";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+
     flexWrap: "wrap",
     "& > *": {
       marginLeft: theme.spacing(18),
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(0),
       width: theme.spacing(120),
-      height: theme.spacing(70),
+      height: theme.spacing(120),
     },
   },
 }));
@@ -88,7 +90,9 @@ export default function Agenda() {
             />
           </Tabs>
         </AppBar>
-        <TabPanel value={value} index={0}></TabPanel>
+        <TabPanel value={value} index={0} spacing={0} m={0} p={0}>
+          <AgendaLista />
+        </TabPanel>
         <TabPanel value={value} index={1}>
           <Agendamento />
         </TabPanel>
