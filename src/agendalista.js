@@ -35,6 +35,8 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
+import BarraProgressoFixa from "./barraprogressofixa";
+import Aviso from "./aviso";
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -114,6 +116,17 @@ TablePaginationActions.propTypes = {
 const useStyles = makeStyles((theme) => ({
   calendar: {
     boxShadow: "5px 10px #888888",
+  },
+  cabecalho: {
+    with: "100%",
+    height: "10px",
+  },
+  table: {
+    minHeight: 470,
+  },
+  roottable: {
+    flexShrink: 0,
+    marginLeft: theme.spacing(2.5),
   },
 }));
 
@@ -250,7 +263,7 @@ export default function AgendaLista() {
   const [Aluno, setAluno] = React.useState("");
   const [professores, setProfessores] = React.useState([]);
   React.useEffect(() => {
-    setTextoBarraProgresso("Listando alunos e professores");
+    setTextoBarraProgresso("Listando agendamentos");
     const apiUrla = `https://localhost:44363/api/aluno/identificacao`;
     trackPromise(
       fetch(apiUrla)
@@ -332,74 +345,116 @@ export default function AgendaLista() {
 
   return (
     <React.Fragment>
-      {promiseInProgress && <BarraProgresso titulo={TextoBarraProgresso} />}
+      <div className={classes.cabecalho}>
+        <BarraProgressoFixa
+          titulo={TextoBarraProgresso}
+          loading={promiseInProgress}
+        />
+      </div>
       <Grid container spacing={3}>
         <Grid item xs={12}></Grid>
         <Grid item xs={12}></Grid>
         <Grid item xs={6}>
-          <Autocomplete
-            value={Aluno}
-            id="autocomplete"
-            onChange={(event, newValue) => {
-              console.log("aluno on change");
-              setPage(0);
-              setAluno(newValue);
-              console.log("aluno on change " + newValue);
-              var idaluno = "0";
-              if (newValue) {
-                idaluno = newValue.substring(0, newValue.indexOf("-")).trim();
-              }
-              var idprofessor = "0";
-              if (Professor) {
-                if (Professor.length > 0) {
-                  idprofessor = Professor.substring(
-                    0,
-                    Professor.indexOf("-")
-                  ).trim();
+          <Grid item xs={12} style={{ width: "100%", marginBottom: 30 }}>
+            <Autocomplete
+              value={Aluno}
+              id="autocomplete"
+              onChange={(event, newValue) => {
+                console.log("aluno on change");
+                setPage(0);
+                setAluno(newValue);
+                console.log("aluno on change " + newValue);
+                var idaluno = "0";
+                if (newValue) {
+                  idaluno = newValue.substring(0, newValue.indexOf("-")).trim();
                 }
-              }
-              const apiUrl =
-                `https://localhost:44363/api/agenda/agenda/` +
-                DataparaParametroPar(valueDay) +
-                "/" +
-                idaluno +
-                "/" +
-                idprofessor;
-              trackPromise(
-                fetch(apiUrl)
-                  .then((response) => {
-                    if (!response.ok) {
-                      throw Error(response.statusText);
-                    }
-                    return response;
-                  })
-                  .then((res) => res.json())
-                  .then((data) => {
-                    console.log(data);
-                    setAgendados(data);
-                  })
-                  .catch(function (error) {
-                    console.log("catch error" + error);
-                    setOpenError(true);
-                  })
-              );
-            }}
-            options={Alunos.map((aluno) => `${aluno.idaluno} - ${aluno.nome}`)}
-            getOptionSelected={(option, value) => {
-              return option === value;
-            }}
-            style={{ width: "100%", marginBottom: 5 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Aluno"
-                required
-                autoFocus
-                variant="outlined"
-              />
-            )}
-          />
+                var idprofessor = "0";
+                if (Professor) {
+                  if (Professor.length > 0) {
+                    idprofessor = Professor.substring(
+                      0,
+                      Professor.indexOf("-")
+                    ).trim();
+                  }
+                }
+                const apiUrl =
+                  `https://localhost:44363/api/agenda/agenda/` +
+                  DataparaParametroPar(valueDay) +
+                  "/" +
+                  idaluno +
+                  "/" +
+                  idprofessor;
+                trackPromise(
+                  fetch(apiUrl)
+                    .then((response) => {
+                      if (!response.ok) {
+                        throw Error(response.statusText);
+                      }
+                      return response;
+                    })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      console.log(data);
+                      setAgendados(data);
+                    })
+                    .catch(function (error) {
+                      console.log("catch error" + error);
+                      setOpenError(true);
+                    })
+                );
+              }}
+              options={Alunos.map(
+                (aluno) => `${aluno.idaluno} - ${aluno.nome}`
+              )}
+              getOptionSelected={(option, value) => {
+                return option === value;
+              }}
+              style={{ width: "100%", marginBottom: 2 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Aluno"
+                  required
+                  autoFocus
+                  variant="outlined"
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}></Grid>
+          <Grid
+            item
+            xs={12}
+            style={{ display: "flex", justifyContent: "flex-start" }}
+          >
+            <Autocomplete
+              value={Professor}
+              id="autocomplete"
+              onChange={(event, newValue) => {
+                setProfessor(newValue);
+                if (newValue) {
+                }
+              }}
+              options={professores.map(
+                (professor) => `${professor.idprofessor} - ${professor.nome}`
+              )}
+              getOptionSelected={(option, value) => {
+                return option === value;
+              }}
+              style={{ width: "100%", marginBottom: 0 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Professor"
+                  required
+                  autoFocus
+                  variant="outlined"
+                />
+              )}
+            />
+          </Grid>
         </Grid>
+
         <Grid
           item
           xs={6}
@@ -425,12 +480,10 @@ export default function AgendaLista() {
             {dataExt}
           </Typography>
         </Grid>
-
-        <Grid
-          item
-          xs={12}
-          style={{ display: "flex", justifyContent: "flex-start" }}
-        >
+        <Grid item xs={12} style={{ justifyContent: "flex-start" }}>
+          {rows.length == 0 && !promiseInProgress && (
+            <Aviso aviso="Não existem alunos agendados para esta data" />
+          )}
           {rows.length > 0 && (
             <TableContainer component={Paper}>
               <Table

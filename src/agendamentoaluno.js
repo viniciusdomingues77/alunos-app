@@ -18,13 +18,18 @@ import Button from "@material-ui/core/Button";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
-import { setDate } from "date-fns";
+import BarraProgressoFixa from "./barraprogressofixa";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    marginTop: 30,
   },
   btn: {
     margin: 0,
+  },
+  cabecalho: {
+    with: "100%",
+    height: "10px",
   },
 }));
 export default function Agendamento() {
@@ -210,168 +215,180 @@ export default function Agendamento() {
     setOpenSuccess({ open: false, vertical: "top", horizontal: "center" });
   };
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={8}>
-          <Autocomplete
-            value={Aluno}
-            id="autocomplete"
-            onChange={(event, newValue) => {
-              setAluno(newValue);
-              if (newValue) {
-              }
-            }}
-            options={Alunos.map((aluno) => `${aluno.idaluno} - ${aluno.nome}`)}
-            getOptionSelected={(option, value) => {
-              return option === value;
-            }}
-            style={{ width: "100%", marginBottom: 5 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Aluno"
-                required
-                autoFocus
-                variant="outlined"
-              />
+    <React.Fragment>
+      <div className={classes.cabecalho}>
+        <BarraProgressoFixa
+          titulo={TextoBarraProgresso}
+          loading={promiseInProgress}
+        />
+      </div>
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <Autocomplete
+              value={Aluno}
+              id="autocomplete"
+              onChange={(event, newValue) => {
+                setAluno(newValue);
+                if (newValue) {
+                }
+              }}
+              options={Alunos.map(
+                (aluno) => `${aluno.idaluno} - ${aluno.nome}`
+              )}
+              getOptionSelected={(option, value) => {
+                return option === value;
+              }}
+              style={{ width: "100%", marginBottom: 5 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Aluno"
+                  required
+                  autoFocus
+                  variant="outlined"
+                />
+              )}
+            />
+            {AlunoError && (
+              <FormHelperText id="component-error-text" error>
+                Indique o Aluno
+              </FormHelperText>
             )}
-          />
-          {AlunoError && (
-            <FormHelperText id="component-error-text" error>
-              Indique o Aluno
-            </FormHelperText>
-          )}
-        </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={8}>
-          <Autocomplete
-            value={Professor}
-            id="autocomplete"
-            onChange={(event, newValue) => {
-              setProfessor(newValue);
-              if (newValue) {
-              }
-            }}
-            options={professores.map(
-              (professor) => `${professor.idprofessor} - ${professor.nome}`
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <Autocomplete
+              value={Professor}
+              id="autocomplete"
+              onChange={(event, newValue) => {
+                setProfessor(newValue);
+                if (newValue) {
+                }
+              }}
+              options={professores.map(
+                (professor) => `${professor.idprofessor} - ${professor.nome}`
+              )}
+              getOptionSelected={(option, value) => {
+                return option === value;
+              }}
+              style={{ width: "100%", marginBottom: 5 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Professor"
+                  required
+                  autoFocus
+                  variant="outlined"
+                />
+              )}
+            />
+            {ProfessorError && (
+              <FormHelperText id="component-error-text" error>
+                Indique o Professor
+              </FormHelperText>
             )}
-            getOptionSelected={(option, value) => {
-              return option === value;
-            }}
-            style={{ width: "100%", marginBottom: 5 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Professor"
-                required
-                autoFocus
-                variant="outlined"
-              />
-            )}
-          />
-          {ProfessorError && (
-            <FormHelperText id="component-error-text" error>
-              Indique o Professor
-            </FormHelperText>
-          )}
-        </Grid>
-        <Grid item xs={2}></Grid>
+          </Grid>
+          <Grid item xs={2}></Grid>
 
-        <Grid item xs={2}></Grid>
-        <Grid item xs={3}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              margin="normal"
-              id="date-picker-dialog"
-              label="Data"
-              format="dd/MM/yyyy"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
-            />
-          </MuiPickersUtilsProvider>
-          {DataError && (
-            <FormHelperText id="component-error-text" error>
-              Indique a data
-            </FormHelperText>
-          )}
+          <Grid item xs={2}></Grid>
+          <Grid item xs={3}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                margin="normal"
+                id="date-picker-dialog"
+                label="Data"
+                format="dd/MM/yyyy"
+                value={selectedDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+              />
+            </MuiPickersUtilsProvider>
+            {DataError && (
+              <FormHelperText id="component-error-text" error>
+                Indique a data
+              </FormHelperText>
+            )}
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={3}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardTimePicker
+                margin="normal"
+                id="time-picker"
+                label="Hora"
+                value={selectedHour}
+                onChange={handleHourChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change time",
+                }}
+              />
+            </MuiPickersUtilsProvider>
+            {HourError && (
+              <FormHelperText id="component-error-text" error>
+                Indique a Hora
+              </FormHelperText>
+            )}
+          </Grid>
         </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={3}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="Hora"
-              value={selectedHour}
-              onChange={handleHourChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time",
-              }}
-            />
-          </MuiPickersUtilsProvider>
-          {HourError && (
-            <FormHelperText id="component-error-text" error>
-              Indique a Hora
-            </FormHelperText>
-          )}
+        <Grid container spacing={3}>
+          <Grid item xs={12}></Grid>
+          <Grid item xs={12}>
+            {/* {promiseInProgress && (
+              <BarraProgresso titulo={TextoBarraProgresso} />
+            )} */}
+          </Grid>
+          <Grid item xs={12}></Grid>
+          <Grid item xs={6}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              startIcon={<SaveIcon />}
+              onClick={HandleSaveClick}
+            >
+              Salvar
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              color="#e8eaf6"
+              size="large"
+              startIcon={<CancelPresentationIcon />}
+              onClick={() => ClearFields()}
+              className={classes.btn}
+            >
+              Cancelar
+            </Button>
+          </Grid>
+          <Grid item xs={2}></Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item xs={12}></Grid>
-        <Grid item xs={12}>
-          {promiseInProgress && <BarraProgresso titulo={TextoBarraProgresso} />}
-        </Grid>
-        <Grid item xs={12}></Grid>
-        <Grid item xs={6}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            startIcon={<SaveIcon />}
-            onClick={HandleSaveClick}
-          >
-            Salvar
-          </Button>
-        </Grid>
-        <Grid item xs={6}>
-          <Button
-            variant="contained"
-            color="#e8eaf6"
-            size="large"
-            startIcon={<CancelPresentationIcon />}
-            onClick={() => ClearFields()}
-            className={classes.btn}
-          >
-            Cancelar
-          </Button>
-        </Grid>
-        <Grid item xs={2}></Grid>
-      </Grid>
-      <Snackbar
-        open={openError}
-        autoHideDuration={6000}
-        onClose={handleCloseError}
-      >
-        <Alert onClose={handleCloseError} severity="error">
-          Não foi possível realizar a operação. Contacte o desenvolvedor
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{ vertical, horizontal }}
-      >
-        <Alert onClose={handleClose} severity="success">
-          Operação realizada com sucesso!
-        </Alert>
-      </Snackbar>
-    </div>
+        <Snackbar
+          open={openError}
+          autoHideDuration={6000}
+          onClose={handleCloseError}
+        >
+          <Alert onClose={handleCloseError} severity="error">
+            Não foi possível realizar a operação. Contacte o desenvolvedor
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical, horizontal }}
+        >
+          <Alert onClose={handleClose} severity="success">
+            Operação realizada com sucesso!
+          </Alert>
+        </Snackbar>
+      </div>
+    </React.Fragment>
   );
 }
