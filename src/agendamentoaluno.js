@@ -240,6 +240,9 @@ export default function Agendamento() {
     }
     setOpenSuccess({ open: false, vertical: "top", horizontal: "center" });
   };
+  const handleCloseModal = (event, reason) => {
+    setopenModal(false);
+  };
   return (
     <React.Fragment>
       <div className={classes.cabecalho}>
@@ -420,7 +423,7 @@ export default function Agendamento() {
         aria-describedby="transition-modal-description"
         className={classes.modal}
         open={openModal}
-        onClose={handleClose}
+        onClose={handleCloseModal}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{

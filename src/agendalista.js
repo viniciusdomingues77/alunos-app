@@ -37,6 +37,13 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import BarraProgressoFixa from "./barraprogressofixa";
 import Aviso from "./aviso";
+import EventBusyIcon from "@material-ui/icons/EventBusy";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -129,6 +136,17 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 0,
     marginLeft: theme.spacing(2.5),
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "1px solid #306898",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 }));
 
 export default function AgendaLista() {
@@ -140,6 +158,9 @@ export default function AgendaLista() {
   const { promiseInProgress } = usePromiseTracker();
   const [Professor, setProfessor] = React.useState("");
   const [SelAluno, setSelAluno] = React.useState(false);
+  const [openModal, setopenModal] = React.useState(false);
+  const [ModalTexto, setModalTexto] = React.useState("");
+  const [ModalTitulo, setModalTitulo] = React.useState("");
   const classes = useStyles();
   const ListarAgendas = () => {
     console.log("day " + valueDay.getDate());
@@ -343,7 +364,17 @@ export default function AgendaLista() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  const handleCloseModal = (event, reason) => {
+    setopenModal(false);
+  };
+  const [valueCancelamento, setValueCancelamento] = React.useState("");
+  function handleClickCancelaAgenda(idagenda) {
+    setModalTitulo("Desmarcação");
+    setopenModal(true);
+  }
+  const handleRadioChangeCancelamento = (event) => {
+    setValueCancelamento(event.target.value);
+  };
   return (
     <React.Fragment>
       <div className={classes.cabecalho}>
@@ -433,8 +464,44 @@ export default function AgendaLista() {
               id="autocomplete"
               onChange={(event, newValue) => {
                 setProfessor(newValue);
+                setPage(0);
+                var idprofessor = "0";
                 if (newValue) {
+                  idprofessor = newValue
+                    .substring(0, newValue.indexOf("-"))
+                    .trim();
                 }
+                var idaluno = "0";
+                if (Aluno) {
+                  if (Aluno.length > 0) {
+                    idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
+                  }
+                }
+                const apiUrl =
+                  `https://localhost:44363/api/agenda/agenda/` +
+                  DataparaParametroPar(valueDay) +
+                  "/" +
+                  idaluno +
+                  "/" +
+                  idprofessor;
+                trackPromise(
+                  fetch(apiUrl)
+                    .then((response) => {
+                      if (!response.ok) {
+                        throw Error(response.statusText);
+                      }
+                      return response;
+                    })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      console.log(data);
+                      setAgendados(data);
+                    })
+                    .catch(function (error) {
+                      console.log("catch error" + error);
+                      setOpenError(true);
+                    })
+                );
               }}
               options={professores.map(
                 (professor) => `${professor.idprofessor} - ${professor.nome}`
@@ -514,6 +581,16 @@ export default function AgendaLista() {
                           color="primary"
                           aria-label="Remove Agenda"
                           component="span"
+                          onClick={() => handleClickCancelaAgenda(row.idagenda)}
+                        >
+                          <EventBusyIcon />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell style={{ width: 60 }} align="left">
+                        <IconButton
+                          color="primary"
+                          aria-label="Remove Agenda"
+                          component="span"
                           //   onClick={() => handleClickOpen(row.idaluno, row.nome)}
                         >
                           <DeleteForeverIcon />
@@ -556,6 +633,67 @@ export default function AgendaLista() {
           )}
         </Grid>
       </Grid>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={openModal}>
+          <div className={classes.paper}>
+            <h2 id="transition-modal-title">{ModalTitulo}</h2>
+            <p id="transition-modal-description">
+              <RadioGroup
+                aria-label="quiz"
+                name="quiz"
+                value={valueCancelamento}
+                onChange={handleRadioChangeCancelamento}
+              >
+                <FormControlLabel
+                  value="professor"
+                  control={<Radio />}
+                  label="Desmarcado pelo professor"
+                />
+                <FormControlLabel
+                  value="aluno"
+                  control={<Radio />}
+                  label="Desmarcado pelo aluno"
+                />
+              </RadioGroup>
+            </p>
+            <Grid container spacing={3}>
+              <Grid
+                item
+                xs={6}
+                style={{ display: "flex", justifyContent: "flex-start" }}
+              >
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setopenModal(false)}
+                >
+                  Desmarcar
+                </Button>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Button variant="contained" onClick={() => setopenModal(false)}>
+                  Fechar
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Fade>
+      </Modal>
     </React.Fragment>
   );
 }
