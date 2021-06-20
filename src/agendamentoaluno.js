@@ -19,6 +19,9 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
 import BarraProgressoFixa from "./barraprogressofixa";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -30,6 +33,17 @@ const useStyles = makeStyles((theme) => ({
   cabecalho: {
     with: "100%",
     height: "10px",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "1px solid #306898",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
 export default function Agendamento() {
@@ -45,6 +59,10 @@ export default function Agendamento() {
   const [HourError, setHourError] = React.useState(false);
   const [ProfessorError, setProfessorError] = React.useState(false);
   const [Aluno, setAluno] = React.useState("");
+  const [ModalTexto, setModalTexto] = React.useState("");
+  const [ModalTitulo, setModalTitulo] = React.useState("");
+  const [openModal, setopenModal] = React.useState(false);
+  const [HorarioOcupado, setHorarioOcupado] = React.useState(false);
   const [Professor, setProfessor] = React.useState("");
   const { promiseInProgress } = usePromiseTracker();
   const { openErr } = openError;
@@ -109,13 +127,20 @@ export default function Agendamento() {
     horizontal: "center",
   });
   const { vertical, horizontal, open } = openSuccess;
-  const [SubmitSuccess, setSubmitSuccess] = React.useState(false);
+  const [SubmitSuccess, setSubmitSuccess] = React.useState(0);
   React.useLayoutEffect(() => {
     console.log("promiseInProgress " + promiseInProgress);
     if (!promiseInProgress) {
-      if (SubmitSuccess) {
+      if (SubmitSuccess > 1) {
         setOpenSuccess({ open: true, vertical: "top", horizontal: "center" });
+      } else {
+        if (SubmitSuccess == -1) {
+          setModalTexto("Este horário já se encontra ocupado");
+          setModalTitulo("Problemas no agendamento");
+          setopenModal(true);
+        }
       }
+
       ClearFields();
     }
   }, [promiseInProgress]);
@@ -165,7 +190,7 @@ export default function Agendamento() {
     if (!ValidaCampos()) {
       return;
     }
-    setSubmitSuccess(false);
+    setSubmitSuccess(0);
     setOpenError(false);
     var idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
     var idprofessor = Professor.substring(0, Professor.indexOf("-")).trim();
@@ -193,10 +218,11 @@ export default function Agendamento() {
           return response;
         })
         .then((response) => response.json())
-        .then((d) => setSubmitSuccess(true))
+        .then((d) => setSubmitSuccess(d))
+
         .catch(function (error) {
           console.log("catch error" + error);
-          setSubmitSuccess(false);
+          setSubmitSuccess(0);
           setOpenError(true);
         })
     );
@@ -389,6 +415,28 @@ export default function Agendamento() {
           </Alert>
         </Snackbar>
       </div>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openModal}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={openModal}>
+          <div className={classes.paper}>
+            <h2 id="transition-modal-title">{ModalTitulo}</h2>
+            <p id="transition-modal-description">{ModalTexto}</p>
+            <Button variant="contained" onClick={() => setopenModal(false)}>
+              Fechar
+            </Button>
+          </div>
+        </Fade>
+      </Modal>
     </React.Fragment>
   );
 }

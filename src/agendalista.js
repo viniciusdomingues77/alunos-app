@@ -43,6 +43,7 @@ const useStyles1 = makeStyles((theme) => ({
     marginLeft: theme.spacing(2.5),
   },
 }));
+
 function TablePaginationActions(props) {
   const classes = useStyles1();
   const theme = useTheme();
@@ -118,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "5px 10px #888888",
   },
   cabecalho: {
-    with: "100%",
+    width: "100%",
     height: "10px",
   },
   table: {

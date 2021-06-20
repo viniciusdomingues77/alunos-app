@@ -26,9 +26,11 @@ import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
 import BarraProgresso from "./barradeprogresso";
+import BarraProgressoFixa from "./barraprogressofixa";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    marginTop: theme.spacing(5),
   },
   button: {
     margin: theme.spacing(1),
@@ -40,7 +42,10 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(12),
     height: theme.spacing(12),
   },
-
+  cabecalho: {
+    with: "100%",
+    height: "10px",
+  },
   input: {
     display: "none",
   },
@@ -55,7 +60,7 @@ export default function AlunoCadastro() {
   const [idAluno, setidAluno] = React.useState(0);
   const [selectedFile, setselectedFile] = React.useState(null);
   const [Saving, setSaving] = React.useState(false);
-
+  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
   React.useLayoutEffect(() => {
     console.log("promiseInProgress " + promiseInProgress);
     if (!promiseInProgress) {
@@ -91,7 +96,7 @@ export default function AlunoCadastro() {
     if (!ValidaTodososCampos()) {
       return;
     }
-
+    setTextoBarraProgresso("Cadastrando aluno");
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -303,245 +308,254 @@ export default function AlunoCadastro() {
   };
 
   return (
-    <form onSubmit={submitForm}>
-      <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid item xs={2}>
-            <Grid
-              container
-              spacing={3}
-              direction="column"
-              className={classes.AlunoFoto}
-            >
-              <Grid item xs={12}>
-                <Avatar className={classes.avatar} src={selectedFile}></Avatar>
-              </Grid>
-              <Grid item xs={12}>
-                <input
-                  accept="image/*"
-                  className={classes.input}
-                  id="contained-button-file"
-                  type="file"
-                  onChange={handleUploadClick}
-                  disabled={promiseInProgress}
-                />
-                <label htmlFor="contained-button-file">
-                  <Fab component="span" className={classes.buttonupload}>
-                    <CloudUploadIcon />
-                  </Fab>
-                </label>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={10}>
-            <Grid container spacing={3}>
-              <Grid item xs={8}>
-                <TextField
-                  name="nome"
-                  required
-                  label="Nome"
-                  fullWidth
-                  value={Nome}
-                  onChange={handleNomeChange}
-                  onBlur={handleNomeError}
-                  disabled={promiseInProgress}
-                />
-                {NomeError && (
-                  <FormHelperText id="component-error-text" error>
-                    Informe ao menos 5 caracteres
-                  </FormHelperText>
-                )}
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  required
-                  label="Email"
-                  name="email"
-                  type="email"
-                  fullWidth
-                  value={Email}
-                  onChange={handleEmailChange}
-                  onBlur={handleEmailError}
-                  disabled={promiseInProgress}
-                />
-                {EmailError && (
-                  <FormHelperText id="component-error-text" error>
-                    Informe um email válido
-                  </FormHelperText>
-                )}
-              </Grid>
-
-              <Grid item xs={3}>
-                <MuiThemeProvider>
-                  <InputMask
-                    type="date"
-                    mask="99/99/9999"
-                    disabled={false}
-                    maskChar=" "
-                    value={DTNascimento}
-                    onChange={handleDTNascimentoChange}
-                    onBlur={handleDTNascimentoError}
-                    disabled={promiseInProgress}
-                  >
-                    {() => (
-                      <TextField
-                        label="Dt.Nascimento"
-                        fullWidth
-                        required
-                        disabled={promiseInProgress}
-                      />
-                    )}
-                  </InputMask>
-                  {DTNascimentoError && (
-                    <FormHelperText id="component-error-text" error>
-                      Informe uma data válida
-                    </FormHelperText>
-                  )}
-                </MuiThemeProvider>
-              </Grid>
-              <Grid item xs={1}></Grid>
-
-              <Grid item xs={4}>
-                <MuiThemeProvider>
-                  <InputMask
-                    mask="(99)99999-9999"
-                    disabled={false}
-                    maskChar=" "
-                    value={TelCelular}
-                    onChange={handleTelCelularChange}
-                    onBlur={handleTelCelularError}
-                    disabled={promiseInProgress}
-                  >
-                    {() => (
-                      <TextField
-                        label="Tel.Celular"
-                        name="telcelular"
-                        fullWidth
-                        required
-                        disabled={promiseInProgress}
-                      />
-                    )}
-                  </InputMask>
-                  {TelCelularError && (
-                    <FormHelperText id="component-error-text" error>
-                      Informe um telefone celular válido
-                    </FormHelperText>
-                  )}
-                </MuiThemeProvider>
-              </Grid>
-              <Grid item xs={4}>
-                <MuiThemeProvider>
-                  <InputMask
-                    mask="(99)9999-9999"
-                    disabled={false}
-                    maskChar=" "
-                    value={TelFixo}
-                    onChange={handleTelFixoChange}
-                    disabled={promiseInProgress}
-                  >
-                    {() => (
-                      <TextField
-                        label="Tel.Fixo"
-                        fullWidth
-                        disabled={promiseInProgress}
-                      />
-                    )}
-                  </InputMask>
-                  {TelFixoError && (
-                    <FormHelperText id="component-error-text" error>
-                      Telefone fixo inválido.Este campo não é obrigatório
-                    </FormHelperText>
-                  )}
-                </MuiThemeProvider>
-              </Grid>
-
-              <Grid item xs={8}>
-                <TextField
-                  label="Endereço"
-                  type="text"
-                  fullWidth
-                  value={Endereco}
-                  onChange={handleEnderecoChange}
-                  disabled={promiseInProgress}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <MuiThemeProvider>
-                  <InputMask
-                    mask="99999-999"
-                    disabled={false}
-                    maskChar=" "
-                    value={CEP}
-                    onChange={handleCEPChange}
-                    disabled={promiseInProgress}
-                  >
-                    {() => (
-                      <TextField
-                        label="CEP"
-                        fullWidth
-                        disabled={promiseInProgress}
-                      />
-                    )}
-                  </InputMask>
-                </MuiThemeProvider>
-              </Grid>
-              <Grid item xs={2}></Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Snackbar
-              open={openError}
-              autoHideDuration={6000}
-              onClose={handleCloseError}
-            >
-              <Alert onClose={handleCloseError} severity="error">
-                Não foi possível realizar a operação. Contacte o desenvolvedor
-              </Alert>
-            </Snackbar>
-          </Grid>
-          <Grid item xs={12}>
-            <Snackbar
-              open={open}
-              autoHideDuration={6000}
-              onClose={handleClose}
-              anchorOrigin={{ vertical, horizontal }}
-            >
-              <Alert onClose={handleClose} severity="success">
-                Operação realizada com sucesso!
-              </Alert>
-            </Snackbar>
-          </Grid>
-          <Grid item xs={12}>
-            {promiseInProgress && <BarraProgresso titulo="Cadastrando aluno" />}
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={6}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              startIcon={<SaveIcon />}
-            >
-              Salvar
-            </Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              color="#e8eaf6"
-              size="large"
-              startIcon={<CancelPresentationIcon />}
-              onClick={ClearFields}
-            >
-              Cancelar
-            </Button>
-          </Grid>
-        </Grid>
+    <React.Fragment>
+      <div className={classes.cabecalho}>
+        <BarraProgressoFixa
+          titulo={TextoBarraProgresso}
+          loading={promiseInProgress}
+        />
       </div>
-    </form>
+      <div className={classes.root}>
+        <form onSubmit={submitForm}>
+          <Grid container spacing={3}>
+            <Grid item xs={2}>
+              <Grid
+                container
+                spacing={3}
+                direction="column"
+                className={classes.AlunoFoto}
+              >
+                <Grid item xs={12}>
+                  <Avatar
+                    className={classes.avatar}
+                    src={selectedFile}
+                  ></Avatar>
+                </Grid>
+                <Grid item xs={12}>
+                  <input
+                    accept="image/*"
+                    className={classes.input}
+                    id="contained-button-file"
+                    type="file"
+                    onChange={handleUploadClick}
+                    disabled={promiseInProgress}
+                  />
+                  <label htmlFor="contained-button-file">
+                    <Fab component="span" className={classes.buttonupload}>
+                      <CloudUploadIcon />
+                    </Fab>
+                  </label>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={10}>
+              <Grid container spacing={3}>
+                <Grid item xs={8}>
+                  <TextField
+                    name="nome"
+                    required
+                    label="Nome"
+                    fullWidth
+                    value={Nome}
+                    onChange={handleNomeChange}
+                    onBlur={handleNomeError}
+                    disabled={promiseInProgress}
+                  />
+                  {NomeError && (
+                    <FormHelperText id="component-error-text" error>
+                      Informe ao menos 5 caracteres
+                    </FormHelperText>
+                  )}
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    required
+                    label="Email"
+                    name="email"
+                    type="email"
+                    fullWidth
+                    value={Email}
+                    onChange={handleEmailChange}
+                    onBlur={handleEmailError}
+                    disabled={promiseInProgress}
+                  />
+                  {EmailError && (
+                    <FormHelperText id="component-error-text" error>
+                      Informe um email válido
+                    </FormHelperText>
+                  )}
+                </Grid>
+
+                <Grid item xs={3}>
+                  <MuiThemeProvider>
+                    <InputMask
+                      type="date"
+                      mask="99/99/9999"
+                      disabled={false}
+                      maskChar=" "
+                      value={DTNascimento}
+                      onChange={handleDTNascimentoChange}
+                      onBlur={handleDTNascimentoError}
+                      disabled={promiseInProgress}
+                    >
+                      {() => (
+                        <TextField
+                          label="Dt.Nascimento"
+                          fullWidth
+                          required
+                          disabled={promiseInProgress}
+                        />
+                      )}
+                    </InputMask>
+                    {DTNascimentoError && (
+                      <FormHelperText id="component-error-text" error>
+                        Informe uma data válida
+                      </FormHelperText>
+                    )}
+                  </MuiThemeProvider>
+                </Grid>
+                <Grid item xs={1}></Grid>
+
+                <Grid item xs={4}>
+                  <MuiThemeProvider>
+                    <InputMask
+                      mask="(99)99999-9999"
+                      disabled={false}
+                      maskChar=" "
+                      value={TelCelular}
+                      onChange={handleTelCelularChange}
+                      onBlur={handleTelCelularError}
+                      disabled={promiseInProgress}
+                    >
+                      {() => (
+                        <TextField
+                          label="Tel.Celular"
+                          name="telcelular"
+                          fullWidth
+                          required
+                          disabled={promiseInProgress}
+                        />
+                      )}
+                    </InputMask>
+                    {TelCelularError && (
+                      <FormHelperText id="component-error-text" error>
+                        Informe um telefone celular válido
+                      </FormHelperText>
+                    )}
+                  </MuiThemeProvider>
+                </Grid>
+                <Grid item xs={4}>
+                  <MuiThemeProvider>
+                    <InputMask
+                      mask="(99)9999-9999"
+                      disabled={false}
+                      maskChar=" "
+                      value={TelFixo}
+                      onChange={handleTelFixoChange}
+                      disabled={promiseInProgress}
+                    >
+                      {() => (
+                        <TextField
+                          label="Tel.Fixo"
+                          fullWidth
+                          disabled={promiseInProgress}
+                        />
+                      )}
+                    </InputMask>
+                    {TelFixoError && (
+                      <FormHelperText id="component-error-text" error>
+                        Telefone fixo inválido.Este campo não é obrigatório
+                      </FormHelperText>
+                    )}
+                  </MuiThemeProvider>
+                </Grid>
+
+                <Grid item xs={8}>
+                  <TextField
+                    label="Endereço"
+                    type="text"
+                    fullWidth
+                    value={Endereco}
+                    onChange={handleEnderecoChange}
+                    disabled={promiseInProgress}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <MuiThemeProvider>
+                    <InputMask
+                      mask="99999-999"
+                      disabled={false}
+                      maskChar=" "
+                      value={CEP}
+                      onChange={handleCEPChange}
+                      disabled={promiseInProgress}
+                    >
+                      {() => (
+                        <TextField
+                          label="CEP"
+                          fullWidth
+                          disabled={promiseInProgress}
+                        />
+                      )}
+                    </InputMask>
+                  </MuiThemeProvider>
+                </Grid>
+                <Grid item xs={2}></Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Snackbar
+                open={openError}
+                autoHideDuration={6000}
+                onClose={handleCloseError}
+              >
+                <Alert onClose={handleCloseError} severity="error">
+                  Não foi possível realizar a operação. Contacte o desenvolvedor
+                </Alert>
+              </Snackbar>
+            </Grid>
+            <Grid item xs={12}>
+              <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical, horizontal }}
+              >
+                <Alert onClose={handleClose} severity="success">
+                  Operação realizada com sucesso!
+                </Alert>
+              </Snackbar>
+            </Grid>
+            <Grid item xs={12}></Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                startIcon={<SaveIcon />}
+              >
+                Salvar
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="#e8eaf6"
+                size="large"
+                startIcon={<CancelPresentationIcon />}
+                onClick={ClearFields}
+              >
+                Cancelar
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </React.Fragment>
   );
 }

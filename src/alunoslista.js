@@ -28,6 +28,8 @@ import Button from "@material-ui/core/Button";
 import BarraProgresso from "./barradeprogresso";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
+import Grid from "@material-ui/core/Grid";
+import BarraProgressoFixa from "./barraprogressofixa";
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -110,7 +112,11 @@ TablePaginationActions.propTypes = {
 
 const useStyles2 = makeStyles({
   table: {
-    minWidth: 500,
+    minHeight: 490,
+  },
+  cabecalho: {
+    width: "100%",
+    height: "10px",
   },
 });
 
@@ -246,71 +252,90 @@ export default function AlunosLista() {
 
   return (
     <React.Fragment>
-      {promiseInProgress && <BarraProgresso titulo={TextoBarraProgresso} />}
+      <div className={classes.cabecalho}>
+        <BarraProgressoFixa
+          titulo={TextoBarraProgresso}
+          loading={promiseInProgress}
+        />
+      </div>
       {rows.length == 0 && !promiseInProgress && "Nenhum aluno para exibição"}
 
       {rows.length > 0 && (
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="custom pagination table">
-            <TableBody>
-              {(rowsPerPage > 0
-                ? rows.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : rows
-              ).map((row) => (
-                <TableRow key={row.idaluno}>
-                  <TableCell style={{ width: 70 }}>
-                    <Avatar src={row.foto}></Avatar>
-                  </TableCell>
-                  <TableCell align="left" style={{ width: 70 }}>
-                    {row.idaluno}
-                  </TableCell>
-                  <TableCell align="left">{row.nome}</TableCell>
-                  <TableCell align="left">{row.telcelular}</TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {row.email}
-                  </TableCell>
-                  <TableCell style={{ width: 60 }} align="left">
-                    <IconButton
-                      color="primary"
-                      aria-label="Remove Aluno"
-                      component="span"
-                      onClick={() => handleClickOpen(row.idaluno, row.nome)}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+        <Grid container spacing={3}>
+          <Grid item xs={12}></Grid>
+          <Grid item xs={12}></Grid>
+          <Grid item xs={12}>
+            <TableContainer component={Paper}>
+              <Table
+                className={classes.table}
+                aria-label="custom pagination table"
+              >
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? rows.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : rows
+                  ).map((row) => (
+                    <TableRow key={row.idaluno}>
+                      <TableCell style={{ width: 70 }}>
+                        <Avatar src={row.foto}></Avatar>
+                      </TableCell>
+                      <TableCell align="left" style={{ width: 70 }}>
+                        {row.idaluno}
+                      </TableCell>
+                      <TableCell align="left">{row.nome}</TableCell>
+                      <TableCell align="left">{row.telcelular}</TableCell>
+                      <TableCell style={{ width: 160 }} align="left">
+                        {row.email}
+                      </TableCell>
+                      <TableCell style={{ width: 60 }} align="left">
+                        <IconButton
+                          color="primary"
+                          aria-label="Remove Aluno"
+                          component="span"
+                          onClick={() => handleClickOpen(row.idaluno, row.nome)}
+                        >
+                          <DeleteForeverIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
 
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  colSpan={5}
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: { "aria-label": "rows per page" },
-                    native: true,
-                  }}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={5}
+                      count={rows.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: { "aria-label": "rows per page" },
+                        native: true,
+                      }}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
       )}
       <Dialog
         open={openDialogoExc}

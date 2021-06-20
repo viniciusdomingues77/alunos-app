@@ -20,7 +20,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
 import BarraProgresso from "./barradeprogresso";
-
+import BarraProgressoFixa from "./barraprogressofixa";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -48,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 10,
       fontSize: 18,
     },
+  },
+  cabecalho: {
+    width: "100%",
+    height: "10px",
   },
 }));
 
@@ -319,8 +323,18 @@ export default function AlunoDetalhe() {
   };
   const { vertical, horizontal, open } = openSuccess;
   return (
-    <div className={classes.root}>
+    <React.Fragment>
+      <div className={classes.cabecalho}>
+        <BarraProgressoFixa
+          titulo={TextoBarraProgresso}
+          loading={promiseInProgress}
+        />
+      </div>
+      {/* <div className={classes.root}> */}
       <Grid container spacing={3}>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
+
         <Grid item xs={2}>
           <TextField
             disabled
@@ -600,9 +614,9 @@ export default function AlunoDetalhe() {
             </Snackbar>
           </Grid>
           <Grid item xs={12}>
-            {promiseInProgress && (
+            {/* {promiseInProgress && (
               <BarraProgresso titulo={TextoBarraProgresso} />
-            )}
+            )} */}
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -631,6 +645,7 @@ export default function AlunoDetalhe() {
           </Grid>
         </Grid>
       </form>
-    </div>
+      {/* </div> */}
+    </React.Fragment>
   );
 }
