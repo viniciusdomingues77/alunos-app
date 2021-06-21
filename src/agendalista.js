@@ -44,6 +44,7 @@ import Fade from "@material-ui/core/Fade";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -143,9 +144,15 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: "1px solid #306898",
+    border: "3px solid #306898",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+  },
+  cancelado: {
+    color: "red",
+  },
+  ativo: {
+    color: "black",
   },
 }));
 
@@ -159,15 +166,18 @@ export default function AgendaLista() {
   const [Professor, setProfessor] = React.useState("");
   const [SelAluno, setSelAluno] = React.useState(false);
   const [openModal, setopenModal] = React.useState(false);
+  const [carregaPlanilha, setcarregaPlanilha] = React.useState(false);
   const [ModalTexto, setModalTexto] = React.useState("");
   const [ModalTitulo, setModalTitulo] = React.useState("");
+  const [textoExc, settextoExc] = React.useState("");
   const classes = useStyles();
   const ListarAgendas = () => {
     console.log("day " + valueDay.getDate());
     console.log("month " + valueDay.getMonth());
     console.log("year " + valueDay.getFullYear());
   };
-
+  const [valueAgendaCancelada, setvalueAgendaCancelada] = React.useState(false);
+  const [Exclusao, setExclusao] = React.useState(false);
   function DataparaParametro() {
     return (
       valueDay.getFullYear() +
@@ -183,7 +193,9 @@ export default function AgendaLista() {
       data.getFullYear() + "-" + (data.getMonth() + 1) + "-" + data.getDate()
     );
   }
-
+  const handleClose = () => {
+    setopenDialogoExc(false);
+  };
   function MesporExtenso(nummes) {
     switch (nummes) {
       case 0:
@@ -239,7 +251,7 @@ export default function AgendaLista() {
   function onChange(nextValue) {
     setPage(0);
     setValueDay(nextValue);
-    setdataExt(DataporExtenso(nextValue));
+    setTextoBarraProgresso("Listando agendamentos");
     var idaluno = "0";
     if (Aluno) {
       if (Aluno.length > 0) {
@@ -273,6 +285,7 @@ export default function AgendaLista() {
           .then((data) => {
             console.log(data);
             setAgendados(data);
+            setdataExt(DataporExtenso(nextValue));
           })
           .catch(function (error) {
             console.log("catch error" + error);
@@ -281,6 +294,53 @@ export default function AgendaLista() {
       );
     }
   }
+  React.useEffect(() => {
+    if (carregaPlanilha == true) {
+      var idaluno = "0";
+      if (Aluno) {
+        if (Aluno.length > 0) {
+          idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
+        }
+      }
+      var idprofessor = "0";
+      if (Professor) {
+        if (Professor.length > 0) {
+          idprofessor = Professor.substring(0, Professor.indexOf("-")).trim();
+        }
+      }
+      setTextoBarraProgresso("Listando agendamentos");
+      const apiUrl =
+        `https://localhost:44363/api/agenda/agenda/` +
+        DataparaParametroPar(valueDay) +
+        "/" +
+        idaluno +
+        "/" +
+        idprofessor;
+      trackPromise(
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw Error(response.statusText);
+            }
+            return response;
+          })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            setAgendados(data);
+            setcarregaPlanilha(false);
+          })
+          .catch(function (error) {
+            console.log("catch error" + error);
+            setOpenError(true);
+            setcarregaPlanilha(false);
+          })
+      );
+
+      setvalueAgendaCancelada(false);
+    }
+  }, [carregaPlanilha]);
+  const [openDialogoExc, setopenDialogoExc] = React.useState(false);
   const [Alunos, setAlunos] = React.useState([]);
   const [Aluno, setAluno] = React.useState("");
   const [professores, setProfessores] = React.useState([]);
@@ -368,13 +428,101 @@ export default function AgendaLista() {
     setopenModal(false);
   };
   const [valueCancelamento, setValueCancelamento] = React.useState("");
+  const [valueIDAgendaCancelamento, setIDAgendaCancelamento] =
+    React.useState(0);
+  const [valueIDAgendaExclusao, setvalueIDAgendaExclusao] = React.useState(0);
+
   function handleClickCancelaAgenda(idagenda) {
+    setIDAgendaCancelamento(idagenda);
     setModalTitulo("Desmarcação");
     setopenModal(true);
+    setValueCancelamento("professor");
+  }
+  function handleClickCancelaAgendaConfirmacao() {
+    console.log("valueCancelamento " + valueCancelamento);
+    console.log("idagenda " + valueIDAgendaCancelamento);
+    setvalueAgendaCancelada(false);
+    setopenModal(false);
+
+    setTextoBarraProgresso("Desmarcando");
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        idagenda: valueIDAgendaCancelamento,
+        stropcao: valueCancelamento,
+      }),
+    };
+    trackPromise(
+      fetch("https://localhost:44363/api/agenda/desmarcacao", requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response;
+        })
+        .then((response) => response.json())
+        .then((d) => setcarregaPlanilha(true), setvalueAgendaCancelada(true))
+        .catch(function (error) {
+          setvalueAgendaCancelada(false);
+          setOpenError(true);
+        })
+    );
   }
   const handleRadioChangeCancelamento = (event) => {
+    setvalueAgendaCancelada(false);
     setValueCancelamento(event.target.value);
   };
+
+  function RetornaClasseAgenda(cancelado) {
+    var classe = "";
+
+    if (cancelado > 0) {
+      classe = classes.cancelado;
+    } else {
+      classe = classes.ativo;
+    }
+
+    return classe;
+  }
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
+  };
+  const handleClickDelete = () => {
+    setopenDialogoExc(false);
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    };
+    trackPromise(
+      fetch(
+        "https://localhost:44363/api/agenda/exclusao/" + valueIDAgendaExclusao,
+        requestOptions
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          setExclusao(true);
+          setcarregaPlanilha(true);
+
+          return response;
+        })
+        .then((response) => response.json())
+        .then((d) => setExclusao(true))
+        .catch(function (error) {
+          console.log("catch error" + error);
+
+          setOpenError(true);
+        })
+    );
+  };
+
   return (
     <React.Fragment>
       <div className={classes.cabecalho}>
@@ -567,34 +715,75 @@ export default function AgendaLista() {
                     : rows
                   ).map((row) => (
                     <TableRow key={row.idagenda}>
-                      <TableCell style={{ width: 70 }}>{row.strhora}</TableCell>
+                      <TableCell
+                        style={{
+                          width: 70,
+                        }}
+                        className={RetornaClasseAgenda(row.cancelado)}
+                      >
+                        {row.strhora}
+                      </TableCell>
                       <TableCell style={{ width: 70 }}>
                         <Avatar src={row.strfoto}></Avatar>
                       </TableCell>
-                      <TableCell align="left" style={{ width: 70 }}>
+                      <TableCell
+                        align="left"
+                        style={{ width: 70 }}
+                        className={RetornaClasseAgenda(row.cancelado)}
+                      >
                         {row.idaluno}
                       </TableCell>
-                      <TableCell align="left">{row.aluno}</TableCell>
-                      <TableCell align="left">{row.professor}</TableCell>
-                      <TableCell style={{ width: 60 }} align="left">
-                        <IconButton
-                          color="primary"
-                          aria-label="Remove Agenda"
-                          component="span"
-                          onClick={() => handleClickCancelaAgenda(row.idagenda)}
-                        >
-                          <EventBusyIcon />
-                        </IconButton>
+                      <TableCell
+                        align="left"
+                        className={RetornaClasseAgenda(row.cancelado)}
+                      >
+                        {row.aluno}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        className={RetornaClasseAgenda(row.cancelado)}
+                      >
+                        {row.professor}
                       </TableCell>
                       <TableCell style={{ width: 60 }} align="left">
-                        <IconButton
-                          color="primary"
-                          aria-label="Remove Agenda"
-                          component="span"
-                          //   onClick={() => handleClickOpen(row.idaluno, row.nome)}
-                        >
-                          <DeleteForeverIcon />
-                        </IconButton>
+                        {row.cancelado == 0 && (
+                          <IconButton
+                            color="primary"
+                            aria-label="Remove Agenda"
+                            component="span"
+                            disabled={promiseInProgress || carregaPlanilha}
+                            onClick={() =>
+                              handleClickCancelaAgenda(row.idagenda)
+                            }
+                          >
+                            <EventBusyIcon />
+                          </IconButton>
+                        )}
+                      </TableCell>
+                      <TableCell style={{ width: 60 }} align="left">
+                        {row.cancelado == 0 && (
+                          <IconButton
+                            color="primary"
+                            aria-label="Remove Agenda"
+                            component="span"
+                            disabled={promiseInProgress || carregaPlanilha}
+                            onClick={() => {
+                              setopenDialogoExc(true);
+                              setvalueIDAgendaExclusao(row.idagenda);
+                              settextoExc(
+                                "Confirma a exclusão da aula às " +
+                                  row.strhora +
+                                  " agendado para o aluno " +
+                                  row.aluno +
+                                  " com o professor " +
+                                  row.professor +
+                                  " ? "
+                              );
+                            }}
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -676,7 +865,7 @@ export default function AgendaLista() {
                 <Button
                   variant="outlined"
                   color="secondary"
-                  onClick={() => setopenModal(false)}
+                  onClick={() => handleClickCancelaAgendaConfirmacao()}
                 >
                   Desmarcar
                 </Button>
@@ -694,6 +883,36 @@ export default function AgendaLista() {
           </div>
         </Fade>
       </Modal>
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <Alert onClose={handleCloseError} severity="error">
+          Não foi possível realizar a operação. Contacte o desenvolvedor
+        </Alert>
+      </Snackbar>
+      <Dialog
+        open={openDialogoExc}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Atenção"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {textoExc}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Desistir
+          </Button>
+          <Button onClick={handleClickDelete} color="primary">
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </React.Fragment>
   );
 }

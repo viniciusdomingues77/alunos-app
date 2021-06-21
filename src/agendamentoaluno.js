@@ -366,11 +366,7 @@ export default function Agendamento() {
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={12}></Grid>
-          <Grid item xs={12}>
-            {/* {promiseInProgress && (
-              <BarraProgresso titulo={TextoBarraProgresso} />
-            )} */}
-          </Grid>
+          <Grid item xs={12}></Grid>
           <Grid item xs={12}></Grid>
           <Grid item xs={6}>
             <Button
