@@ -25,7 +25,7 @@ import logo from "./logomarcio.jpg";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import Aluno from "./aluno";
 import Agenda from "./agenda";
-
+import Prontuario from "./prontuario";
 import Home from "./home";
 const drawerWidth = 240;
 
@@ -174,11 +174,16 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText primary="Agenda" />
             </ListItem>
-            <ListItem button key={"Agenda"}>
+            <ListItem
+              button
+              key={"Prontuario"}
+              component={Link}
+              to={"/prontuario"}
+            >
               <ListItemIcon>
                 <LocalLibraryIcon></LocalLibraryIcon>
               </ListItemIcon>
-              <ListItemText primary="Prontuário" />
+              <ListItemText primary="Prontuario" />
             </ListItem>
           </List>
         </Drawer>
@@ -189,6 +194,7 @@ export default function MiniDrawer() {
             <Route exact path="/" render={() => <Home />} />
             <Route path="/aluno" render={() => <Aluno />} />
             <Route path="/agenda" render={() => <Agenda />} />
+            <Route path="/prontuario" render={() => <Prontuario />} />
           </Switch>
         </main>
       </BrowserRouter>
