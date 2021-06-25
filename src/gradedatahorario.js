@@ -5,12 +5,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 
+import Typography from "@material-ui/core/Typography";
 import {
   action,
   AppState,
   store,
   SetIDAgendaSelProntuarioAction,
   SetIDAlunoSelProntuarioAction,
+  SetDataSelProntuarioAction,
+  SetFotoSelProntuarioAction,
 } from "./ConfigSate";
 const useStyles = makeStyles({
   root: {
@@ -24,10 +27,14 @@ const useStyles = makeStyles({
   boxcalendar: {
     color: "white",
     fontSize: "15px",
+    // borderStyle: "solid",
+    // borderWidth: "thin",
+    // borderColor: "#3c52b2",
   },
   btncalendar: {
-    background: "#7A8889",
+    background: "#306898",
     borderRadius: "3px",
+
     fontSize: "11px",
     border: "0",
     color: "white",
@@ -43,6 +50,7 @@ export default function AgendasAluno() {
   const classes = useStyles();
   const [Agendas, setAgendas] = React.useState([]);
   const { promiseInProgress } = usePromiseTracker();
+  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
   const idagenda = useSelector(
     (state) => state.configuracoes.IDAgendaSelProntuario
   );
@@ -50,13 +58,12 @@ export default function AgendasAluno() {
     (state) => state.configuracoes.IDAlunoSelProntuario
   );
   const dispatch = useDispatch();
-  const SelIdAgenda = (idagenda) => {
+  const SelIdAgenda = (idagenda, data) => {
     dispatch(SetIDAgendaSelProntuarioAction(idagenda));
+    dispatch(SetDataSelProntuarioAction(new Date(data)));
   };
 
   React.useEffect(() => {
-    //setTextoBarraProgresso("Listando alunos");
-
     const apiUrl = `https://localhost:44363/api/agenda/agendas/` + idaluno;
     trackPromise(
       fetch(apiUrl)
@@ -76,6 +83,25 @@ export default function AgendasAluno() {
           //setOpenError(true);
         })
     );
+    const apiUrl2 = `https://localhost:44363/api/aluno/foto/` + idaluno;
+    trackPromise(
+      fetch(apiUrl2)
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response;
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          dispatch(SetFotoSelProntuarioAction(data.foto));
+        })
+        .catch(function (error) {
+          console.log("catch error" + error);
+          //setOpenError(true);
+        })
+    );
   }, [idaluno]);
 
   return (
@@ -89,6 +115,8 @@ export default function AgendasAluno() {
         m={0}
         bgcolor="background.paper"
       >
+        {idaluno == 0 && <Typography variant="h5">Agenda do aluno</Typography>}
+
         {Agendas.map((agenda) => (
           <Box
             className={classes.boxcalendar}
@@ -96,7 +124,7 @@ export default function AgendasAluno() {
           >
             <Button
               className={classes.btncalendar}
-              onClick={() => SelIdAgenda(agenda.idagenda)}
+              onClick={() => SelIdAgenda(agenda.idagenda, agenda.data)}
             >
               {agenda.strData} <br /> {agenda.strHora}
               <br />

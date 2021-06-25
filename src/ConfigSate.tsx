@@ -3,6 +3,8 @@ import { Store, createStore, combineReducers, applyMiddleware } from "redux";
 interface ConfigState {
   readonly IDAgendaSelProntuario: number;
   readonly IDAlunoSelProntuario: number;
+  readonly DataSelProntuario: Date;
+  readonly FotoAlunoSelProntuario: string;
 }
 
 export interface AppState {
@@ -12,6 +14,8 @@ export interface AppState {
 const initialConfigState: ConfigState = {
   IDAgendaSelProntuario: 0,
   IDAlunoSelProntuario: 0,
+  DataSelProntuario: new Date(),
+  FotoAlunoSelProntuario: "",
 };
 
 export const GETTINCONFIG = "GettingConfig";
@@ -34,10 +38,26 @@ export const SetIDAlunoSelProntuarioAction = (idaluno: number) =>
     idaluno: idaluno,
   } as const);
 
+export const SETDATASELPRONTUARIO = "DataSelProntuario";
+export const SetDataSelProntuarioAction = (data: Date) =>
+  ({
+    type: SETDATASELPRONTUARIO,
+    data: data,
+  } as const);
+
+export const SETFOTOSELPRONTUARIO = "FotoSelProntuario";
+export const SetFotoSelProntuarioAction = (foto: string) =>
+  ({
+    type: SETFOTOSELPRONTUARIO,
+    foto: foto,
+  } as const);
+
 type ConfigActions =
   | ReturnType<typeof gettingConfigAction>
   | ReturnType<typeof SetIDAgendaSelProntuarioAction>
-  | ReturnType<typeof SetIDAlunoSelProntuarioAction>;
+  | ReturnType<typeof SetIDAlunoSelProntuarioAction>
+  | ReturnType<typeof SetDataSelProntuarioAction>
+  | ReturnType<typeof SetFotoSelProntuarioAction>;
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
@@ -56,6 +76,18 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
       return {
         ...state,
         IDAlunoSelProntuario: action.idaluno,
+      };
+    }
+    case SETDATASELPRONTUARIO: {
+      return {
+        ...state,
+        DataSelProntuario: action.data,
+      };
+    }
+    case SETFOTOSELPRONTUARIO: {
+      return {
+        ...state,
+        FotoAlunoSelProntuario: action.foto,
       };
     }
   }

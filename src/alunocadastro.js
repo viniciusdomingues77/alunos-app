@@ -325,7 +325,7 @@ export default function AlunoCadastro() {
                 direction="column"
                 className={classes.AlunoFoto}
               >
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ justifyContent: "center" }}>
                   <Avatar
                     className={classes.avatar}
                     src={selectedFile}
