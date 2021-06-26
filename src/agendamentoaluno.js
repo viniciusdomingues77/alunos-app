@@ -29,6 +29,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -227,7 +228,7 @@ export default function Agendamento() {
   React.useLayoutEffect(() => {
     console.log("promiseInProgress " + promiseInProgress);
     if (!promiseInProgress) {
-      if (SubmitSuccess > 1) {
+      if (SubmitSuccess > 0) {
         setOpenSuccess({ open: true, vertical: "top", horizontal: "center" });
       } else {
         if (SubmitSuccess == -1) {
@@ -308,17 +309,22 @@ export default function Agendamento() {
     setopenDialogoConf(true);
   };
   const HandleSaveClick = () => {
-    // if (!ValidaCampos()) {
-    //   return;
-    // }
     setSubmitSuccess(0);
     setOpenError(false);
+    var url = "";
+    if (MarcacaoSemestral === true) {
+      url = "https://localhost:44363/api/agenda/semestre/";
+    } else {
+      url = "https://localhost:44363/api/agenda/";
+    }
+
     var idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
     var idprofessor = Professor.substring(0, Professor.indexOf("-")).trim();
     console.log("idaluno " + idaluno);
     console.log("idprofessor " + idprofessor);
     console.log("date " + selectedDate);
     console.log("hour " + selectedHour);
+
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -332,7 +338,7 @@ export default function Agendamento() {
     };
     setTextoBarraProgresso("Agendando");
     trackPromise(
-      fetch("https://localhost:44363/api/agenda/", requestOptions)
+      fetch(url, requestOptions)
         .then((response) => {
           if (!response.ok) {
             throw Error(response.statusText);
@@ -348,6 +354,7 @@ export default function Agendamento() {
           setOpenError(true);
         })
     );
+    setopenDialogoConf(false);
   };
 
   const handleCloseError = (event, reason) => {

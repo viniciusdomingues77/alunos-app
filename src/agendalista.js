@@ -44,7 +44,8 @@ import Fade from "@material-ui/core/Fade";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-
+import Link from "@material-ui/core/Link";
+import AgendasdoAluno from "./agendasdoaluno";
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -342,7 +343,7 @@ export default function AgendaLista() {
   }, [carregaPlanilha]);
   const [openDialogoExc, setopenDialogoExc] = React.useState(false);
   const [Alunos, setAlunos] = React.useState([]);
-  const [Aluno, setAluno] = React.useState("");
+  const [Aluno, setAluno] = React.useState(null);
   const [professores, setProfessores] = React.useState([]);
   React.useEffect(() => {
     setTextoBarraProgresso("Listando agendamentos");
@@ -492,6 +493,9 @@ export default function AgendaLista() {
     }
     setOpenError(false);
   };
+  const handleClickAgendasAluno = () => {
+    <AgendasdoAluno open={true} />;
+  };
   const handleClickDelete = () => {
     setopenDialogoExc(false);
     const requestOptions = {
@@ -601,7 +605,7 @@ export default function AgendaLista() {
               )}
             />
           </Grid>
-          <Grid item xs={6}></Grid>
+          <Grid item xs={12}></Grid>
           <Grid
             item
             xs={12}
@@ -668,6 +672,22 @@ export default function AgendaLista() {
                 />
               )}
             />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: 30,
+              marginLeft: 10,
+            }}
+          >
+            {Aluno != null && (
+              <Link href="#" onClick={handleClickAgendasAluno}>
+                Agendas do aluno
+              </Link>
+            )}
           </Grid>
         </Grid>
 
