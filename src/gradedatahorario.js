@@ -15,6 +15,7 @@ import {
   SetDataSelProntuarioAction,
   SetFotoSelProntuarioAction,
 } from "./ConfigSate";
+import { isClassExpression } from "typescript";
 const useStyles = makeStyles({
   root: {
     boxShadow:
@@ -43,6 +44,10 @@ const useStyles = makeStyles({
       backgroundColor: "#fff",
       color: "#3c52b2",
     },
+  },
+  divCabecalhoCalendario: {
+    background: "white",
+    width: "100%",
   },
 });
 
@@ -106,6 +111,12 @@ export default function AgendasAluno() {
 
   return (
     <div className={classes.root}>
+      <div className={classes.divCabecalhoCalendario}>
+        <Typography variant="overline" style={{ color: "#306898" }}>
+          Agendas do aluno
+        </Typography>
+      </div>
+
       <Box
         flexWrap="wrap"
         display="flex"
@@ -115,7 +126,7 @@ export default function AgendasAluno() {
         m={0}
         bgcolor="background.paper"
       >
-        {idaluno == 0 && <Typography variant="h5">Agenda do aluno</Typography>}
+        {/* {idaluno == 0 && <Typography variant="h5">Agenda do aluno</Typography>} */}
 
         {Agendas.map((agenda) => (
           <Box

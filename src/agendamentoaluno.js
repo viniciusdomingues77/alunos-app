@@ -22,6 +22,13 @@ import BarraProgressoFixa from "./barraprogressofixa";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -45,6 +52,11 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  divDiaSemana: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
 }));
 export default function Agendamento() {
   const classes = useStyles();
@@ -64,8 +76,17 @@ export default function Agendamento() {
   const [openModal, setopenModal] = React.useState(false);
   const [HorarioOcupado, setHorarioOcupado] = React.useState(false);
   const [Professor, setProfessor] = React.useState("");
+  const [DiaSemanaExt, setDiaSemanaExt] = React.useState("");
   const { promiseInProgress } = usePromiseTracker();
+  const [MarcacaoSemestral, setMarcacaoSemestral] = React.useState(false);
+  const [textoConfirmaAgendamento, settextoConfirmaAgendamento] =
+    React.useState("");
   const { openErr } = openError;
+  const [openDialogoConf, setopenDialogoConf] = React.useState(false);
+  const handleChangeMarcacaoSemestral = (event) => {
+    setMarcacaoSemestral(event.target.checked);
+  };
+
   React.useEffect(() => {
     setTextoBarraProgresso("Listando alunos e professores");
     const apiUrl = `https://localhost:44363/api/aluno/identificacao`;
@@ -107,6 +128,7 @@ export default function Agendamento() {
           setOpenError(true);
         })
     );
+    setDiaSemanaExt(DiaDaSemana(new Date()));
   }, []);
   function ClearFields() {
     setAluno("");
@@ -116,8 +138,82 @@ export default function Agendamento() {
   }
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    setDiaSemanaExt(DiaDaSemana(date));
   };
 
+  function DiaDaSemana(date) {
+    var numdiasemana = date.getDay();
+    var diasemana = "";
+    switch (numdiasemana) {
+      case 0:
+        diasemana = "Domingo";
+        break;
+      case 1:
+        diasemana = "Segunda feira";
+        break;
+      case 2:
+        diasemana = "Terça feira";
+        break;
+      case 3:
+        diasemana = "Quarta feira";
+        break;
+      case 4:
+        diasemana = "Quinta feira";
+        break;
+      case 5:
+        diasemana = "Sexta feira";
+        break;
+      case 6:
+        diasemana = "Sabado";
+        break;
+
+      default:
+    }
+    return diasemana;
+  }
+
+  function MesporExtenso(nummes) {
+    switch (nummes) {
+      case 0:
+        return "Janeiro";
+        break;
+      case 1:
+        return "Fevereiro";
+        break;
+      case 2:
+        return "Março";
+        break;
+      case 3:
+        return "Abril";
+        break;
+      case 4:
+        return "Maio";
+        break;
+      case 5:
+        return "Junho";
+        break;
+      case 6:
+        return "Julho";
+        break;
+      case 7:
+        return "Agosto";
+        break;
+      case 8:
+        return "Setembro";
+        break;
+      case 9:
+        return "Outubro";
+        break;
+      case 10:
+        return "Novembro";
+        break;
+      case 11:
+        return "Dezembro";
+        break;
+
+      default:
+    }
+  }
   const handleHourChange = (hour) => {
     setSelectedHour(hour);
   };
@@ -185,11 +281,36 @@ export default function Agendamento() {
 
     return !camposinvalidos;
   }
-
-  const HandleSaveClick = () => {
+  const handleClickConfirmar = () => {
     if (!ValidaCampos()) {
       return;
     }
+
+    var minutes = selectedHour.getMinutes();
+    var hour = selectedHour.getHours();
+    var hora = hour + ":" + minutes;
+    if (MarcacaoSemestral === true) {
+      var msg =
+        "O aluno será agendado para " +
+        DiaSemanaExt +
+        " às " +
+        hora +
+        " para os próximos seis meses. Confirma?";
+    } else {
+      var ano = selectedDate.getFullYear();
+      var mes = MesporExtenso(selectedDate.getMonth());
+      var dia = selectedDate.getDate();
+      var dt = dia + " de " + mes + " de " + ano;
+      var msg =
+        "O aluno será agendado para " + dt + " às " + hora + " Confirma?";
+    }
+    settextoConfirmaAgendamento(msg);
+    setopenDialogoConf(true);
+  };
+  const HandleSaveClick = () => {
+    // if (!ValidaCampos()) {
+    //   return;
+    // }
     setSubmitSuccess(0);
     setOpenError(false);
     var idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
@@ -206,6 +327,7 @@ export default function Agendamento() {
         idprofessor: idprofessor,
         data: selectedDate,
         hora: selectedHour,
+        agendarsemestre: MarcacaoSemestral,
       }),
     };
     setTextoBarraProgresso("Agendando");
@@ -242,6 +364,9 @@ export default function Agendamento() {
   };
   const handleCloseModal = (event, reason) => {
     setopenModal(false);
+  };
+  const handleCloseConf = () => {
+    setopenDialogoConf(false);
   };
   return (
     <React.Fragment>
@@ -342,6 +467,7 @@ export default function Agendamento() {
                 Indique a data
               </FormHelperText>
             )}
+            <div className={classes.divDiaSemana}>{DiaSemanaExt}</div>
           </Grid>
           <Grid item xs={2}></Grid>
           <Grid item xs={3}>
@@ -366,7 +492,20 @@ export default function Agendamento() {
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={12}></Grid>
-          <Grid item xs={12}></Grid>
+          <Grid item xs={6}></Grid>
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={MarcacaoSemestral}
+                  onChange={handleChangeMarcacaoSemestral}
+                  name="chkSemestral"
+                  color="primary"
+                />
+              }
+              label="Agendar Semestre"
+            />
+          </Grid>
           <Grid item xs={12}></Grid>
           <Grid item xs={6}>
             <Button
@@ -375,7 +514,7 @@ export default function Agendamento() {
               color="primary"
               size="large"
               startIcon={<SaveIcon />}
-              onClick={HandleSaveClick}
+              onClick={handleClickConfirmar}
             >
               Salvar
             </Button>
@@ -436,6 +575,27 @@ export default function Agendamento() {
           </div>
         </Fade>
       </Modal>
+      <Dialog
+        open={openDialogoConf}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Atenção"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {textoConfirmaAgendamento}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConf} color="primary">
+            Desistir
+          </Button>
+          <Button onClick={HandleSaveClick} color="primary">
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </React.Fragment>
   );
 }
