@@ -45,7 +45,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Link from "@material-ui/core/Link";
-import AgendasdoAluno from "./agendasdoaluno";
+import HistoricoAgendasAluno from "./agendasdoaluno";
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -165,7 +165,7 @@ export default function AgendaLista() {
   const [openError, setOpenError] = React.useState(false);
   const { promiseInProgress } = usePromiseTracker();
   const [Professor, setProfessor] = React.useState("");
-  const [SelAluno, setSelAluno] = React.useState(false);
+  const [IDAluno, setIDAluno] = React.useState(0);
   const [openModal, setopenModal] = React.useState(false);
   const [carregaPlanilha, setcarregaPlanilha] = React.useState(false);
   const [ModalTexto, setModalTexto] = React.useState("");
@@ -201,41 +201,39 @@ export default function AgendaLista() {
     switch (nummes) {
       case 0:
         return "Janeiro";
-        break;
+
       case 1:
         return "Fevereiro";
-        break;
+
       case 2:
         return "Março";
-        break;
+
       case 3:
         return "Abril";
-        break;
+
       case 4:
         return "Maio";
-        break;
+
       case 5:
         return "Junho";
-        break;
+
       case 6:
         return "Julho";
-        break;
+
       case 7:
         return "Agosto";
-        break;
+
       case 8:
         return "Setembro";
-        break;
+
       case 9:
         return "Outubro";
-        break;
+
       case 10:
         return "Novembro";
-        break;
+
       case 11:
         return "Dezembro";
-        break;
-
       default:
     }
   }
@@ -345,6 +343,8 @@ export default function AgendaLista() {
   const [Alunos, setAlunos] = React.useState([]);
   const [Aluno, setAluno] = React.useState(null);
   const [professores, setProfessores] = React.useState([]);
+  const [Agendas, setAgendas] = React.useState([]);
+  const [openAgendasAluno, setopenAgendasAluno] = React.useState(false);
   React.useEffect(() => {
     setTextoBarraProgresso("Listando agendamentos");
     const apiUrla = `https://localhost:44363/api/aluno/identificacao`;
@@ -493,8 +493,11 @@ export default function AgendaLista() {
     }
     setOpenError(false);
   };
+  const handleCloseAgendasAluno = () => {
+    setopenAgendasAluno(false);
+  };
   const handleClickAgendasAluno = () => {
-    <AgendasdoAluno open={true} />;
+    setopenAgendasAluno(true);
   };
   const handleClickDelete = () => {
     setopenDialogoExc(false);
@@ -552,6 +555,7 @@ export default function AgendaLista() {
                 if (newValue) {
                   idaluno = newValue.substring(0, newValue.indexOf("-")).trim();
                 }
+                setIDAluno(idaluno);
                 var idprofessor = "0";
                 if (Professor) {
                   if (Professor.length > 0) {
@@ -932,6 +936,16 @@ export default function AgendaLista() {
             Confirmar
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog
+        onClose={handleCloseAgendasAluno}
+        aria-labelledby="simple-dialog-title"
+        open={openAgendasAluno}
+      >
+        <DialogTitle id="simple-dialog-title"></DialogTitle>
+        <DialogContentText>
+          <HistoricoAgendasAluno idaluno={IDAluno} />
+        </DialogContentText>
       </Dialog>
     </React.Fragment>
   );
