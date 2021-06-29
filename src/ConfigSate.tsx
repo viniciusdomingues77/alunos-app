@@ -1,104 +1,120 @@
-import { Store, createStore, combineReducers, applyMiddleware } from "redux";
+import { Store, createStore, combineReducers, applyMiddleware } from 'redux'
 
 interface ConfigState {
-  readonly IDAgendaSelProntuario: number;
-  readonly IDAlunoSelProntuario: number;
-  readonly DataSelProntuario: Date;
-  readonly FotoAlunoSelProntuario: string;
+  readonly IDAgendaSelProntuario: number
+  readonly IDAlunoSelProntuario: number
+  readonly DataSelProntuario: Date
+  readonly FotoAlunoSelProntuario: string
+  readonly AgendaCancelada: boolean
 }
 
 export interface AppState {
-  readonly configuracoes: ConfigState;
+  readonly configuracoes: ConfigState
 }
 
 const initialConfigState: ConfigState = {
   IDAgendaSelProntuario: 0,
   IDAlunoSelProntuario: 0,
   DataSelProntuario: new Date(),
-  FotoAlunoSelProntuario: "",
-};
+  FotoAlunoSelProntuario: '',
+  AgendaCancelada: false
+}
 
-export const GETTINCONFIG = "GettingConfig";
+export const GETTINCONFIG = 'GettingConfig'
 export const gettingConfigAction = () =>
   ({
-    type: GETTINCONFIG,
-  } as const);
+    type: GETTINCONFIG
+  } as const)
 
-export const SETIDAGENDASELPRONTUARIO = "IDAgendaSelProntuario";
+export const SETIDAGENDASELPRONTUARIO = 'IDAgendaSelProntuario'
 export const SetIDAgendaSelProntuarioAction = (idagenda: number) =>
   ({
     type: SETIDAGENDASELPRONTUARIO,
-    idagenda: idagenda,
-  } as const);
+    idagenda: idagenda
+  } as const)
 
-export const SETIDALUNOSELPRONTUARIO = "IDAlunoSelProntuario";
+export const SETIDALUNOSELPRONTUARIO = 'IDAlunoSelProntuario'
 export const SetIDAlunoSelProntuarioAction = (idaluno: number) =>
   ({
     type: SETIDALUNOSELPRONTUARIO,
-    idaluno: idaluno,
-  } as const);
+    idaluno: idaluno
+  } as const)
 
-export const SETDATASELPRONTUARIO = "DataSelProntuario";
+export const SETDATASELPRONTUARIO = 'DataSelProntuario'
 export const SetDataSelProntuarioAction = (data: Date) =>
   ({
     type: SETDATASELPRONTUARIO,
-    data: data,
-  } as const);
+    data: data
+  } as const)
 
-export const SETFOTOSELPRONTUARIO = "FotoSelProntuario";
+export const SETFOTOSELPRONTUARIO = 'FotoSelProntuario'
 export const SetFotoSelProntuarioAction = (foto: string) =>
   ({
     type: SETFOTOSELPRONTUARIO,
-    foto: foto,
-  } as const);
+    foto: foto
+  } as const)
+
+export const SETAGENDACANCELADA = 'AgendaCancelada'
+export const SetAgendaCanceladaAction = (cancelada: boolean) =>
+  ({
+    type: SETAGENDACANCELADA,
+    cancelada: cancelada
+  } as const)
 
 type ConfigActions =
   | ReturnType<typeof gettingConfigAction>
   | ReturnType<typeof SetIDAgendaSelProntuarioAction>
   | ReturnType<typeof SetIDAlunoSelProntuarioAction>
   | ReturnType<typeof SetDataSelProntuarioAction>
-  | ReturnType<typeof SetFotoSelProntuarioAction>;
+  | ReturnType<typeof SetFotoSelProntuarioAction>
+  | ReturnType<typeof SetAgendaCanceladaAction>
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
     case GETTINCONFIG: {
       return {
-        ...state,
-      };
+        ...state
+      }
     }
     case SETIDAGENDASELPRONTUARIO: {
       return {
         ...state,
-        IDAgendaSelProntuario: action.idagenda,
-      };
+        IDAgendaSelProntuario: action.idagenda
+      }
     }
     case SETIDALUNOSELPRONTUARIO: {
       return {
         ...state,
-        IDAlunoSelProntuario: action.idaluno,
-      };
+        IDAlunoSelProntuario: action.idaluno
+      }
     }
     case SETDATASELPRONTUARIO: {
       return {
         ...state,
-        DataSelProntuario: action.data,
-      };
+        DataSelProntuario: action.data
+      }
     }
     case SETFOTOSELPRONTUARIO: {
       return {
         ...state,
-        FotoAlunoSelProntuario: action.foto,
-      };
+        FotoAlunoSelProntuario: action.foto
+      }
+    }
+    case SETAGENDACANCELADA: {
+      return {
+        ...state,
+        AgendaCancelada: action.cancelada
+      }
     }
   }
 
-  return state;
-};
+  return state
+}
 
 const rootReducer = combineReducers<AppState>({
-  configuracoes: configReducer,
-});
+  configuracoes: configReducer
+})
 
-export const store = createStore(rootReducer);
+export const store = createStore(rootReducer)
 
-export const action = (type: any) => store.dispatch({ type });
+export const action = (type: any) => store.dispatch({ type })

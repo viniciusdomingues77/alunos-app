@@ -22,6 +22,8 @@ import BarraProgressoFixa from './barraprogressofixa'
 import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
 import { Alert } from '@material-ui/lab'
+import { useSelector, useDispatch } from 'react-redux'
+import { action, AppState, store, SetAgendaCanceladaAction } from './ConfigSate'
 const useStyles = makeStyles(theme => ({
   avatar: {
     width: theme.spacing(6),
@@ -56,7 +58,7 @@ export default function HistoricoAgendasAluno (props) {
   const [valueCancelamento, setValueCancelamento] = React.useState('')
   const [openModal, setopenModal] = React.useState(false)
   const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState('')
-
+  const dispatch = useDispatch()
   const classes = useStyles()
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -90,6 +92,7 @@ export default function HistoricoAgendasAluno (props) {
   }
 
   const handleClickCancelaAgendaConfirmacao = () => {
+    dispatch(SetAgendaCanceladaAction(false))
     var idsstr = select.toString()
     var ids = idsstr.split(',')
     setopenModal(false)
@@ -125,6 +128,7 @@ export default function HistoricoAgendasAluno (props) {
     setOpenError(false)
   }
   React.useEffect(() => {
+    dispatch(SetAgendaCanceladaAction(false))
     setTextoBarraProgresso('Carregando')
     const apiUrla =
       `https://localhost:44363/api/agenda/todasasagendas/` + props.idaluno
@@ -190,6 +194,7 @@ export default function HistoricoAgendasAluno (props) {
             setOpenError(true)
           })
       )
+      dispatch(SetAgendaCanceladaAction(true))
       setCancelando(false)
     }
   }, [Cancelando])

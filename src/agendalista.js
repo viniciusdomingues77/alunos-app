@@ -48,6 +48,8 @@ import Link from '@material-ui/core/Link'
 import HistoricoAgendasAluno from './agendasdoaluno'
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation'
 import CloseIcon from '@material-ui/icons/Close'
+import { useSelector, useDispatch } from 'react-redux'
+import { action, AppState, store } from './ConfigSate'
 const useStyles1 = makeStyles(theme => ({
   root: {
     flexShrink: 0,
@@ -181,6 +183,9 @@ export default function AgendaLista () {
   }
   const [valueAgendaCancelada, setvalueAgendaCancelada] = React.useState(false)
   const [Exclusao, setExclusao] = React.useState(false)
+  const AgendaCancelada = useSelector(
+    state => state.configuracoes.AgendaCancelada
+  )
   function DataparaParametro () {
     return (
       valueDay.getFullYear() +
@@ -341,6 +346,54 @@ export default function AgendaLista () {
       setvalueAgendaCancelada(false)
     }
   }, [carregaPlanilha])
+
+  React.useEffect(() => {
+    var idaluno = '0'
+
+    if (AgendaCancelada === true) {
+      if (Aluno) {
+        if (Aluno.length > 0) {
+          idaluno = Aluno.substring(0, Aluno.indexOf('-')).trim()
+        }
+      }
+      var idprofessor = '0'
+      if (Professor) {
+        if (Professor.length > 0) {
+          idprofessor = Professor.substring(0, Professor.indexOf('-')).trim()
+        }
+      }
+
+      setTextoBarraProgresso('Listando agendamentos')
+      const apiUrl =
+        `https://localhost:44363/api/agenda/agenda/` +
+        DataparaParametroPar(valueDay) +
+        '/' +
+        idaluno +
+        '/' +
+        idprofessor
+      trackPromise(
+        fetch(apiUrl)
+          .then(response => {
+            if (!response.ok) {
+              throw Error(response.statusText)
+            }
+            return response
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            setAgendados(data)
+            setcarregaPlanilha(false)
+          })
+          .catch(function (error) {
+            console.log('catch error' + error)
+            setOpenError(true)
+            setcarregaPlanilha(false)
+          })
+      )
+    }
+  }, [AgendaCancelada])
+
   const [openDialogoExc, setopenDialogoExc] = React.useState(false)
   const [Alunos, setAlunos] = React.useState([])
   const [Aluno, setAluno] = React.useState(null)
