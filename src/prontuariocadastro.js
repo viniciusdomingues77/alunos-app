@@ -9,12 +9,15 @@ import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Avatar from '@material-ui/core/Avatar'
+
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation'
 import {
   action,
   AppState,
   store,
-  SetIDAlunoSelProntuarioAction
+  SetIDAgendaSelProntuarioAction,
+  SetIDAlunoSelProntuarioAction,
+  SetIDProfessorSelProntuarioAction
 } from './ConfigSate'
 import ReactDOM from 'react-dom'
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
@@ -57,7 +60,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#ECF0F1',
     padding: '1rem',
     border: '1px solid #306898s',
-    height: '300px'
+    height: '300px',
+    minHeight: '300px'
   },
   toolbarclass: {
     border: '1px solid #ccc'
@@ -157,6 +161,12 @@ export default function ProntuarioCadastro () {
     setTextoBarraProgresso('Carregando agendas do aluno')
     dispatch(SetIDAlunoSelProntuarioAction(idaluno))
   }
+
+  const SelIdProfessor = idprofessor => {
+    setTextoBarraProgresso('Carregando agendas do aluno')
+    dispatch(SetIDProfessorSelProntuarioAction(idprofessor))
+  }
+
   const SalvarProntuario = () => {
     var texto = JSON.stringify(convertToRaw(editorState.getCurrentContent()))
 
@@ -188,6 +198,7 @@ export default function ProntuarioCadastro () {
   }
 
   React.useEffect(() => {
+    setdataExt('')
     setTextoBarraProgresso('Listando alunos')
     const apiUrl = `https://localhost:44363/api/aluno/identificacao`
     trackPromise(
@@ -230,10 +241,8 @@ export default function ProntuarioCadastro () {
   }, [])
 
   React.useEffect(() => {
-    if (idagendasel == 0) {
-      return
-    }
-
+   
+    setdataExt('')
     setTextoBarraProgresso('Carregando prontuário')
     const apiUrl2 =
       `https://localhost:44363/api/prontuario?idagenda=` + idagendasel
@@ -261,7 +270,11 @@ export default function ProntuarioCadastro () {
           } else {
             setEditorState(EditorState.createEmpty())
           }
-          setdataExt(DataporExtenso(datasel))
+          if (idagendasel) {
+            if (idagendasel > 0) {
+              setdataExt(DataporExtenso(datasel))
+            }
+          }
         })
         .catch(function (error) {
           console.log('catch error' + error)
@@ -285,33 +298,6 @@ export default function ProntuarioCadastro () {
             <Grid container spacing={3} direction='column'>
               <Grid item xs={12}>
                 <Autocomplete
-                  value={Professor}
-                  id='autocomplete'
-                  onChange={(event, newValue) => {
-                    setProfessor(newValue)
-                    if (newValue) {
-                    }
-                  }}
-                  options={professores.map(
-                    professor => `${professor.idprofessor} - ${professor.nome}`
-                  )}
-                  getOptionSelected={(option, value) => {
-                    return option === value
-                  }}
-                  style={{ width: '100%', marginBottom: 5 }}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      label='Professor'
-                      required
-                      autoFocus
-                      variant='outlined'
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
                   value={Aluno}
                   id='autocomplete'
                   onChange={(event, newValue) => {
@@ -324,6 +310,7 @@ export default function ProntuarioCadastro () {
                         .trim()
                     }
                     SelIdAluno(idaluno)
+                    dispatch(SetIDAgendaSelProntuarioAction(0))
                   }}
                   options={Alunos.map(
                     aluno => `${aluno.idaluno} - ${aluno.nome}`
@@ -344,7 +331,36 @@ export default function ProntuarioCadastro () {
                 />
               </Grid>
               <Grid item xs={12}>
-                {/* <Avatar className={classes.avatar} src={fotoalunosel}></Avatar> */}
+                <Autocomplete
+                  value={Professor}
+                  id='autocomplete'
+                  onChange={(event, newValue) => {
+                    setProfessor(newValue)
+                    var idprofessor = '0'
+                    if (newValue) {
+                      idprofessor = newValue
+                        .substring(0, newValue.indexOf('-'))
+                        .trim()
+                    }
+                    SelIdProfessor(idprofessor)
+                  }}
+                  options={professores.map(
+                    professor => `${professor.idprofessor} - ${professor.nome}`
+                  )}
+                  getOptionSelected={(option, value) => {
+                    return option === value
+                  }}
+                  style={{ width: '100%', marginBottom: 5 }}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label='Professor'
+                      required
+                      autoFocus
+                      variant='outlined'
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
           </Grid>

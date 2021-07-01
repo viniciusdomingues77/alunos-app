@@ -3,6 +3,7 @@ import { Store, createStore, combineReducers, applyMiddleware } from 'redux'
 interface ConfigState {
   readonly IDAgendaSelProntuario: number
   readonly IDAlunoSelProntuario: number
+  readonly IDProfessorSelProntuario: number
   readonly DataSelProntuario: Date
   readonly FotoAlunoSelProntuario: string
   readonly AgendaCancelada: boolean
@@ -15,6 +16,7 @@ export interface AppState {
 const initialConfigState: ConfigState = {
   IDAgendaSelProntuario: 0,
   IDAlunoSelProntuario: 0,
+  IDProfessorSelProntuario: 0,
   DataSelProntuario: new Date(),
   FotoAlunoSelProntuario: '',
   AgendaCancelada: false
@@ -61,6 +63,13 @@ export const SetAgendaCanceladaAction = (cancelada: boolean) =>
     cancelada: cancelada
   } as const)
 
+export const SETIDPROFESSORSELPRONTUARIO = 'IDProfessorSelProntuario'
+export const SetIDProfessorSelProntuarioAction = (idprofessor: number) =>
+  ({
+    type: SETIDPROFESSORSELPRONTUARIO,
+    idprofessor: idprofessor
+  } as const)
+
 type ConfigActions =
   | ReturnType<typeof gettingConfigAction>
   | ReturnType<typeof SetIDAgendaSelProntuarioAction>
@@ -68,6 +77,7 @@ type ConfigActions =
   | ReturnType<typeof SetDataSelProntuarioAction>
   | ReturnType<typeof SetFotoSelProntuarioAction>
   | ReturnType<typeof SetAgendaCanceladaAction>
+  | ReturnType<typeof SetIDProfessorSelProntuarioAction>
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
@@ -88,6 +98,13 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
         IDAlunoSelProntuario: action.idaluno
       }
     }
+    case SETIDPROFESSORSELPRONTUARIO: {
+      return {
+        ...state,
+        IDProfessorSelProntuario: action.idprofessor
+      }
+    }
+
     case SETDATASELPRONTUARIO: {
       return {
         ...state,
