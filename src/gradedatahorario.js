@@ -12,6 +12,7 @@ import {
   store,
   SetIDAgendaSelProntuarioAction,
   SetIDAlunoSelProntuarioAction,
+  SetNomeAlunoSelProntuarioAction,
   SetDataSelProntuarioAction,
   SetFotoSelProntuarioAction
 } from './ConfigSate'
@@ -67,6 +68,9 @@ export default function AgendasAluno () {
     state => state.configuracoes.IDAgendaSelProntuario
   )
   const idaluno = useSelector(state => state.configuracoes.IDAlunoSelProntuario)
+  const nmaluno = useSelector(
+    state => state.configuracoes.NomeAlunoSelProntuario
+  )
   const idprofessor = useSelector(
     state => state.configuracoes.IDProfessorSelProntuario
   )
@@ -78,9 +82,17 @@ export default function AgendasAluno () {
     dispatch(SetIDAgendaSelProntuarioAction(idagenda))
     dispatch(SetDataSelProntuarioAction(new Date(data)))
   }
+  const LimpaRedux = () => {
+    console.log('LimpaRedux')
+    //dispatch(SetIDAlunoSelProntuarioAction(0))
+    dispatch(SetNomeAlunoSelProntuarioAction(''))
+    //dispatch(SetIDProfessorSelProntuarioAction(0))
+    dispatch(SetFotoSelProntuarioAction(''))
+    dispatch(SetIDAgendaSelProntuarioAction(0))
+  }
 
   const CarregaAgendas = () => {
-    dispatch(SetFotoSelProntuarioAction([]))
+    console.log('carrega agendas')
     var idalunosel = 0
 
     if (idaluno) {
@@ -91,7 +103,7 @@ export default function AgendasAluno () {
     if (idprofessor) {
       idprofessorsel = idprofessor
     }
-
+    console.log('idaluno ' + idaluno)
     const apiUrl =
       `https://localhost:44363/api/agenda/agendas/` +
       idaluno +
@@ -112,9 +124,11 @@ export default function AgendasAluno () {
         })
         .catch(function (error) {
           console.log('catch error' + error)
+          setAgendas([])
           //setOpenError(true);
         })
     )
+
     const apiUrl2 = `https://localhost:44363/api/aluno/foto/` + idaluno
     trackPromise(
       fetch(apiUrl2)
@@ -127,16 +141,30 @@ export default function AgendasAluno () {
         .then(res => res.json())
         .then(data => {
           console.log(data)
+
           dispatch(SetFotoSelProntuarioAction(data.foto))
         })
         .catch(function (error) {
           console.log('catch error' + error)
-
+          dispatch(SetFotoSelProntuarioAction(''))
           //setOpenError(true);
         })
     )
   }
 
+  React.useEffect(() => {
+    if (idaluno == 0) {
+      console.log('aluno zero');
+      dispatch(SetFotoSelProntuarioAction(''))
+      LimpaRedux ()
+      setAgendas([])
+    }
+  })
+
+  React.useEffect(() => {
+    //LimpaRedux()
+    dispatch(SetIDAlunoSelProntuarioAction(0))
+  }, [])
   React.useEffect(() => {
     CarregaAgendas()
   }, [idaluno])
@@ -163,7 +191,8 @@ export default function AgendasAluno () {
             variant='overline'
             style={{ marginLeft: 10, color: 'grey' }}
           >
-            Agendas do aluno
+            {/* Agendas {nmaluno != ''  && (<span>de</span>)} {nmaluno} */}
+            Agendas do Aluno
           </Typography>
         </Box>
       </div>

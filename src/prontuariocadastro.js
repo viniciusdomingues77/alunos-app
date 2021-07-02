@@ -17,7 +17,9 @@ import {
   store,
   SetIDAgendaSelProntuarioAction,
   SetIDAlunoSelProntuarioAction,
-  SetIDProfessorSelProntuarioAction
+  SetIDProfessorSelProntuarioAction,
+  SetNomeAlunoSelProntuarioAction,
+  SetFotoSelProntuarioAction
 } from './ConfigSate'
 import ReactDOM from 'react-dom'
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
@@ -157,9 +159,10 @@ export default function ProntuarioCadastro () {
     return dt
   }
   const dispatch = useDispatch()
-  const SelIdAluno = idaluno => {
+  const SelAluno = (idaluno, nmaluno) => {
     setTextoBarraProgresso('Carregando agendas do aluno')
     dispatch(SetIDAlunoSelProntuarioAction(idaluno))
+    dispatch(SetNomeAlunoSelProntuarioAction(nmaluno))
   }
 
   const SelIdProfessor = idprofessor => {
@@ -196,10 +199,16 @@ export default function ProntuarioCadastro () {
         })
     )
   }
+  React.useEffect(() => {
+    if (idagendasel == 0) {
+      setdataExt('')
+    }
+  })
 
   React.useEffect(() => {
     setdataExt('')
     setTextoBarraProgresso('Listando alunos')
+
     const apiUrl = `https://localhost:44363/api/aluno/identificacao`
     trackPromise(
       fetch(apiUrl)
@@ -241,8 +250,11 @@ export default function ProntuarioCadastro () {
   }, [])
 
   React.useEffect(() => {
-   
-    setdataExt('')
+    // setdataExt('')
+    // if (idagendasel == 0) {
+    //   setEditorState(EditorState.createEmpty())
+    //   return
+    // }
     setTextoBarraProgresso('Carregando prontuário')
     const apiUrl2 =
       `https://localhost:44363/api/prontuario?idagenda=` + idagendasel
@@ -304,12 +316,16 @@ export default function ProntuarioCadastro () {
                     setAluno(newValue)
                     console.log('aluno on change ' + newValue)
                     var idaluno = '0'
+                    var nomealuno = ''
                     if (newValue) {
                       idaluno = newValue
                         .substring(0, newValue.indexOf('-'))
                         .trim()
+                      nomealuno = newValue
+                        .substring(newValue.indexOf('-') + 1, newValue.lenght)
+                        .trim()
                     }
-                    SelIdAluno(idaluno)
+                    SelAluno(idaluno, nomealuno)
                     dispatch(SetIDAgendaSelProntuarioAction(0))
                   }}
                   options={Alunos.map(
@@ -373,7 +389,12 @@ export default function ProntuarioCadastro () {
           xs={12}
           style={{ display: 'flex', justifyContent: 'flex-start' }}
         >
-          <Typography variant='h5' display='block' gutterBottom>
+          <Typography
+            variant='h5'
+            display='block'
+            gutterBottom
+            style={{ minHeight: '40px' }}
+          >
             {dataExt}
           </Typography>
         </Grid>
@@ -399,6 +420,7 @@ export default function ProntuarioCadastro () {
               size='large'
               startIcon={<SaveIcon />}
               onClick={SalvarProntuario}
+              disabled={idalunosel == 0 || idagendasel == 0}
             >
               Salvar
             </Button>

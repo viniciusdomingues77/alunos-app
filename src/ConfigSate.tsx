@@ -3,6 +3,7 @@ import { Store, createStore, combineReducers, applyMiddleware } from 'redux'
 interface ConfigState {
   readonly IDAgendaSelProntuario: number
   readonly IDAlunoSelProntuario: number
+  readonly NomeAlunoSelProntuario: string
   readonly IDProfessorSelProntuario: number
   readonly DataSelProntuario: Date
   readonly FotoAlunoSelProntuario: string
@@ -19,7 +20,8 @@ const initialConfigState: ConfigState = {
   IDProfessorSelProntuario: 0,
   DataSelProntuario: new Date(),
   FotoAlunoSelProntuario: '',
-  AgendaCancelada: false
+  AgendaCancelada: false,
+  NomeAlunoSelProntuario:''
 }
 
 export const GETTINCONFIG = 'GettingConfig'
@@ -41,6 +43,16 @@ export const SetIDAlunoSelProntuarioAction = (idaluno: number) =>
     type: SETIDALUNOSELPRONTUARIO,
     idaluno: idaluno
   } as const)
+
+export const SETNOMEALUNOSELPRONTUARIO = 'NomeAlunoSelProntuario'
+export const SetNomeAlunoSelProntuarioAction = (nmaluno: string) =>
+  ({
+    type: SETNOMEALUNOSELPRONTUARIO,
+    nmaluno: nmaluno
+  } as const)
+
+
+
 
 export const SETDATASELPRONTUARIO = 'DataSelProntuario'
 export const SetDataSelProntuarioAction = (data: Date) =>
@@ -78,6 +90,8 @@ type ConfigActions =
   | ReturnType<typeof SetFotoSelProntuarioAction>
   | ReturnType<typeof SetAgendaCanceladaAction>
   | ReturnType<typeof SetIDProfessorSelProntuarioAction>
+  | ReturnType<typeof SetNomeAlunoSelProntuarioAction>
+  
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
@@ -96,6 +110,12 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
       return {
         ...state,
         IDAlunoSelProntuario: action.idaluno
+      }
+    }
+    case SETNOMEALUNOSELPRONTUARIO: {
+      return {
+        ...state,
+        NomeAlunoSelProntuario: action.nmaluno
       }
     }
     case SETIDPROFESSORSELPRONTUARIO: {
