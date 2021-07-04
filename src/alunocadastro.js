@@ -186,10 +186,10 @@ export default function AlunoCadastro() {
   function handleNomeError() {
     if (Nome.length <= 5) {
       setNomeError(true);
-      // return true;
+      return true;
     } else {
       setNomeError(false);
-      // return false;
+      return false;
     }
   }
 
@@ -201,10 +201,10 @@ export default function AlunoCadastro() {
     console.log("email" + Email);
     if (result) {
       setEmailError(false);
-      // return false;
+      return false;
     } else {
       setEmailError(true);
-      // return true;
+      return true;
     }
   }
 
@@ -214,10 +214,10 @@ export default function AlunoCadastro() {
     var result = validacao.test(DTNascimento);
     if (result) {
       setDTNascimentoError(false);
-      // return false;
+      return false;
     } else {
       setDTNascimentoError(true);
-      // return true;
+      return true;
     }
   }
 
@@ -227,10 +227,10 @@ export default function AlunoCadastro() {
     var result = validacao.test(TelCelular);
     if (result) {
       setTelCelularError(false);
-      // return false;
+      return false;
     } else {
       setTelCelularError(true);
-      // return true;
+      return true;
     }
   }
 
@@ -240,17 +240,17 @@ export default function AlunoCadastro() {
 
     if (!result) {
       setTelFixoError(false);
-      // return false;
+      return false;
     } else {
       var validacao =
         /^(?:(?:\+|00)?(55)\s?)?(?:(?:\(?[1-9][0-9]\)?)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/;
       var result = validacao.test(TelFixo);
       if (result) {
         setTelFixoError(false);
-        // return false;
+        return false;
       } else {
         setTelFixoError(true);
-        // return true;
+        return true;
       }
     }
   }
@@ -261,23 +261,27 @@ export default function AlunoCadastro() {
 
     if (!result) {
       setCEPError(false);
-      // return false;
+      return false;
     } else {
       var validacao = /[0-9]{5}-[0-9]{3}/;
       var result = validacao.test(CEP);
       if (result) {
         setCEPError(false);
-        // return false;
+        return false;
       } else {
         setCEPError(true);
-        // return true ;
+        return true;
       }
     }
   }
 
   function ValidaTodososCampos() {
     console.log("handleCEPError() " + handleCEPError());
-    if (NomeError || EmailError || TelCelularError || DTNascimentoError) {
+    var nomerror = handleNomeError();
+    var emailerror = handleEmailError();
+    var telcelularerror = handleTelCelularError();
+    var dtnascimentoerror = handleDTNascimentoError();
+    if (nomerror || emailerror || telcelularerror || dtnascimentoerror) {
       return false;
     } else {
       return true;
@@ -353,12 +357,12 @@ export default function AlunoCadastro() {
                 <Grid item xs={8}>
                   <TextField
                     name="nome"
-                    required
+                    // required
                     label="Nome"
                     fullWidth
                     value={Nome}
                     onChange={handleNomeChange}
-                    onBlur={handleNomeError}
+                    // onBlur={handleNomeError}
                     disabled={promiseInProgress}
                   />
                   {NomeError && (
@@ -369,14 +373,14 @@ export default function AlunoCadastro() {
                 </Grid>
                 <Grid item xs={4}>
                   <TextField
-                    required
+                    //required
                     label="Email"
                     name="email"
                     type="email"
                     fullWidth
                     value={Email}
                     onChange={handleEmailChange}
-                    onBlur={handleEmailError}
+                    // onBlur={handleEmailError}
                     disabled={promiseInProgress}
                   />
                   {EmailError && (
@@ -395,14 +399,14 @@ export default function AlunoCadastro() {
                       maskChar=" "
                       value={DTNascimento}
                       onChange={handleDTNascimentoChange}
-                      onBlur={handleDTNascimentoError}
+                      // onBlur={handleDTNascimentoError}
                       disabled={promiseInProgress}
                     >
                       {() => (
                         <TextField
                           label="Dt.Nascimento"
                           fullWidth
-                          required
+                          //required
                           disabled={promiseInProgress}
                         />
                       )}
@@ -424,7 +428,7 @@ export default function AlunoCadastro() {
                       maskChar=" "
                       value={TelCelular}
                       onChange={handleTelCelularChange}
-                      onBlur={handleTelCelularError}
+                      // onBlur={handleTelCelularError}
                       disabled={promiseInProgress}
                     >
                       {() => (
@@ -432,7 +436,7 @@ export default function AlunoCadastro() {
                           label="Tel.Celular"
                           name="telcelular"
                           fullWidth
-                          required
+                          //required
                           disabled={promiseInProgress}
                         />
                       )}

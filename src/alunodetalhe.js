@@ -398,6 +398,7 @@ export default function AlunoDetalhe() {
             renderInput={(params) => (
               <TextField
                 {...params}
+                disabled={promiseInProgress}
                 label="Aluno"
                 required
                 autoFocus
@@ -427,7 +428,7 @@ export default function AlunoDetalhe() {
                   id="contained-button-file"
                   type="file"
                   onChange={handleUploadClick}
-                  disabled={idAluno.length == 0}
+                  disabled={idAluno.length == 0 || promiseInProgress}
                 />
                 <label htmlFor="contained-button-file">
                   <Fab component="span" className={classes.buttonupload}>
@@ -441,7 +442,7 @@ export default function AlunoDetalhe() {
             <Grid container spacing={3}>
               <Grid item xs={8}>
                 <TextField
-                  disabled={idAluno.length == 0}
+                  disabled={idAluno.length == 0 || promiseInProgress}
                   name="nome"
                   required
                   label="Nome"
@@ -459,7 +460,7 @@ export default function AlunoDetalhe() {
               <Grid item xs={4}>
                 <TextField
                   required
-                  disabled={idAluno.length == 0}
+                  disabled={idAluno.length == 0 || promiseInProgress}
                   label="Email"
                   name="email"
                   type="email"
@@ -480,19 +481,14 @@ export default function AlunoDetalhe() {
                   <InputMask
                     type="date"
                     mask="99/99/9999"
-                    disabled={idAluno.length == 0}
+                    disabled={idAluno.length == 0 || promiseInProgress}
                     maskChar=" "
                     value={DTNascimento}
                     onChange={handleDTNascimentoChange}
                     onBlur={handleDTNascimentoError}
                   >
                     {() => (
-                      <TextField
-                        label="Dt.Nascimento"
-                        fullWidth
-                        required
-                        disabled={idAluno.length == 0}
-                      />
+                      <TextField label="Dt.Nascimento" fullWidth required />
                     )}
                   </InputMask>
                   {DTNascimentoError && (
@@ -508,7 +504,7 @@ export default function AlunoDetalhe() {
                 <MuiThemeProvider>
                   <InputMask
                     mask="(99)99999-9999"
-                    disabled={idAluno.length == 0}
+                    disabled={idAluno.length == 0 || promiseInProgress}
                     maskChar=" "
                     value={TelCelular}
                     onChange={handleTelCelularChange}
@@ -520,7 +516,6 @@ export default function AlunoDetalhe() {
                         name="telcelular"
                         fullWidth
                         required
-                        disabled={idAluno.length == 0}
                       />
                     )}
                   </InputMask>
@@ -535,18 +530,12 @@ export default function AlunoDetalhe() {
                 <MuiThemeProvider>
                   <InputMask
                     mask="(99)9999-9999"
-                    disabled={idAluno.length == 0}
+                    disabled={idAluno.length == 0 || promiseInProgress}
                     maskChar=" "
                     value={TelFixo}
                     onChange={handleTelFixoChange}
                   >
-                    {() => (
-                      <TextField
-                        label="Tel.Fixo"
-                        fullWidth
-                        disabled={idAluno.length == 0}
-                      />
-                    )}
+                    {() => <TextField label="Tel.Fixo" fullWidth />}
                   </InputMask>
                   {TelFixoError && (
                     <FormHelperText id="component-error-text" error>
@@ -563,25 +552,19 @@ export default function AlunoDetalhe() {
                   fullWidth
                   value={Endereco}
                   onChange={handleEnderecoChange}
-                  disabled={idAluno.length == 0}
+                  disabled={idAluno.length == 0 || promiseInProgress}
                 />
               </Grid>
               <Grid item xs={4}>
                 <MuiThemeProvider>
                   <InputMask
                     mask="99999-999"
-                    disabled={idAluno.length == 0}
+                    disabled={idAluno.length == 0 || promiseInProgress}
                     maskChar=" "
                     value={CEP}
                     onChange={handleCEPChange}
                   >
-                    {() => (
-                      <TextField
-                        label="CEP"
-                        fullWidth
-                        disabled={idAluno.length == 0}
-                      />
-                    )}
+                    {() => <TextField label="CEP" fullWidth />}
                   </InputMask>
                 </MuiThemeProvider>
               </Grid>
@@ -627,7 +610,7 @@ export default function AlunoDetalhe() {
               color="primary"
               size="large"
               startIcon={<SaveIcon />}
-              disabled={idAluno.length == 0}
+              disabled={idAluno.length == 0 || promiseInProgress}
             >
               Salvar
             </Button>
@@ -639,6 +622,7 @@ export default function AlunoDetalhe() {
               size="large"
               startIcon={<CancelPresentationIcon />}
               onClick={ClearFields}
+              disabled={promiseInProgress}
             >
               Cancelar
             </Button>

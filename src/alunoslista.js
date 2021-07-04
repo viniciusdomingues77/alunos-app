@@ -128,6 +128,8 @@ export default function AlunosLista() {
     setOpenError(false);
   };
   const [openDialogoExc, setopenDialogoExc] = React.useState(false);
+  const [openDialogoAgendaExistente, setopenDialogoAgendaExistente] =
+    React.useState(false);
   const { promiseInProgress } = usePromiseTracker();
   const [Alunos, setAlunos] = React.useState([]);
   const [textoExc, settextoExc] = React.useState("");
@@ -135,17 +137,44 @@ export default function AlunosLista() {
   const [Exclusao, setExclusao] = React.useState(false);
   const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
   function handleClickOpen(idaluno, nome) {
-    settextoExc(
-      "Confirma a exclusão de " +
-        nome +
-        " ? \r\n A exclusão não será realizada caso o aluno ja possua registro na agenda."
+    setTextoBarraProgresso("Verificando agenda");
+    trackPromise(
+      fetch("https://localhost:44363/api/agenda/aluno/" + idaluno)
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+
+          return response;
+        })
+        .then((response) => response.json())
+        .then((d) => {
+          if (d == true) {
+            settextoExc(
+              "O aluno(a)  " +
+                nome +
+                "\r\n já possui agenda cadastrada. Não será possível realizar a  exclusão."
+            );
+            setopenDialogoAgendaExistente(true);
+            setopenDialogoExc(false);
+          } else {
+            settextoExc("Confirma a exclusão de " + nome + " ?");
+            setopenDialogoExc(true);
+            setopenDialogoAgendaExistente(false);
+            setidalunoExc(idaluno);
+          }
+        })
+        .catch(function (error) {
+          console.log("catch error" + error);
+          setOpenError(true);
+        })
     );
-    setopenDialogoExc(true);
-    setidalunoExc(idaluno);
   }
 
   const handleConfimrExclusao = () => {
     setExclusao(false);
+    setTextoBarraProgresso("Verificando agenda");
+
     console.log("handleConfimrExclusao");
     console.log("handleConfimrExclusao idalunoExc " + idalunoExc);
     setopenDialogoExc(false);
@@ -182,6 +211,10 @@ export default function AlunosLista() {
   const handleClose = () => {
     setopenDialogoExc(false);
   };
+  const handleCloseAvisoAgenda = () => {
+    setopenDialogoAgendaExistente(false);
+  };
+
   const [openError, setOpenError] = React.useState(false);
   const { openErr } = openError;
   const rows = Alunos;
@@ -295,6 +328,7 @@ export default function AlunosLista() {
                           color="primary"
                           aria-label="Remove Aluno"
                           component="span"
+                          disabled={promiseInProgress}
                           onClick={() => handleClickOpen(row.idaluno, row.nome)}
                         >
                           <DeleteForeverIcon />
@@ -355,6 +389,24 @@ export default function AlunosLista() {
           </Button>
           <Button onClick={handleConfimrExclusao} color="primary">
             Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openDialogoAgendaExistente}
+        onClose={handleCloseAvisoAgenda}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Atenção"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {textoExc}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAvisoAgenda} color="primary">
+            ok
           </Button>
         </DialogActions>
       </Dialog>
