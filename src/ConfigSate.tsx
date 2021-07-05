@@ -6,6 +6,7 @@ interface ConfigState {
   readonly NomeAlunoSelProntuario: string
   readonly IDProfessorSelProntuario: number
   readonly DataSelProntuario: Date
+  readonly HoraSelProntuario: string
   readonly FotoAlunoSelProntuario: string
   readonly AgendaCancelada: boolean
 }
@@ -20,6 +21,7 @@ const initialConfigState: ConfigState = {
   IDProfessorSelProntuario: 0,
   DataSelProntuario: new Date(),
   FotoAlunoSelProntuario: '',
+  HoraSelProntuario:'',
   AgendaCancelada: false,
   NomeAlunoSelProntuario:''
 }
@@ -51,15 +53,20 @@ export const SetNomeAlunoSelProntuarioAction = (nmaluno: string) =>
     nmaluno: nmaluno
   } as const)
 
-
-
-
 export const SETDATASELPRONTUARIO = 'DataSelProntuario'
 export const SetDataSelProntuarioAction = (data: Date) =>
   ({
     type: SETDATASELPRONTUARIO,
     data: data
   } as const)
+
+export const SETHORASELPRONTUARIO = 'HoraSelProntuario'
+export const SetHoraSelProntuarioAction = (hora: string) =>
+  ({
+    type: SETHORASELPRONTUARIO,
+    hora: hora
+  } as const)
+
 
 export const SETFOTOSELPRONTUARIO = 'FotoSelProntuario'
 export const SetFotoSelProntuarioAction = (foto: string) =>
@@ -87,6 +94,7 @@ type ConfigActions =
   | ReturnType<typeof SetIDAgendaSelProntuarioAction>
   | ReturnType<typeof SetIDAlunoSelProntuarioAction>
   | ReturnType<typeof SetDataSelProntuarioAction>
+  | ReturnType<typeof SetHoraSelProntuarioAction>
   | ReturnType<typeof SetFotoSelProntuarioAction>
   | ReturnType<typeof SetAgendaCanceladaAction>
   | ReturnType<typeof SetIDProfessorSelProntuarioAction>
@@ -131,6 +139,13 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
         DataSelProntuario: action.data
       }
     }
+    case SETHORASELPRONTUARIO: {
+      return {
+        ...state,
+        HoraSelProntuario: action.hora
+      }
+    }
+
     case SETFOTOSELPRONTUARIO: {
       return {
         ...state,

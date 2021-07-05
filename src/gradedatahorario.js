@@ -14,6 +14,7 @@ import {
   SetIDAlunoSelProntuarioAction,
   SetNomeAlunoSelProntuarioAction,
   SetDataSelProntuarioAction,
+  SetHoraSelProntuarioAction,
   SetFotoSelProntuarioAction,
 } from "./ConfigSate";
 import { isClassExpression } from "typescript";
@@ -80,9 +81,10 @@ export default function AgendasAluno(props) {
     (state) => state.configuracoes.FotoAlunoSelProntuario
   );
   const dispatch = useDispatch();
-  const SelIdAgenda = (idagenda, data) => {
+  const SelIdAgenda = (idagenda, data,strHora) => {
     dispatch(SetIDAgendaSelProntuarioAction(idagenda));
     dispatch(SetDataSelProntuarioAction(new Date(data)));
+    dispatch(SetHoraSelProntuarioAction(strHora));
   };
   const LimpaRedux = () => {
     console.log("LimpaRedux");
@@ -91,6 +93,7 @@ export default function AgendasAluno(props) {
     //dispatch(SetIDProfessorSelProntuarioAction(0))
     dispatch(SetFotoSelProntuarioAction(""));
     dispatch(SetIDAgendaSelProntuarioAction(0));
+    dispatch(SetHoraSelProntuarioAction(''));
   };
 
   const CarregaAgendas = () => {
@@ -222,7 +225,7 @@ export default function AgendasAluno(props) {
           >
             <Button
               className={classes.btncalendar}
-              onClick={() => SelIdAgenda(agenda.idagenda, agenda.data)}
+              onClick={() => SelIdAgenda(agenda.idagenda, agenda.data,agenda.strHora)}
               disabled={props.disabled}
             >
               {agenda.strData} <br /> {agenda.strHora}
