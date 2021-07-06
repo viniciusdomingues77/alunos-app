@@ -39,7 +39,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy-production": "react-scripts build && scp -r ./build/* root@5.183.11.111:/home/vinicius/alunos-app"
   },
   "eslintConfig": {
     "extends": [
@@ -63,4 +64,5 @@
     "@types/react-input-mask": "^3.0.0",
     "@types/react-redux": "^7.1.16"
   }
+  
 }
