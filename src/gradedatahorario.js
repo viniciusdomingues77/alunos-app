@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import { server } from "./server";
 import {
   action,
   AppState,
@@ -81,7 +82,7 @@ export default function AgendasAluno(props) {
     (state) => state.configuracoes.FotoAlunoSelProntuario
   );
   const dispatch = useDispatch();
-  const SelIdAgenda = (idagenda, data,strHora) => {
+  const SelIdAgenda = (idagenda, data, strHora) => {
     dispatch(SetIDAgendaSelProntuarioAction(idagenda));
     dispatch(SetDataSelProntuarioAction(new Date(data)));
     dispatch(SetHoraSelProntuarioAction(strHora));
@@ -93,7 +94,7 @@ export default function AgendasAluno(props) {
     //dispatch(SetIDProfessorSelProntuarioAction(0))
     dispatch(SetFotoSelProntuarioAction(""));
     dispatch(SetIDAgendaSelProntuarioAction(0));
-    dispatch(SetHoraSelProntuarioAction(''));
+    dispatch(SetHoraSelProntuarioAction(""));
   };
 
   const CarregaAgendas = () => {
@@ -110,10 +111,7 @@ export default function AgendasAluno(props) {
     }
     console.log("idaluno " + idaluno);
     const apiUrl =
-      `https://localhost:44363/api/agenda/agendas/` +
-      idaluno +
-      "/" +
-      idprofessorsel;
+      server + `/api/agenda/agendas/` + idaluno + "/" + idprofessorsel;
     trackPromise(
       fetch(apiUrl)
         .then((response) => {
@@ -136,7 +134,7 @@ export default function AgendasAluno(props) {
         })
     );
 
-    const apiUrl2 = `https://localhost:44363/api/aluno/foto/` + idaluno;
+    const apiUrl2 = server + `/api/aluno/foto/` + idaluno;
     trackPromise(
       fetch(apiUrl2)
         .then((response) => {
@@ -225,7 +223,9 @@ export default function AgendasAluno(props) {
           >
             <Button
               className={classes.btncalendar}
-              onClick={() => SelIdAgenda(agenda.idagenda, agenda.data,agenda.strHora)}
+              onClick={() =>
+                SelIdAgenda(agenda.idagenda, agenda.data, agenda.strHora)
+              }
               disabled={props.disabled}
             >
               {agenda.strData} <br /> {agenda.strHora}

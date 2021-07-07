@@ -50,6 +50,8 @@ import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
 import CloseIcon from "@material-ui/icons/Close";
 import { useSelector, useDispatch } from "react-redux";
 import { action, AppState, store } from "./ConfigSate";
+import { server } from "./server";
+
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -273,7 +275,8 @@ export default function AgendaLista() {
 
     if (nextValue) {
       const apiUrl =
-        `https://localhost:44363/api/agenda/agenda/` +
+        server +
+        "/api/agenda/agenda/" +
         DataparaParametroPar(nextValue) +
         "/" +
         idaluno +
@@ -316,7 +319,7 @@ export default function AgendaLista() {
       }
       setTextoBarraProgresso("Listando agendamentos");
       const apiUrl =
-        `https://localhost:44363/api/agenda/agenda/` +
+        `/api/agenda/agenda/` +
         DataparaParametroPar(valueDay) +
         "/" +
         idaluno +
@@ -365,7 +368,8 @@ export default function AgendaLista() {
 
       setTextoBarraProgresso("Listando agendamentos");
       const apiUrl =
-        `https://localhost:44363/api/agenda/agenda/` +
+        server +
+        `/api/agenda/agenda/` +
         DataparaParametroPar(valueDay) +
         "/" +
         idaluno +
@@ -402,7 +406,7 @@ export default function AgendaLista() {
   const [openAgendasAluno, setopenAgendasAluno] = React.useState(false);
   React.useEffect(() => {
     setTextoBarraProgresso("Listando agendamentos");
-    const apiUrla = `https://localhost:44363/api/aluno/identificacao`;
+    const apiUrla = server + `/api/aluno/identificacao`;
     trackPromise(
       fetch(apiUrla)
         .then((response) => {
@@ -422,7 +426,7 @@ export default function AgendaLista() {
         })
     );
 
-    const apiUrlp = `https://localhost:44363/api/professor`;
+    const apiUrlp = server + `/api/professor`;
     trackPromise(
       fetch(apiUrlp)
         .then((response) => {
@@ -443,9 +447,7 @@ export default function AgendaLista() {
     );
 
     const apiUrl =
-      `https://localhost:44363/api/agenda/agenda/` +
-      DataparaParametro() +
-      "/0/0";
+      server + `/api/agenda/agenda/` + DataparaParametro() + "/0/0";
     trackPromise(
       fetch(apiUrl)
         .then((response) => {
@@ -511,7 +513,7 @@ export default function AgendaLista() {
       }),
     };
     trackPromise(
-      fetch("https://localhost:44363/api/agenda/desmarcacao", requestOptions)
+      fetch(server + "/api/agenda/desmarcacao", requestOptions)
         .then((response) => {
           if (!response.ok) {
             throw Error(response.statusText);
@@ -563,7 +565,7 @@ export default function AgendaLista() {
     };
     trackPromise(
       fetch(
-        "https://localhost:44363/api/agenda/exclusao/" + valueIDAgendaExclusao,
+        server + "/api/agenda/exclusao/" + valueIDAgendaExclusao,
         requestOptions
       )
         .then((response) => {
@@ -621,7 +623,8 @@ export default function AgendaLista() {
                   }
                 }
                 const apiUrl =
-                  `https://localhost:44363/api/agenda/agenda/` +
+                  server +
+                  `/api/agenda/agenda/` +
                   DataparaParametroPar(valueDay) +
                   "/" +
                   idaluno +
@@ -690,7 +693,8 @@ export default function AgendaLista() {
                   }
                 }
                 const apiUrl =
-                  `https://localhost:44363/api/agenda/agenda/` +
+                  server +
+                  `/api/agenda/agenda/` +
                   DataparaParametroPar(valueDay) +
                   "/" +
                   idaluno +

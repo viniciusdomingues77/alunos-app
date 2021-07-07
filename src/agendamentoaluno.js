@@ -29,7 +29,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import { server } from "./server";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -90,7 +90,7 @@ export default function Agendamento() {
 
   React.useEffect(() => {
     setTextoBarraProgresso("Listando alunos e professores");
-    const apiUrl = `https://localhost:44363/api/aluno/identificacao`;
+    const apiUrl = server + `/api/aluno/identificacao`;
     trackPromise(
       fetch(apiUrl)
         .then((response) => {
@@ -110,7 +110,7 @@ export default function Agendamento() {
         })
     );
 
-    const apiUrlp = `https://localhost:44363/api/professor`;
+    const apiUrlp = server + `/api/professor`;
     trackPromise(
       fetch(apiUrlp)
         .then((response) => {
@@ -327,9 +327,9 @@ export default function Agendamento() {
     setOpenError(false);
     var url = "";
     if (MarcacaoSemestral === true) {
-      url = "https://localhost:44363/api/agenda/semestre/";
+      url = server + "/api/agenda/semestre/";
     } else {
-      url = "https://localhost:44363/api/agenda/";
+      url = server + "/api/agenda/";
     }
 
     var idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();

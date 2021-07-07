@@ -27,6 +27,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
 import BarraProgresso from "./barradeprogresso";
 import BarraProgressoFixa from "./barraprogressofixa";
+import { server } from "./server";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -113,7 +114,7 @@ export default function AlunoCadastro() {
       }),
     };
     trackPromise(
-      fetch("https://localhost:44363/api/aluno/", requestOptions)
+      fetch(server + "/api/aluno/", requestOptions)
         .then((response) => {
           if (!response.ok) {
             throw Error(response.statusText);

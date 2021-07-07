@@ -30,6 +30,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { Alert } from "@material-ui/lab";
 import Grid from "@material-ui/core/Grid";
 import BarraProgressoFixa from "./barraprogressofixa";
+import { server } from "./server";
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
@@ -139,7 +140,7 @@ export default function AlunosLista() {
   function handleClickOpen(idaluno, nome) {
     setTextoBarraProgresso("Verificando agenda");
     trackPromise(
-      fetch("https://localhost:44363/api/agenda/aluno/" + idaluno)
+      fetch(server + "/api/agenda/aluno/" + idaluno)
         .then((response) => {
           if (!response.ok) {
             throw Error(response.statusText);
@@ -188,10 +189,7 @@ export default function AlunosLista() {
       }),
     };
     trackPromise(
-      fetch(
-        "https://localhost:44363/api/aluno/deletar/" + idalunoExc,
-        requestOptions
-      )
+      fetch(server + "/api/aluno/deletar/" + idalunoExc, requestOptions)
         .then((response) => {
           if (!response.ok) {
             throw Error(response.statusText);
@@ -220,7 +218,7 @@ export default function AlunosLista() {
   const rows = Alunos;
   React.useEffect(() => {
     setTextoBarraProgresso("Carregando alunos");
-    const apiUrl = `https://localhost:44363/api/Aluno`;
+    const apiUrl = server + `/api/Aluno`;
     trackPromise(
       fetch(apiUrl)
         .then((response) => {
@@ -245,7 +243,7 @@ export default function AlunosLista() {
     console.log("effect exc " + Exclusao);
     if (Exclusao) {
       setTextoBarraProgresso("Carregando alunos");
-      const apiUrl = `https://localhost:44363/api/Aluno`;
+      const apiUrl = server + `/api/Aluno`;
       trackPromise(
         fetch(apiUrl)
           .then((response) => {

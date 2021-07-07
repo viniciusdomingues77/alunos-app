@@ -21,6 +21,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
 import BarraProgresso from "./barradeprogresso";
 import BarraProgressoFixa from "./barraprogressofixa";
+import { server } from "./server";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -134,7 +135,7 @@ export default function AlunoDetalhe() {
       }),
     };
     trackPromise(
-      fetch("https://localhost:44363/api/aluno/", requestOptions)
+      fetch(server + "/api/aluno/", requestOptions)
         .then((response) => {
           if (!response.ok) {
             throw Error(response.statusText);
@@ -295,7 +296,7 @@ export default function AlunoDetalhe() {
   const [selectedFile, setselectedFile] = React.useState(null);
   React.useEffect(() => {
     setTextoBarraProgresso("Listando alunos");
-    const apiUrl = `https://localhost:44363/api/aluno/identificacao`;
+    const apiUrl = server + `/api/aluno/identificacao`;
     trackPromise(
       fetch(apiUrl)
         .then((response) => {
@@ -359,8 +360,7 @@ export default function AlunoDetalhe() {
                   ClearFields();
                   setTextoBarraProgresso("Carregando aluno");
                   const apiUrl =
-                    `https://localhost:44363/api/aluno/aluno?idaluno=` +
-                    values[0];
+                    server + `/api/aluno/aluno?idaluno=` + values[0];
                   trackPromise(
                     fetch(apiUrl)
                       .then((response) => {
