@@ -155,6 +155,9 @@ export default function AlunoCadastro () {
     setEmailError(false)
     setDTNascimentoError(false)
     setTelCelularError(false)
+    setCPFError(false)
+    setCEPError(false)
+    setTelFixoError(false)
   }
 
   const [SubmitSuccess, setSubmitSuccess] = React.useState(false)
@@ -263,6 +266,17 @@ export default function AlunoCadastro () {
   }
 
   function handleTelFixoError () {
+    
+    if (TelFixo) {
+      if (TelFixo.length == 0) {
+        setTelFixoError(false)
+        return false
+      }
+    } else {
+      setTelFixoError(false)
+      return false
+    }
+    
     const regex = /[0-9]/
     var result = regex.test(TelFixo)
 
@@ -283,6 +297,17 @@ export default function AlunoCadastro () {
   }
 
   function handleCEPError () {
+    
+    if (CEP) {
+      if (CEP.length == 0) {
+        setCEPError(false)
+        return false
+      }
+    } else {
+      setCEPError(false)
+      return false
+    }
+    
     const regex = /[0-9]/
     var result = regex.test(CEP)
 
@@ -316,14 +341,24 @@ export default function AlunoCadastro () {
   }
 
   function ValidaTodososCampos () {
-    console.log('handleCEPError() ' + handleCEPError())
+
     var nomerror = handleNomeError()
     var emailerror = handleEmailError()
     var telcelularerror = handleTelCelularError()
     var dtnascimentoerror = handleDTNascimentoError()
-    var cpf = handleCPFError()
+    var cpferror = handleCPFError()
+    var telfixoerror = handleTelFixoError()
+    var ceperror = handleCEPError()
 
-    if (nomerror || emailerror || telcelularerror || dtnascimentoerror || cpf) {
+    if (
+      nomerror ||
+      emailerror ||
+      telcelularerror ||
+      dtnascimentoerror ||
+      cpferror ||
+      telfixoerror ||
+      ceperror
+    ) {
       return false
     } else {
       return true
@@ -569,6 +604,11 @@ export default function AlunoCadastro () {
                         />
                       )}
                     </InputMask>
+                     {CEPError && (
+                    <FormHelperText id='component-error-text' error>
+                      CEP inválido.Este campo não é obrigatório
+                    </FormHelperText>
+                  )}
                   </MuiThemeProvider>
                 </Grid>
                 <Grid item xs={4}>
