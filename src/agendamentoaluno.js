@@ -351,7 +351,8 @@ export default function Agendamento () {
         idprofessor: idprofessor,
         data: selectedDate,
         hora: selectedHour,
-        agendarsemestre: MarcacaoSemestral
+        agendarsemestre: MarcacaoSemestral,
+        valor_aula: Valor
       })
     }
     setTextoBarraProgresso('Agendando')
