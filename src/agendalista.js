@@ -497,7 +497,6 @@ export default function AgendaLista () {
     setValueCancelamento('professor')
   }
   function handleClickCancelaAgendaConfirmacao () {
-    
     console.log('valueCancelamento ' + valueCancelamento)
     console.log('idagenda ' + valueIDAgendaCancelamento)
     setvalueAgendaCancelada(false)
@@ -659,7 +658,6 @@ export default function AgendaLista () {
                 <TextField
                   {...params}
                   label='Aluno'
-                  required
                   autoFocus
                   variant='outlined'
                   disabled={promiseInProgress}
@@ -729,7 +727,6 @@ export default function AgendaLista () {
                 <TextField
                   {...params}
                   label='Professor'
-                  required
                   autoFocus
                   variant='outlined'
                   disabled={promiseInProgress}
