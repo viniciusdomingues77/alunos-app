@@ -1,100 +1,100 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import LastPageIcon from "@material-ui/icons/LastPage";
-import Avatar from "@material-ui/core/Avatar";
-import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import DialogoConfirmacao from "./dialogoconfirmacao";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import BarraProgresso from "./barradeprogresso";
-import Snackbar from "@material-ui/core/Snackbar";
-import { Alert } from "@material-ui/lab";
-import Grid from "@material-ui/core/Grid";
-import { Calendar } from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import EventNoteIcon from "@material-ui/icons/EventNote";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
-import BarraProgressoFixa from "./barraprogressofixa";
-import Aviso from "./aviso";
-import EventBusyIcon from "@material-ui/icons/EventBusy";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Link from "@material-ui/core/Link";
-import HistoricoAgendasAluno from "./agendasdoaluno";
-import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
-import CloseIcon from "@material-ui/icons/Close";
-import { useSelector, useDispatch } from "react-redux";
-import { action, AppState, store } from "./ConfigSate";
-import { server } from "./server";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableFooter from '@material-ui/core/TableFooter'
+import TablePagination from '@material-ui/core/TablePagination'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
+import IconButton from '@material-ui/core/IconButton'
+import FirstPageIcon from '@material-ui/icons/FirstPage'
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
+import LastPageIcon from '@material-ui/icons/LastPage'
+import Avatar from '@material-ui/core/Avatar'
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import DialogoConfirmacao from './dialogoconfirmacao'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@material-ui/core/Button'
+import BarraProgresso from './barradeprogresso'
+import Snackbar from '@material-ui/core/Snackbar'
+import { Alert } from '@material-ui/lab'
+import Grid from '@material-ui/core/Grid'
+import { Calendar } from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
+import EventNoteIcon from '@material-ui/icons/EventNote'
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import TextField from '@material-ui/core/TextField'
+import BarraProgressoFixa from './barraprogressofixa'
+import Aviso from './aviso'
+import EventBusyIcon from '@material-ui/icons/EventBusy'
+import Modal from '@material-ui/core/Modal'
+import Backdrop from '@material-ui/core/Backdrop'
+import Fade from '@material-ui/core/Fade'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Link from '@material-ui/core/Link'
+import HistoricoAgendasAluno from './agendasdoaluno'
+import CancelPresentationIcon from '@material-ui/icons/CancelPresentation'
+import CloseIcon from '@material-ui/icons/Close'
+import { useSelector, useDispatch } from 'react-redux'
+import { action, AppState, store } from './ConfigSate'
+import { server } from './server'
 
-const useStyles1 = makeStyles((theme) => ({
+const useStyles1 = makeStyles(theme => ({
   root: {
     flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
-  },
-}));
+    marginLeft: theme.spacing(2.5)
+  }
+}))
 
-function TablePaginationActions(props) {
-  const classes = useStyles1();
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onChangePage } = props;
+function TablePaginationActions (props) {
+  const classes = useStyles1()
+  const theme = useTheme()
+  const { count, page, rowsPerPage, onChangePage } = props
 
-  const handleFirstPageButtonClick = (event) => {
-    onChangePage(event, 0);
-  };
+  const handleFirstPageButtonClick = event => {
+    onChangePage(event, 0)
+  }
 
-  const handleBackButtonClick = (event) => {
-    onChangePage(event, page - 1);
-  };
+  const handleBackButtonClick = event => {
+    onChangePage(event, page - 1)
+  }
 
-  const handleNextButtonClick = (event) => {
-    onChangePage(event, page + 1);
-  };
+  const handleNextButtonClick = event => {
+    onChangePage(event, page + 1)
+  }
 
-  const handleLastPageButtonClick = (event) => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
+  const handleLastPageButtonClick = event => {
+    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
+  }
 
   return (
     <div className={classes.root}>
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
-        aria-label="first page"
+        aria-label='first page'
       >
-        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
       <IconButton
         onClick={handleBackButtonClick}
         disabled={page === 0}
-        aria-label="previous page"
+        aria-label='previous page'
       >
-        {theme.direction === "rtl" ? (
+        {theme.direction === 'rtl' ? (
           <KeyboardArrowRight />
         ) : (
           <KeyboardArrowLeft />
@@ -103,9 +103,9 @@ function TablePaginationActions(props) {
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
+        aria-label='next page'
       >
-        {theme.direction === "rtl" ? (
+        {theme.direction === 'rtl' ? (
           <KeyboardArrowLeft />
         ) : (
           <KeyboardArrowRight />
@@ -114,478 +114,478 @@ function TablePaginationActions(props) {
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
+        aria-label='last page'
       >
-        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
     </div>
-  );
+  )
 }
 
 TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
+  rowsPerPage: PropTypes.number.isRequired
+}
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   calendar: {
-    boxShadow: "5px 10px #888888",
+    boxShadow: '5px 10px #888888'
   },
   cabecalho: {
-    width: "100%",
-    height: "10px",
+    width: '100%',
+    height: '10px'
   },
   table: {
-    minHeight: 470,
+    minHeight: 470
   },
   roottable: {
     flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
+    marginLeft: theme.spacing(2.5)
   },
   modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: "3px solid #306898",
+    border: '3px solid #306898',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 4, 3)
   },
   cancelado: {
-    color: "red",
+    color: 'red'
   },
   ativo: {
-    color: "black",
-  },
-}));
+    color: 'black'
+  }
+}))
 
-export default function AgendaLista() {
-  const [valueDay, setValueDay] = React.useState(new Date());
-  const [dataExt, setdataExt] = React.useState(DataporExtenso(new Date()));
-  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
-  const [Agendados, setAgendados] = React.useState([]);
-  const [openError, setOpenError] = React.useState(false);
-  const { promiseInProgress } = usePromiseTracker();
-  const [Professor, setProfessor] = React.useState("");
-  const [IDAluno, setIDAluno] = React.useState(0);
-  const [openModal, setopenModal] = React.useState(false);
-  const [carregaPlanilha, setcarregaPlanilha] = React.useState(false);
-  const [ModalTexto, setModalTexto] = React.useState("");
-  const [ModalTitulo, setModalTitulo] = React.useState("");
-  const [textoExc, settextoExc] = React.useState("");
-  const classes = useStyles();
+export default function AgendaLista () {
+  const [valueDay, setValueDay] = React.useState(new Date())
+  const [dataExt, setdataExt] = React.useState(DataporExtenso(new Date()))
+  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState('')
+  const [Agendados, setAgendados] = React.useState([])
+  const [openError, setOpenError] = React.useState(false)
+  const { promiseInProgress } = usePromiseTracker()
+  const [Professor, setProfessor] = React.useState('')
+  const [IDAluno, setIDAluno] = React.useState(0)
+  const [openModal, setopenModal] = React.useState(false)
+  const [carregaPlanilha, setcarregaPlanilha] = React.useState(false)
+  const [ModalTexto, setModalTexto] = React.useState('')
+  const [ModalTitulo, setModalTitulo] = React.useState('')
+  const [textoExc, settextoExc] = React.useState('')
+  const classes = useStyles()
   const ListarAgendas = () => {
-    console.log("day " + valueDay.getDate());
-    console.log("month " + valueDay.getMonth());
-    console.log("year " + valueDay.getFullYear());
-  };
-  const [valueAgendaCancelada, setvalueAgendaCancelada] = React.useState(false);
-  const [Exclusao, setExclusao] = React.useState(false);
+    console.log('day ' + valueDay.getDate())
+    console.log('month ' + valueDay.getMonth())
+    console.log('year ' + valueDay.getFullYear())
+  }
+  const [valueAgendaCancelada, setvalueAgendaCancelada] = React.useState(false)
+  const [Exclusao, setExclusao] = React.useState(false)
   const AgendaCancelada = useSelector(
-    (state) => state.configuracoes.AgendaCancelada
-  );
-  function DataparaParametro() {
+    state => state.configuracoes.AgendaCancelada
+  )
+  function DataparaParametro () {
     return (
       valueDay.getFullYear() +
-      "-" +
+      '-' +
       (valueDay.getMonth() + 1) +
-      "-" +
+      '-' +
       valueDay.getDate()
-    );
+    )
   }
 
-  function DataparaParametroPar(data) {
+  function DataparaParametroPar (data) {
     return (
-      data.getFullYear() + "-" + (data.getMonth() + 1) + "-" + data.getDate()
-    );
+      data.getFullYear() + '-' + (data.getMonth() + 1) + '-' + data.getDate()
+    )
   }
   const handleClose = () => {
-    setopenDialogoExc(false);
-  };
-  function MesporExtenso(nummes) {
+    setopenDialogoExc(false)
+  }
+  function MesporExtenso (nummes) {
     switch (nummes) {
       case 0:
-        return "Janeiro";
+        return 'Janeiro'
 
       case 1:
-        return "Fevereiro";
+        return 'Fevereiro'
 
       case 2:
-        return "Março";
+        return 'Março'
 
       case 3:
-        return "Abril";
+        return 'Abril'
 
       case 4:
-        return "Maio";
+        return 'Maio'
 
       case 5:
-        return "Junho";
+        return 'Junho'
 
       case 6:
-        return "Julho";
+        return 'Julho'
 
       case 7:
-        return "Agosto";
+        return 'Agosto'
 
       case 8:
-        return "Setembro";
+        return 'Setembro'
 
       case 9:
-        return "Outubro";
+        return 'Outubro'
 
       case 10:
-        return "Novembro";
+        return 'Novembro'
 
       case 11:
-        return "Dezembro";
+        return 'Dezembro'
       default:
     }
   }
 
-  function DataporExtenso(data) {
+  function DataporExtenso (data) {
     var dt =
       data.getDate() +
-      " de " +
+      ' de ' +
       MesporExtenso(data.getMonth()) +
-      " de " +
-      data.getFullYear();
-    return dt;
+      ' de ' +
+      data.getFullYear()
+    return dt
   }
-  function onChange(nextValue) {
-    setPage(0);
-    setValueDay(nextValue);
-    setTextoBarraProgresso("Listando agendamentos");
-    var idaluno = "0";
+  function onChange (nextValue) {
+    setPage(0)
+    setValueDay(nextValue)
+    setTextoBarraProgresso('Listando agendamentos')
+    var idaluno = '0'
     if (Aluno) {
       if (Aluno.length > 0) {
-        idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
+        idaluno = Aluno.substring(0, Aluno.indexOf('-')).trim()
       }
     }
-    var idprofessor = "0";
+    var idprofessor = '0'
     if (Professor) {
       if (Professor.length > 0) {
-        idprofessor = Professor.substring(0, Professor.indexOf("-")).trim();
+        idprofessor = Professor.substring(0, Professor.indexOf('-')).trim()
       }
     }
 
     if (nextValue) {
       const apiUrl =
         server +
-        "/api/agenda/agenda/" +
+        '/api/agenda/agenda/' +
         DataparaParametroPar(nextValue) +
-        "/" +
+        '/' +
         idaluno +
-        "/" +
-        idprofessor;
+        '/' +
+        idprofessor
       trackPromise(
         fetch(apiUrl)
-          .then((response) => {
+          .then(response => {
             if (!response.ok) {
-              throw Error(response.statusText);
+              throw Error(response.statusText)
             }
-            return response;
+            return response
           })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setAgendados(data);
-            setdataExt(DataporExtenso(nextValue));
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            setAgendados(data)
+            setdataExt(DataporExtenso(nextValue))
           })
           .catch(function (error) {
-            console.log("catch error" + error);
-            setOpenError(true);
+            console.log('catch error' + error)
+            setOpenError(true)
           })
-      );
+      )
     }
   }
   React.useEffect(() => {
     if (carregaPlanilha == true) {
-      var idaluno = "0";
+      var idaluno = '0'
       if (Aluno) {
         if (Aluno.length > 0) {
-          idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
+          idaluno = Aluno.substring(0, Aluno.indexOf('-')).trim()
         }
       }
-      var idprofessor = "0";
+      var idprofessor = '0'
       if (Professor) {
         if (Professor.length > 0) {
-          idprofessor = Professor.substring(0, Professor.indexOf("-")).trim();
+          idprofessor = Professor.substring(0, Professor.indexOf('-')).trim()
         }
       }
-      setTextoBarraProgresso("Listando agendamentos");
-      const apiUrl =
-        `/api/agenda/agenda/` +
-        DataparaParametroPar(valueDay) +
-        "/" +
-        idaluno +
-        "/" +
-        idprofessor;
-      trackPromise(
-        fetch(apiUrl)
-          .then((response) => {
-            if (!response.ok) {
-              throw Error(response.statusText);
-            }
-            return response;
-          })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setAgendados(data);
-            setcarregaPlanilha(false);
-          })
-          .catch(function (error) {
-            console.log("catch error" + error);
-            setOpenError(true);
-            setcarregaPlanilha(false);
-          })
-      );
-
-      setvalueAgendaCancelada(false);
-    }
-  }, [carregaPlanilha]);
-
-  React.useEffect(() => {
-    var idaluno = "0";
-
-    if (AgendaCancelada === true) {
-      if (Aluno) {
-        if (Aluno.length > 0) {
-          idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
-        }
-      }
-      var idprofessor = "0";
-      if (Professor) {
-        if (Professor.length > 0) {
-          idprofessor = Professor.substring(0, Professor.indexOf("-")).trim();
-        }
-      }
-
-      setTextoBarraProgresso("Listando agendamentos");
+      setTextoBarraProgresso('Listando agendamentos')
       const apiUrl =
         server +
         `/api/agenda/agenda/` +
         DataparaParametroPar(valueDay) +
-        "/" +
+        '/' +
         idaluno +
-        "/" +
-        idprofessor;
+        '/' +
+        idprofessor
+
       trackPromise(
         fetch(apiUrl)
-          .then((response) => {
+          .then(response => {
             if (!response.ok) {
-              throw Error(response.statusText);
+              throw Error(response.statusText)
             }
-            return response;
+            return response
           })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setAgendados(data);
-            setcarregaPlanilha(false);
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            setAgendados(data)
+            setcarregaPlanilha(false)
           })
           .catch(function (error) {
-            console.log("catch error" + error);
-            setOpenError(true);
-            setcarregaPlanilha(false);
+            console.log('catch error' + error)
+            setOpenError(true)
+            setcarregaPlanilha(false)
           })
-      );
-    }
-  }, [AgendaCancelada]);
+      )
 
-  const [openDialogoExc, setopenDialogoExc] = React.useState(false);
-  const [Alunos, setAlunos] = React.useState([]);
-  const [Aluno, setAluno] = React.useState(null);
-  const [professores, setProfessores] = React.useState([]);
-  const [Agendas, setAgendas] = React.useState([]);
-  const [openAgendasAluno, setopenAgendasAluno] = React.useState(false);
+      setvalueAgendaCancelada(false)
+    }
+  }, [carregaPlanilha])
+
   React.useEffect(() => {
-    setTextoBarraProgresso("Listando agendamentos");
-    const apiUrla = server + `/api/aluno/identificacao`;
+    var idaluno = '0'
+
+    if (AgendaCancelada === true) {
+      if (Aluno) {
+        if (Aluno.length > 0) {
+          idaluno = Aluno.substring(0, Aluno.indexOf('-')).trim()
+        }
+      }
+      var idprofessor = '0'
+      if (Professor) {
+        if (Professor.length > 0) {
+          idprofessor = Professor.substring(0, Professor.indexOf('-')).trim()
+        }
+      }
+
+      setTextoBarraProgresso('Listando agendamentos')
+      const apiUrl =
+        server +
+        `/api/agenda/agenda/` +
+        DataparaParametroPar(valueDay) +
+        '/' +
+        idaluno +
+        '/' +
+        idprofessor
+      trackPromise(
+        fetch(apiUrl)
+          .then(response => {
+            if (!response.ok) {
+              throw Error(response.statusText)
+            }
+            return response
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            setAgendados(data)
+            setcarregaPlanilha(false)
+          })
+          .catch(function (error) {
+            console.log('catch error' + error)
+            setOpenError(true)
+            setcarregaPlanilha(false)
+          })
+      )
+    }
+  }, [AgendaCancelada])
+
+  const [openDialogoExc, setopenDialogoExc] = React.useState(false)
+  const [Alunos, setAlunos] = React.useState([])
+  const [Aluno, setAluno] = React.useState(null)
+  const [professores, setProfessores] = React.useState([])
+  const [Agendas, setAgendas] = React.useState([])
+  const [openAgendasAluno, setopenAgendasAluno] = React.useState(false)
+  React.useEffect(() => {
+    setTextoBarraProgresso('Listando agendamentos')
+    const apiUrla = server + `/api/aluno/identificacao`
     trackPromise(
       fetch(apiUrla)
-        .then((response) => {
+        .then(response => {
           if (!response.ok) {
-            throw Error(response.statusText);
+            throw Error(response.statusText)
           }
-          return response;
+          return response
         })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setAlunos(data);
+        .then(res => res.json())
+        .then(data => {
+          console.log(data)
+          setAlunos(data)
         })
         .catch(function (error) {
-          console.log("catch error" + error);
-          setOpenError(true);
+          console.log('catch error' + error)
+          setOpenError(true)
         })
-    );
+    )
 
-    const apiUrlp = server + `/api/professor`;
+    const apiUrlp = server + `/api/professor`
     trackPromise(
       fetch(apiUrlp)
-        .then((response) => {
+        .then(response => {
           if (!response.ok) {
-            throw Error(response.statusText);
+            throw Error(response.statusText)
           }
-          return response;
+          return response
         })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setProfessores(data);
+        .then(res => res.json())
+        .then(data => {
+          console.log(data)
+          setProfessores(data)
         })
         .catch(function (error) {
-          console.log("catch error" + error);
-          setOpenError(true);
+          console.log('catch error' + error)
+          setOpenError(true)
         })
-    );
+    )
 
-    const apiUrl =
-      server + `/api/agenda/agenda/` + DataparaParametro() + "/0/0";
+    const apiUrl = server + `/api/agenda/agenda/` + DataparaParametro() + '/0/0'
     trackPromise(
       fetch(apiUrl)
-        .then((response) => {
+        .then(response => {
           if (!response.ok) {
-            throw Error(response.statusText);
+            throw Error(response.statusText)
           }
-          return response;
+          return response
         })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setAgendados(data);
+        .then(res => res.json())
+        .then(data => {
+          console.log(data)
+          setAgendados(data)
         })
         .catch(function (error) {
-          console.log("catch error" + error);
-          setOpenError(true);
+          console.log('catch error' + error)
+          setOpenError(true)
         })
-    );
-  }, []);
+    )
+  }, [])
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const rows = Agendados;
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const rows = Agendados
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-  const handleCloseModal = (event, reason) => {
-    setopenModal(false);
-  };
-  const [valueCancelamento, setValueCancelamento] = React.useState("");
-  const [valueIDAgendaCancelamento, setIDAgendaCancelamento] =
-    React.useState(0);
-  const [valueIDAgendaExclusao, setvalueIDAgendaExclusao] = React.useState(0);
-
-  function handleClickCancelaAgenda(idagenda) {
-    setIDAgendaCancelamento(idagenda);
-    setModalTitulo("Desmarcação");
-    setopenModal(true);
-    setValueCancelamento("professor");
+    setPage(newPage)
   }
-  function handleClickCancelaAgendaConfirmacao() {
-    console.log("valueCancelamento " + valueCancelamento);
-    console.log("idagenda " + valueIDAgendaCancelamento);
-    setvalueAgendaCancelada(false);
-    setopenModal(false);
 
-    setTextoBarraProgresso("Desmarcando");
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+  const handleCloseModal = (event, reason) => {
+    setopenModal(false)
+  }
+  const [valueCancelamento, setValueCancelamento] = React.useState('')
+  const [valueIDAgendaCancelamento, setIDAgendaCancelamento] = React.useState(0)
+  const [valueIDAgendaExclusao, setvalueIDAgendaExclusao] = React.useState(0)
+
+  function handleClickCancelaAgenda (idagenda) {
+    setIDAgendaCancelamento(idagenda)
+    setModalTitulo('Desmarcação')
+    setopenModal(true)
+    setValueCancelamento('professor')
+  }
+  function handleClickCancelaAgendaConfirmacao () {
+    console.log('valueCancelamento ' + valueCancelamento)
+    console.log('idagenda ' + valueIDAgendaCancelamento)
+    setvalueAgendaCancelada(false)
+    setopenModal(false)
+
+    setTextoBarraProgresso('Desmarcando')
 
     const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         idagenda: valueIDAgendaCancelamento,
-        stropcao: valueCancelamento,
-      }),
-    };
+        stropcao: valueCancelamento
+      })
+    }
     trackPromise(
-      fetch(server + "/api/agenda/desmarcacao", requestOptions)
-        .then((response) => {
+      fetch(server + '/api/agenda/desmarcacao', requestOptions)
+        .then(response => {
           if (!response.ok) {
-            throw Error(response.statusText);
+            throw Error(response.statusText)
           }
-          return response;
+          return response
         })
-        .then((response) => response.json())
-        .then((d) => setcarregaPlanilha(true), setvalueAgendaCancelada(true))
+        .then(response => response.json())
+        .then(d => setcarregaPlanilha(true), setvalueAgendaCancelada(true))
         .catch(function (error) {
-          setvalueAgendaCancelada(false);
-          setOpenError(true);
+          setvalueAgendaCancelada(false)
+          setOpenError(true)
         })
-    );
+    )
   }
-  const handleRadioChangeCancelamento = (event) => {
-    setvalueAgendaCancelada(false);
-    setValueCancelamento(event.target.value);
-  };
+  const handleRadioChangeCancelamento = event => {
+    setvalueAgendaCancelada(false)
+    setValueCancelamento(event.target.value)
+  }
 
-  function RetornaClasseAgenda(cancelado) {
-    var classe = "";
+  function RetornaClasseAgenda (cancelado) {
+    var classe = ''
 
     if (cancelado > 0) {
-      classe = classes.cancelado;
+      classe = classes.cancelado
     } else {
-      classe = classes.ativo;
+      classe = classes.ativo
     }
 
-    return classe;
+    return classe
   }
   const handleCloseError = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
-    setOpenError(false);
-  };
+    setOpenError(false)
+  }
   const handleCloseAgendasAluno = () => {
-    setopenAgendasAluno(false);
-  };
+    setopenAgendasAluno(false)
+  }
   const handleClickAgendasAluno = () => {
-    setopenAgendasAluno(true);
-  };
+    setopenAgendasAluno(true)
+  }
   const handleClickDelete = () => {
-    setopenDialogoExc(false);
+    setopenDialogoExc(false)
     const requestOptions = {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    };
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    }
     trackPromise(
       fetch(
-        server + "/api/agenda/exclusao/" + valueIDAgendaExclusao,
+        server + '/api/agenda/exclusao/' + valueIDAgendaExclusao,
         requestOptions
       )
-        .then((response) => {
+        .then(response => {
           if (!response.ok) {
-            throw Error(response.statusText);
+            throw Error(response.statusText)
           }
-          setExclusao(true);
-          setcarregaPlanilha(true);
+          setExclusao(true)
+          setcarregaPlanilha(true)
 
-          return response;
+          return response
         })
-        .then((response) => response.json())
-        .then((d) => setExclusao(true))
+        .then(response => response.json())
+        .then(d => setExclusao(true))
         .catch(function (error) {
-          console.log("catch error" + error);
+          console.log('catch error' + error)
 
-          setOpenError(true);
+          setOpenError(true)
         })
-    );
-  };
+    )
+  }
 
   return (
     <React.Fragment>
@@ -599,70 +599,67 @@ export default function AgendaLista() {
         <Grid item xs={12}></Grid>
         <Grid item xs={12}></Grid>
         <Grid item xs={6}>
-          <Grid item xs={12} style={{ width: "100%", marginBottom: 30 }}>
+          <Grid item xs={12} style={{ width: '100%', marginBottom: 30 }}>
             <Autocomplete
               value={Aluno}
-              id="autocomplete"
+              id='autocomplete'
               onChange={(event, newValue) => {
-                console.log("aluno on change");
-                setPage(0);
-                setAluno(newValue);
-                console.log("aluno on change " + newValue);
-                var idaluno = "0";
+                console.log('aluno on change')
+                setPage(0)
+                setAluno(newValue)
+                console.log('aluno on change ' + newValue)
+                var idaluno = '0'
                 if (newValue) {
-                  idaluno = newValue.substring(0, newValue.indexOf("-")).trim();
+                  idaluno = newValue.substring(0, newValue.indexOf('-')).trim()
                 }
-                setIDAluno(idaluno);
-                var idprofessor = "0";
+                setIDAluno(idaluno)
+                var idprofessor = '0'
                 if (Professor) {
                   if (Professor.length > 0) {
                     idprofessor = Professor.substring(
                       0,
-                      Professor.indexOf("-")
-                    ).trim();
+                      Professor.indexOf('-')
+                    ).trim()
                   }
                 }
                 const apiUrl =
                   server +
                   `/api/agenda/agenda/` +
                   DataparaParametroPar(valueDay) +
-                  "/" +
+                  '/' +
                   idaluno +
-                  "/" +
-                  idprofessor;
+                  '/' +
+                  idprofessor
                 trackPromise(
                   fetch(apiUrl)
-                    .then((response) => {
+                    .then(response => {
                       if (!response.ok) {
-                        throw Error(response.statusText);
+                        throw Error(response.statusText)
                       }
-                      return response;
+                      return response
                     })
-                    .then((res) => res.json())
-                    .then((data) => {
-                      console.log(data);
-                      setAgendados(data);
+                    .then(res => res.json())
+                    .then(data => {
+                      console.log(data)
+                      setAgendados(data)
                     })
                     .catch(function (error) {
-                      console.log("catch error" + error);
-                      setOpenError(true);
+                      console.log('catch error' + error)
+                      setOpenError(true)
                     })
-                );
+                )
               }}
-              options={Alunos.map(
-                (aluno) => `${aluno.idaluno} - ${aluno.nome}`
-              )}
+              options={Alunos.map(aluno => `${aluno.idaluno} - ${aluno.nome}`)}
               getOptionSelected={(option, value) => {
-                return option === value;
+                return option === value
               }}
-              style={{ width: "100%", marginBottom: 2 }}
-              renderInput={(params) => (
+              style={{ width: '100%', marginBottom: 2 }}
+              renderInput={params => (
                 <TextField
                   {...params}
-                  label="Aluno"
-                  required
+                  label='Aluno'
                   autoFocus
-                  variant="outlined"
+                  variant='outlined'
                   disabled={promiseInProgress}
                 />
               )}
@@ -672,67 +669,66 @@ export default function AgendaLista() {
           <Grid
             item
             xs={12}
-            style={{ display: "flex", justifyContent: "flex-start" }}
+            style={{ display: 'flex', justifyContent: 'flex-start' }}
           >
             <Autocomplete
               value={Professor}
-              id="autocomplete"
+              id='autocomplete'
               onChange={(event, newValue) => {
-                setProfessor(newValue);
-                setPage(0);
-                var idprofessor = "0";
+                setProfessor(newValue)
+                setPage(0)
+                var idprofessor = '0'
                 if (newValue) {
                   idprofessor = newValue
-                    .substring(0, newValue.indexOf("-"))
-                    .trim();
+                    .substring(0, newValue.indexOf('-'))
+                    .trim()
                 }
-                var idaluno = "0";
+                var idaluno = '0'
                 if (Aluno) {
                   if (Aluno.length > 0) {
-                    idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
+                    idaluno = Aluno.substring(0, Aluno.indexOf('-')).trim()
                   }
                 }
                 const apiUrl =
                   server +
                   `/api/agenda/agenda/` +
                   DataparaParametroPar(valueDay) +
-                  "/" +
+                  '/' +
                   idaluno +
-                  "/" +
-                  idprofessor;
+                  '/' +
+                  idprofessor
                 trackPromise(
                   fetch(apiUrl)
-                    .then((response) => {
+                    .then(response => {
                       if (!response.ok) {
-                        throw Error(response.statusText);
+                        throw Error(response.statusText)
                       }
-                      return response;
+                      return response
                     })
-                    .then((res) => res.json())
-                    .then((data) => {
-                      console.log(data);
-                      setAgendados(data);
+                    .then(res => res.json())
+                    .then(data => {
+                      console.log(data)
+                      setAgendados(data)
                     })
                     .catch(function (error) {
-                      console.log("catch error" + error);
-                      setOpenError(true);
+                      console.log('catch error' + error)
+                      setOpenError(true)
                     })
-                );
+                )
               }}
               options={professores.map(
-                (professor) => `${professor.idprofessor} - ${professor.nome}`
+                professor => `${professor.idprofessor} - ${professor.nome}`
               )}
               getOptionSelected={(option, value) => {
-                return option === value;
+                return option === value
               }}
-              style={{ width: "100%", marginBottom: 0 }}
-              renderInput={(params) => (
+              style={{ width: '100%', marginBottom: 0 }}
+              renderInput={params => (
                 <TextField
                   {...params}
-                  label="Professor"
-                  required
+                  label='Professor'
                   autoFocus
-                  variant="outlined"
+                  variant='outlined'
                   disabled={promiseInProgress}
                 />
               )}
@@ -742,14 +738,14 @@ export default function AgendaLista() {
             item
             xs={12}
             style={{
-              display: "flex",
-              justifyContent: "flex-start",
+              display: 'flex',
+              justifyContent: 'flex-start',
               marginTop: 30,
-              marginLeft: 10,
+              marginLeft: 10
             }}
           >
             {Aluno != null && (
-              <Link href="#" onClick={handleClickAgendasAluno}>
+              <Link href='#' onClick={handleClickAgendasAluno}>
                 Agendas do aluno
               </Link>
             )}
@@ -759,7 +755,7 @@ export default function AgendaLista() {
         <Grid
           item
           xs={6}
-          style={{ display: "flex", justifyContent: "flex-end" }}
+          style={{ display: 'flex', justifyContent: 'flex-end' }}
         >
           <Box boxShadow={3}>
             <Calendar
@@ -775,21 +771,21 @@ export default function AgendaLista() {
         <Grid
           item
           xs={12}
-          style={{ display: "flex", justifyContent: "flex-start" }}
+          style={{ display: 'flex', justifyContent: 'flex-start' }}
         >
-          <Typography variant="h5" display="block" gutterBottom>
+          <Typography variant='h5' display='block' gutterBottom>
             {dataExt}
           </Typography>
         </Grid>
-        <Grid item xs={12} style={{ justifyContent: "flex-start" }}>
+        <Grid item xs={12} style={{ justifyContent: 'flex-start' }}>
           {rows.length == 0 && !promiseInProgress && (
-            <Aviso aviso="Não existem alunos agendados para esta data" />
+            <Aviso aviso='Não existem alunos agendados para esta data' />
           )}
           {rows.length > 0 && (
             <TableContainer component={Paper}>
               <Table
                 className={classes.table}
-                aria-label="custom pagination table"
+                aria-label='custom pagination table'
               >
                 <TableBody>
                   {(rowsPerPage > 0
@@ -798,11 +794,11 @@ export default function AgendaLista() {
                         page * rowsPerPage + rowsPerPage
                       )
                     : rows
-                  ).map((row) => (
+                  ).map(row => (
                     <TableRow key={row.idagenda}>
                       <TableCell
                         style={{
-                          width: 70,
+                          width: 70
                         }}
                         className={RetornaClasseAgenda(row.cancelado)}
                       >
@@ -812,30 +808,30 @@ export default function AgendaLista() {
                         <Avatar src={row.strfoto}></Avatar>
                       </TableCell>
                       <TableCell
-                        align="left"
+                        align='left'
                         style={{ width: 70 }}
                         className={RetornaClasseAgenda(row.cancelado)}
                       >
                         {row.idaluno}
                       </TableCell>
                       <TableCell
-                        align="left"
+                        align='left'
                         className={RetornaClasseAgenda(row.cancelado)}
                       >
                         {row.aluno}
                       </TableCell>
                       <TableCell
-                        align="left"
+                        align='left'
                         className={RetornaClasseAgenda(row.cancelado)}
                       >
                         {row.professor}
                       </TableCell>
-                      <TableCell style={{ width: 60 }} align="left">
+                      <TableCell style={{ width: 60 }} align='left'>
                         {row.cancelado == 0 && (
                           <IconButton
-                            color="primary"
-                            aria-label="Remove Agenda"
-                            component="span"
+                            color='primary'
+                            aria-label='Remove Agenda'
+                            component='span'
                             disabled={promiseInProgress || carregaPlanilha}
                             onClick={() =>
                               handleClickCancelaAgenda(row.idagenda)
@@ -886,15 +882,15 @@ export default function AgendaLista() {
                         5,
                         10,
                         25,
-                        { label: "All", value: -1 },
+                        { label: 'All', value: -1 }
                       ]}
                       colSpan={5}
                       count={rows.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       SelectProps={{
-                        inputProps: { "aria-label": "rows per page" },
-                        native: true,
+                        inputProps: { 'aria-label': 'rows per page' },
+                        native: true
                       }}
                       onChangePage={handleChangePage}
                       onChangeRowsPerPage={handleChangeRowsPerPage}
@@ -908,36 +904,36 @@ export default function AgendaLista() {
         </Grid>
       </Grid>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby='transition-modal-title'
+        aria-describedby='transition-modal-description'
         className={classes.modal}
         open={openModal}
         onClose={handleCloseModal}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
-          timeout: 500,
+          timeout: 500
         }}
       >
         <Fade in={openModal}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">{ModalTitulo}</h2>
-            <p id="transition-modal-description">
+            <h2 id='transition-modal-title'>{ModalTitulo}</h2>
+            <p id='transition-modal-description'>
               <RadioGroup
-                aria-label="quiz"
-                name="quiz"
+                aria-label='quiz'
+                name='quiz'
                 value={valueCancelamento}
                 onChange={handleRadioChangeCancelamento}
               >
                 <FormControlLabel
-                  value="professor"
+                  value='professor'
                   control={<Radio />}
-                  label="Desmarcado pelo professor"
+                  label='Desmarcado pelo professor'
                 />
                 <FormControlLabel
-                  value="aluno"
+                  value='aluno'
                   control={<Radio />}
-                  label="Desmarcado pelo aluno"
+                  label='Desmarcado pelo aluno'
                 />
               </RadioGroup>
             </p>
@@ -945,11 +941,11 @@ export default function AgendaLista() {
               <Grid
                 item
                 xs={6}
-                style={{ display: "flex", justifyContent: "flex-start" }}
+                style={{ display: 'flex', justifyContent: 'flex-start' }}
               >
                 <Button
-                  variant="outlined"
-                  color="secondary"
+                  variant='outlined'
+                  color='secondary'
                   onClick={() => handleClickCancelaAgendaConfirmacao()}
                 >
                   Desmarcar
@@ -958,9 +954,9 @@ export default function AgendaLista() {
               <Grid
                 item
                 xs={6}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                style={{ display: 'flex', justifyContent: 'flex-end' }}
               >
-                <Button variant="contained" onClick={() => setopenModal(false)}>
+                <Button variant='contained' onClick={() => setopenModal(false)}>
                   Fechar
                 </Button>
               </Grid>
@@ -973,48 +969,48 @@ export default function AgendaLista() {
         autoHideDuration={6000}
         onClose={handleCloseError}
       >
-        <Alert onClose={handleCloseError} severity="error">
+        <Alert onClose={handleCloseError} severity='error'>
           Não foi possível realizar a operação. Contacte o desenvolvedor
         </Alert>
       </Snackbar>
       <Dialog
         open={openDialogoExc}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
       >
-        <DialogTitle id="alert-dialog-title">{"Atenção"}</DialogTitle>
+        <DialogTitle id='alert-dialog-title'>{'Atenção'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id='alert-dialog-description'>
             {textoExc}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color='primary'>
             Desistir
           </Button>
-          <Button onClick={handleClickDelete} color="primary">
+          <Button onClick={handleClickDelete} color='primary'>
             Confirmar
           </Button>
         </DialogActions>
       </Dialog>
       <Dialog
         onClose={handleCloseAgendasAluno}
-        aria-labelledby="simple-dialog-title"
+        aria-labelledby='simple-dialog-title'
         open={openAgendasAluno}
       >
-        <DialogTitle id="simple-dialog-title" disableTypography>
+        <DialogTitle id='simple-dialog-title' disableTypography>
           <Grid container spacing={3}>
             <Grid
               item
               xs={8}
               style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
               }}
             >
-              <Typography variant="h6" display="block" gutterBottom>
+              <Typography variant='h6' display='block' gutterBottom>
                 Agendas do aluno
               </Typography>
             </Grid>
@@ -1023,15 +1019,15 @@ export default function AgendaLista() {
               item
               xs={4}
               style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center'
               }}
             >
               <IconButton
-                color="default"
-                aria-label="Fechar"
-                component="span"
+                color='default'
+                aria-label='Fechar'
+                component='span'
                 onClick={handleCloseAgendasAluno}
               >
                 <CloseIcon />
@@ -1044,5 +1040,5 @@ export default function AgendaLista() {
         </DialogContentText>
       </Dialog>
     </React.Fragment>
-  );
+  )
 }
