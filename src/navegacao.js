@@ -21,12 +21,14 @@ import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 import EventIcon from "@material-ui/icons/Event";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
+import GroupIcon from "@material-ui/icons/Group";
 import logo from "./logomarcio.jpg";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import Aluno from "./aluno";
 import Agenda from "./agenda";
 import Prontuario from "./prontuario";
 import Home from "./home";
+import Turma from "./turma";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -168,6 +170,12 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText primary="Alunos" />
             </ListItem>
+            <ListItem button key={"Turmas"} component={Link} to={"/turma"}>
+              <ListItemIcon>
+                <GroupIcon></GroupIcon>
+              </ListItemIcon>
+              <ListItemText primary="Alunos" />
+            </ListItem>
             <ListItem button key={"Agenda"} component={Link} to={"/agenda"}>
               <ListItemIcon>
                 <EventIcon></EventIcon>
@@ -193,6 +201,7 @@ export default function MiniDrawer() {
           <Switch>
             <Route exact path="/" render={() => <Home />} />
             <Route path="/aluno" render={() => <Aluno />} />
+            <Route path="/turma" render={() => <Turma />} />
             <Route path="/agenda" render={() => <Agenda />} />
             <Route path="/prontuario" render={() => <Prontuario />} />
           </Switch>
