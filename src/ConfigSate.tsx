@@ -9,6 +9,7 @@ interface ConfigState {
   readonly HoraSelProntuario: string
   readonly FotoAlunoSelProntuario: string
   readonly AgendaCancelada: boolean
+  readonly AlunosSelecionadosParaTurma: string[]
 }
 
 export interface AppState {
@@ -21,9 +22,10 @@ const initialConfigState: ConfigState = {
   IDProfessorSelProntuario: 0,
   DataSelProntuario: new Date(),
   FotoAlunoSelProntuario: '',
-  HoraSelProntuario:'',
+  HoraSelProntuario: '',
   AgendaCancelada: false,
-  NomeAlunoSelProntuario:''
+  NomeAlunoSelProntuario: '',
+  AlunosSelecionadosParaTurma: []
 }
 
 export const GETTINCONFIG = 'GettingConfig'
@@ -67,7 +69,6 @@ export const SetHoraSelProntuarioAction = (hora: string) =>
     hora: hora
   } as const)
 
-
 export const SETFOTOSELPRONTUARIO = 'FotoSelProntuario'
 export const SetFotoSelProntuarioAction = (foto: string) =>
   ({
@@ -89,6 +90,13 @@ export const SetIDProfessorSelProntuarioAction = (idprofessor: number) =>
     idprofessor: idprofessor
   } as const)
 
+export const SETALUNOSSELECIONADOSPARATURMA = 'AlunosSelecionadosParaTurma'
+export const SetAlunosSelecionadosParaTurmaAction = (alunos: string[]) =>
+  ({
+    type: SETALUNOSSELECIONADOSPARATURMA,
+    alunos: alunos
+  } as const)
+
 type ConfigActions =
   | ReturnType<typeof gettingConfigAction>
   | ReturnType<typeof SetIDAgendaSelProntuarioAction>
@@ -99,7 +107,7 @@ type ConfigActions =
   | ReturnType<typeof SetAgendaCanceladaAction>
   | ReturnType<typeof SetIDProfessorSelProntuarioAction>
   | ReturnType<typeof SetNomeAlunoSelProntuarioAction>
-  
+  | ReturnType<typeof SetAlunosSelecionadosParaTurmaAction>
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
@@ -158,6 +166,13 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
         AgendaCancelada: action.cancelada
       }
     }
+    case SETALUNOSSELECIONADOSPARATURMA: {
+      return {
+        ...state,
+        Alunos: action.alunos
+      }
+    }
+
   }
 
   return state
