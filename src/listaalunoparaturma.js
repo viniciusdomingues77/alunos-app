@@ -20,7 +20,9 @@ import {
   AppState,
   store,
   SetAlunosSelecionadosParaTurmaAction,
-  SetSelecionandoAlunosParaTurmaAction
+  SetSelecionandoAlunosParaTurmaAction,
+  SetAlunosRemovidosdaTurmaAction,
+  SetAlunosRemovendodaTurmaAction
 } from './ConfigSate'
 
 const useStyles = makeStyles(theme => ({
@@ -35,11 +37,12 @@ const useStyles = makeStyles(theme => ({
   grid: {
     width: '100%',
     maxWidth: 480,
+
     backgroundColor: theme.palette.background.paper
   }
 }))
 
-export default function CheckboxListAluno () {
+export default function CheckboxListAlunoEnturmado () {
   const classes = useStyles()
   const [checked, setChecked] = React.useState([])
 
@@ -47,16 +50,23 @@ export default function CheckboxListAluno () {
   const { promiseInProgress } = usePromiseTracker()
   const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState('')
   const [Alunos, setAlunos] = React.useState([])
+
   const SelecionandoAlunosParaTurma = useSelector(
     state => state.configuracoes.SelecionandoAlunosParaTurma
   )
   const RemovendoAlunosParaTurma = useSelector(
     state => state.configuracoes.RemovendoAlunosParaTurma
   )
+  const IDTurmaSelecionada = useSelector(
+    state => state.configuracoes.TurmaSelecionada
+  )
+
   const handleAlunoFiltroChange = e => {
     setAlunoFiltro(e.currentTarget.value)
   }
+
   const dispatch = useDispatch()
+
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value)
     const newChecked = [...checked]
@@ -67,11 +77,13 @@ export default function CheckboxListAluno () {
       newChecked.splice(currentIndex, 1)
     }
     setChecked(newChecked)
-    dispatch(SetAlunosSelecionadosParaTurmaAction(newChecked))
+    dispatch(SetAlunosRemovidosdaTurmaAction(newChecked))
   }
+
   const handleFiltrarAluno = () => {
     setTextoBarraProgresso('Listando alunos')
-    const apiUrl = server + '/api/aluno/identificacaocomfoto/' + AlunoFiltro
+    const apiUrl =
+      server + '/api/aluno/identificacaocomfotocomturma/' + AlunoFiltro
 
     trackPromise(
       fetch(apiUrl)
@@ -94,8 +106,9 @@ export default function CheckboxListAluno () {
   }
 
   function CarregaAlunos () {
-    setTextoBarraProgresso('Listando alunos')
-    const apiUrl = server + `/api/aluno/identificacaocomfoto/` + AlunoFiltro
+    setTextoBarraProgresso('Listando alunos da turma')
+    const apiUrl =
+      server + `/api/aluno/identificacaocomfotocomturma/` + IDTurmaSelecionada
     trackPromise(
       fetch(apiUrl)
         .then(response => {
@@ -117,48 +130,57 @@ export default function CheckboxListAluno () {
   }
 
   React.useEffect(() => {
-    dispatch(SetAlunosSelecionadosParaTurmaAction(''))
+    dispatch(SetAlunosRemovendodaTurmaAction(false))
+    dispatch(SetAlunosRemovidosdaTurmaAction(''))
     CarregaAlunos()
   }, [])
+
   React.useEffect(() => {
     if (SelecionandoAlunosParaTurma) {
       CarregaAlunos()
       dispatch(SetSelecionandoAlunosParaTurmaAction(false))
-      dispatch(SetAlunosSelecionadosParaTurmaAction(''))
-      setChecked([])
     }
   }, [SelecionandoAlunosParaTurma])
 
   React.useEffect(() => {
     if (RemovendoAlunosParaTurma) {
       CarregaAlunos()
+      dispatch(SetAlunosRemovendodaTurmaAction(false))
+      dispatch(SetAlunosRemovidosdaTurmaAction(''))
+      setChecked([])
     }
   }, [RemovendoAlunosParaTurma])
 
+  React.useEffect(() => {
+    if (IDTurmaSelecionada > 0) {
+      CarregaAlunos()
+    }
+  }, [IDTurmaSelecionada])
+
   return (
     <Grid container spacing={3} direction='column' className={classes.grid}>
-      <Grid container spacing={1} direction='row'>
-        <Grid
+      <Grid container spacing={3} direction='row'>
+        {/* <Grid
           item
           xs={8}
           style={{
             display: 'flex',
             justifyContent: 'flex-end',
             paddingRight: 0,
-            paddingLeft: 30
+            paddingLeft: 10
           }}
-        >
-          {/* <TextField
-            label='Aluno'
-            name='Aluno'
-            fullWidth
-            value={AlunoFiltro}
-            onChange={handleAlunoFiltroChange}
-            disabled={promiseInProgress}
-          /> */}
-          <TextBusca label={'Aluno'} />
-        </Grid>
-        <Grid
+        > */}
+        <TextField
+          label='Aluno'
+          name='Aluno'
+          value={AlunoFiltro}
+          onChange={handleAlunoFiltroChange}
+          disabled={promiseInProgress}
+          variant='filled'
+          style={{ width: '80%' }}
+        />
+        {/* </Grid> */}
+        {/* <Grid
           item
           xs={4}
           style={{
@@ -166,16 +188,14 @@ export default function CheckboxListAluno () {
             justifyContent: 'flex-end',
             alignItems: 'center'
           }}
-        >
-          <Button
-            variant='outlined'
-            color='default'
-            startIcon={<FindInPageIcon />}
-            onClick={handleFiltrarAluno}
-          >
-            Buscar
-          </Button>
-        </Grid>
+        > */}
+        <Button
+          variant='contained'
+          color='default'
+          startIcon={<FindInPageIcon />}
+          onClick={handleFiltrarAluno}
+        ></Button>
+        {/* </Grid> */}
       </Grid>
       <List dense className={classes.root}>
         {Alunos.map(aluno => {

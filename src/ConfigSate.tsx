@@ -9,7 +9,11 @@ interface ConfigState {
   readonly HoraSelProntuario: string
   readonly FotoAlunoSelProntuario: string
   readonly AgendaCancelada: boolean
-  readonly AlunosSelecionadosParaTurma: string[]
+  readonly AlunosSelecionadosParaTurma: string
+  readonly AlunosRemovidosdaTurma: string
+  readonly SelecionandoAlunosParaTurma: boolean
+  readonly RemovendoAlunosParaTurma: boolean
+  readonly TurmaSelecionada: number
 }
 
 export interface AppState {
@@ -25,7 +29,11 @@ const initialConfigState: ConfigState = {
   HoraSelProntuario: '',
   AgendaCancelada: false,
   NomeAlunoSelProntuario: '',
-  AlunosSelecionadosParaTurma: []
+  AlunosSelecionadosParaTurma: '',
+  SelecionandoAlunosParaTurma: false,
+  TurmaSelecionada: 0,
+  AlunosRemovidosdaTurma: '',
+  RemovendoAlunosParaTurma:false
 }
 
 export const GETTINCONFIG = 'GettingConfig'
@@ -91,10 +99,38 @@ export const SetIDProfessorSelProntuarioAction = (idprofessor: number) =>
   } as const)
 
 export const SETALUNOSSELECIONADOSPARATURMA = 'AlunosSelecionadosParaTurma'
-export const SetAlunosSelecionadosParaTurmaAction = (alunos: string[]) =>
+export const SetAlunosSelecionadosParaTurmaAction = (alunos: string) =>
   ({
     type: SETALUNOSSELECIONADOSPARATURMA,
     alunos: alunos
+  } as const)
+
+export const SETSELECIONANDOALUNOSPARATURMA = 'SelecionandoAlunosParaTurma'
+export const SetSelecionandoAlunosParaTurmaAction = (selecionando: boolean) =>
+  ({
+    type: SETSELECIONANDOALUNOSPARATURMA,
+    selecionando: selecionando
+  } as const)
+
+export const SETTURMASELECIONADA = 'TurmaSelecionada'
+export const SetTurmaSelecionadaAction = (idturma: number) =>
+  ({
+    type: SETTURMASELECIONADA,
+    idturma: idturma
+  } as const)
+
+export const SETALUNOSREMOVIDOSDATURMA = 'AlunosRemovidosdaTurma'
+export const SetAlunosRemovidosdaTurmaAction = (alunos: string) =>
+  ({
+    type: SETALUNOSREMOVIDOSDATURMA,
+    alunos: alunos
+  } as const)
+
+export const SETREMOVENDOALUNOSDATURMA = 'RemovendoAlunosdaTurma'
+export const SetAlunosRemovendodaTurmaAction = (removendo: boolean) =>
+  ({
+    type: SETREMOVENDOALUNOSDATURMA,
+    removendo: removendo
   } as const)
 
 type ConfigActions =
@@ -108,6 +144,10 @@ type ConfigActions =
   | ReturnType<typeof SetIDProfessorSelProntuarioAction>
   | ReturnType<typeof SetNomeAlunoSelProntuarioAction>
   | ReturnType<typeof SetAlunosSelecionadosParaTurmaAction>
+  | ReturnType<typeof SetSelecionandoAlunosParaTurmaAction>
+  | ReturnType<typeof SetTurmaSelecionadaAction>
+  | ReturnType<typeof SetAlunosRemovidosdaTurmaAction>
+  | ReturnType<typeof SetAlunosRemovendodaTurmaAction>
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
@@ -169,10 +209,33 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
     case SETALUNOSSELECIONADOSPARATURMA: {
       return {
         ...state,
-        Alunos: action.alunos
+        AlunosSelecionadosParaTurma: action.alunos
       }
     }
-
+    case SETSELECIONANDOALUNOSPARATURMA: {
+      return {
+        ...state,
+        SelecionandoAlunosParaTurma: action.selecionando
+      }
+    }
+    case SETTURMASELECIONADA: {
+      return {
+        ...state,
+        TurmaSelecionada: action.idturma
+      }
+    }
+    case SETALUNOSREMOVIDOSDATURMA: {
+      return {
+        ...state,
+        AlunosRemovidosdaTurma: action.alunos
+      }
+    }
+    case SETREMOVENDOALUNOSDATURMA: {
+      return {
+        ...state,
+        RemovendoAlunosParaTurma: action.removendo
+      }
+    }
   }
 
   return state
