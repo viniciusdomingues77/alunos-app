@@ -18,7 +18,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import Typography from '@material-ui/core/Typography'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import { useSelector, useDispatch } from 'react-redux'
-
+import IconButton from '@material-ui/core/IconButton'
 import {
   action,
   AppState,
@@ -82,6 +82,7 @@ export default function TurmaAluno () {
         })
     )
   }, [])
+
   const EnturmaAluno = () => {
     if (Turma.length == 0) {
       return
@@ -279,12 +280,17 @@ export default function TurmaAluno () {
               alignItems: 'center'
             }}
           >
-            <Button
-              variant='outlined'
-              color='primary'
-              endIcon={<ArrowForwardIosIcon />}
+            <IconButton
               onClick={EnturmaAluno}
-            ></Button>
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+            {/* <Button
+              variant='outlined'
+              color='default'
+              startIcon={<ArrowForwardIosIcon />}
+              onClick={EnturmaAluno}
+            ></Button> */}
             <Button
               variant='outlined'
               color='primary'

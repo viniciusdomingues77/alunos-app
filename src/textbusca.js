@@ -33,8 +33,9 @@ export default function TextBusca (props) {
 
   return (
     <Paper component='form' className={classes.root}>
-      <InputBase className={classes.input} placeholder={props.label} />
-      <IconButton type='submit' className={classes.iconButton}>
+      <InputBase className={classes.input} placeholder={props.label} 
+      value={props.value} onChange={props.onChange} disabled={props.disabled}/>
+      <IconButton type='button' className={classes.iconButton} onClick={props.onClickButton} >
         <SearchIcon />
       </IconButton>
     </Paper>

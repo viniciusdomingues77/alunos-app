@@ -159,43 +159,14 @@ export default function CheckboxListAlunoEnturmado () {
 
   return (
     <Grid container spacing={3} direction='column' className={classes.grid}>
-      <Grid container spacing={3} direction='row'>
-        {/* <Grid
-          item
-          xs={8}
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            paddingRight: 0,
-            paddingLeft: 10
-          }}
-        > */}
-        <TextField
-          label='Aluno'
-          name='Aluno'
+      <Grid container spacing={1} direction='row'>
+        <TextBusca
+          label={'Aluno'}
           value={AlunoFiltro}
           onChange={handleAlunoFiltroChange}
           disabled={promiseInProgress}
-          variant='filled'
-          style={{ width: '80%' }}
+          onClickButton={handleFiltrarAluno}
         />
-        {/* </Grid> */}
-        {/* <Grid
-          item
-          xs={4}
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center'
-          }}
-        > */}
-        <Button
-          variant='contained'
-          color='default'
-          startIcon={<FindInPageIcon />}
-          onClick={handleFiltrarAluno}
-        ></Button>
-        {/* </Grid> */}
       </Grid>
       <List dense className={classes.root}>
         {Alunos.map(aluno => {

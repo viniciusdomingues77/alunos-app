@@ -137,45 +137,14 @@ export default function CheckboxListAluno () {
 
   return (
     <Grid container spacing={3} direction='column' className={classes.grid}>
-      <Grid container spacing={1} direction='row'>
-        <Grid
-          item
-          xs={8}
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            paddingRight: 0,
-            paddingLeft: 30
-          }}
-        >
-          {/* <TextField
-            label='Aluno'
-            name='Aluno'
-            fullWidth
-            value={AlunoFiltro}
-            onChange={handleAlunoFiltroChange}
-            disabled={promiseInProgress}
-          /> */}
-          <TextBusca label={'Aluno'} />
-        </Grid>
-        <Grid
-          item
-          xs={4}
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center'
-          }}
-        >
-          <Button
-            variant='outlined'
-            color='default'
-            startIcon={<FindInPageIcon />}
-            onClick={handleFiltrarAluno}
-          >
-            Buscar
-          </Button>
-        </Grid>
+      <Grid container spacing={1} direction='row' style={{ marginLeft: 15 }}>
+        <TextBusca
+          label={'Aluno'}
+          value={AlunoFiltro}
+          onChange={handleAlunoFiltroChange}
+          disabled={promiseInProgress}
+          onClickButton={handleFiltrarAluno}
+        />
       </Grid>
       <List dense className={classes.root}>
         {Alunos.map(aluno => {
