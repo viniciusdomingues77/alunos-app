@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import { useSelector, useDispatch } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import {
   action,
   AppState,
@@ -236,7 +237,9 @@ export default function TurmaAluno () {
                   />
                 )}
               />
-              {Turma.length == 0 && <span>Selecione uma turma</span>}
+              {Turma.length == 0 &&  <Typography variant="body2" gutterBottom>
+                        selecione uma turma
+                      </Typography>}
             </Grid>
           </Grid>
         </Grid>
@@ -280,9 +283,7 @@ export default function TurmaAluno () {
               alignItems: 'center'
             }}
           >
-            <IconButton
-              onClick={EnturmaAluno}
-            >
+            <IconButton onClick={EnturmaAluno}>
               <ArrowForwardIosIcon />
             </IconButton>
             {/* <Button
@@ -291,12 +292,15 @@ export default function TurmaAluno () {
               startIcon={<ArrowForwardIosIcon />}
               onClick={EnturmaAluno}
             ></Button> */}
-            <Button
+            {/* <Button
               variant='outlined'
               color='primary'
               endIcon={<ArrowForwardIosIcon />}
               onClick={DesenturmaAluno}
-            ></Button>
+            ></Button> */}
+            <IconButton onClick={DesenturmaAluno}>
+              <ArrowBackIosIcon />
+            </IconButton>
           </Grid>
           <Grid
             item
