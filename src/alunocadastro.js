@@ -129,7 +129,16 @@ export default function AlunoCadastro () {
           return response
         })
         .then(response => response.json())
-        .then(d => console.log('data res ' + d), setSubmitSuccess(true))
+        .then(d => {
+          console.log(
+            'statusCode ' + d.statusCode + ' reasonPhrase ' + d.reasonPhrase
+          )
+          if (d.statusCode != '200') {
+            settextError(d.reasonPhrase)
+            throw Error(d.reasonPhrase)
+          }
+          setSubmitSuccess(true)
+        })
         .catch(function (error) {
           console.log('catch error' + error)
           setSubmitSuccess(false)
@@ -266,7 +275,6 @@ export default function AlunoCadastro () {
   }
 
   function handleTelFixoError () {
-    
     if (TelFixo) {
       if (TelFixo.length == 0) {
         setTelFixoError(false)
@@ -276,7 +284,7 @@ export default function AlunoCadastro () {
       setTelFixoError(false)
       return false
     }
-    
+
     const regex = /[0-9]/
     var result = regex.test(TelFixo)
 
@@ -297,7 +305,6 @@ export default function AlunoCadastro () {
   }
 
   function handleCEPError () {
-    
     if (CEP) {
       if (CEP.length == 0) {
         setCEPError(false)
@@ -307,7 +314,7 @@ export default function AlunoCadastro () {
       setCEPError(false)
       return false
     }
-    
+
     const regex = /[0-9]/
     var result = regex.test(CEP)
 
@@ -341,7 +348,6 @@ export default function AlunoCadastro () {
   }
 
   function ValidaTodososCampos () {
-
     var nomerror = handleNomeError()
     var emailerror = handleEmailError()
     var telcelularerror = handleTelCelularError()
@@ -369,7 +375,9 @@ export default function AlunoCadastro () {
     vertical: 'top',
     horizontal: 'center'
   })
+
   const [openError, setOpenError] = React.useState(false)
+  const [textError, settextError] = React.useState('')
 
   const { vertical, horizontal, open } = openSuccess
   const { openErr } = openError
@@ -604,11 +612,11 @@ export default function AlunoCadastro () {
                         />
                       )}
                     </InputMask>
-                     {CEPError && (
-                    <FormHelperText id='component-error-text' error>
-                      CEP inválido.Este campo não é obrigatório
-                    </FormHelperText>
-                  )}
+                    {CEPError && (
+                      <FormHelperText id='component-error-text' error>
+                        CEP inválido.Este campo não é obrigatório
+                      </FormHelperText>
+                    )}
                   </MuiThemeProvider>
                 </Grid>
                 <Grid item xs={4}>
@@ -665,7 +673,7 @@ export default function AlunoCadastro () {
                 onClose={handleCloseError}
               >
                 <Alert onClose={handleCloseError} severity='error'>
-                  Não foi possível realizar a operação. Contacte o desenvolvedor
+                  Não foi possível realizar a operação. Erro ´{textError}´
                 </Alert>
               </Snackbar>
             </Grid>
