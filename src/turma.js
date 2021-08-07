@@ -12,6 +12,7 @@ import Box from "@material-ui/core/Box";
 import ListIcon from "@material-ui/icons/List";
 import TurmaCadastro from "./turmacadastro";
 import TurmaAluno from "./turmaaluno";
+import TurmaLista from "./turmalista";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -91,7 +92,9 @@ export default function Turma() {
         <TabPanel value={value} index={0}>
           <TurmaCadastro />
         </TabPanel>
-        <TabPanel value={value} index={1}></TabPanel>
+        <TabPanel value={value} index={1}>
+          <TurmaLista />
+        </TabPanel>
         <TabPanel value={value} index={2}>
           <TurmaAluno />
         </TabPanel>
