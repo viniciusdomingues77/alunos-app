@@ -131,7 +131,6 @@ export default function TurmaAluno() {
         })
         .catch(function (error) {
           setOpenError(true);
-          // setCancelando(false);
         })
     );
   };
@@ -177,7 +176,6 @@ export default function TurmaAluno() {
         })
         .catch(function (error) {
           setOpenError(true);
-          // setCancelando(false);
         })
     );
   };

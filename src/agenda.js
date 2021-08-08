@@ -19,6 +19,8 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import Agendamento from "./agendamentoaluno";
 import AgendaLista from "./agendalista";
+import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
+import AgendamentoTurma from "./agendamentoturma";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -88,6 +90,11 @@ export default function Agenda() {
               icon={<PermContactCalendarIcon />}
               {...a11yProps(1)}
             />
+            <Tab
+              label="Agendamento de turma"
+              icon={<AssignmentIndOutlinedIcon />}
+              {...a11yProps(1)}
+            />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} spacing={0} m={0} p={0}>
@@ -95,6 +102,9 @@ export default function Agenda() {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Agendamento />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <AgendamentoTurma />
         </TabPanel>
       </Paper>
     </div>
