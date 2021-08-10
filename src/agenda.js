@@ -1,45 +1,48 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import CabecalhoModulo from "./titulomodulo";
-import AlunosLista from "./alunoslista";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import ListIcon from "@material-ui/icons/List";
-import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Typography from "@material-ui/core/Typography";
-import AlunoCadastro from "./alunocadastro";
-import PersonIcon from "@material-ui/icons/Person";
-import AlunoDetalhe from "./alunodetalhe";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
-import Agendamento from "./agendamentoaluno";
-import AgendaLista from "./agendalista";
-import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
-import AgendamentoTurma from "./agendamentoturma";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
+import CabecalhoModulo from './titulomodulo'
+import AlunosLista from './alunoslista'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
+import ListIcon from '@material-ui/icons/List'
+import PropTypes from 'prop-types'
+import AppBar from '@material-ui/core/AppBar'
+import Typography from '@material-ui/core/Typography'
+import AlunoCadastro from './alunocadastro'
+import PersonIcon from '@material-ui/icons/Person'
+import AlunoDetalhe from './alunodetalhe'
+import DateRangeIcon from '@material-ui/icons/DateRange'
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
+import Agendamento from './agendamentoaluno'
+import AgendaLista from './agendalista'
+import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined'
+import AgendamentoTurma from './agendamentoturma'
+import EventIcon from '@material-ui/icons/Event'
+import Calendario from './calendario'
 
-    flexWrap: "wrap",
-    "& > *": {
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+
+    flexWrap: 'wrap',
+    '& > *': {
       marginLeft: theme.spacing(18),
       marginTop: theme.spacing(0),
       width: theme.spacing(120),
-      height: theme.spacing(130),
-    },
-  },
-}));
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+      height: theme.spacing(130)
+    }
+  }
+}))
+function TabPanel (props) {
+  const { children, value, index, ...other } = props
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`scrollable-force-tabpanel-${index}`}
       aria-labelledby={`scrollable-force-tab-${index}`}
@@ -51,62 +54,66 @@ function TabPanel(props) {
         </Box>
       )}
     </div>
-  );
+  )
 }
-export default function Agenda() {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+export default function Agenda () {
+  const classes = useStyles()
+  const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+  }
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-  function a11yProps(index) {
+    value: PropTypes.any.isRequired
+  }
+  function a11yProps (index) {
     return {
       id: `scrollable-force-tab-${index}`,
-      "aria-controls": `scrollable-force-tabpanel-${index}`,
-    };
+      'aria-controls': `scrollable-force-tabpanel-${index}`
+    }
   }
   return (
     <div className={classes.root}>
       <Paper elevation={1}>
-        <AppBar position="static" color="default">
+        <AppBar position='static' color='default'>
           <Tabs
             value={value}
             onChange={handleChange}
-            variant="fullWidth"
-            scrollButtons="on"
-            indicatorColor="primary"
-            textColor="primary"
-            aria-label="scrollable force tabs example"
+            variant='fullWidth'
+            scrollButtons='on'
+            indicatorColor='primary'
+            textColor='primary'
+            aria-label='scrollable force tabs example'
           >
-            <Tab label="Agenda" icon={<DateRangeIcon />} {...a11yProps(0)} />
+            <Tab label='Calendario' icon={<EventIcon />} {...a11yProps(0)} />
+            <Tab label='Agenda' icon={<DateRangeIcon />} {...a11yProps(0)} />
             <Tab
-              label="Agendamento de aluno"
+              label='Agendamento de aluno'
               icon={<PermContactCalendarIcon />}
               {...a11yProps(1)}
             />
             <Tab
-              label="Agendamento de turma"
+              label='Agendamento de turma'
               icon={<AssignmentIndOutlinedIcon />}
               {...a11yProps(1)}
             />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} spacing={0} m={0} p={0}>
+          <Calendario />
+        </TabPanel>
+        <TabPanel value={value} index={1} spacing={0} m={0} p={0}>
           <AgendaLista />
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        <TabPanel value={value} index={2}>
           <Agendamento />
         </TabPanel>
-        <TabPanel value={value} index={2}>
+        <TabPanel value={value} index={3}>
           <AgendamentoTurma />
         </TabPanel>
       </Paper>
     </div>
-  );
+  )
 }
