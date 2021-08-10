@@ -413,7 +413,7 @@ export default function AgendamentoTurma() {
     setOpenError(false);
     var url = "";
     if (MarcacaoSemestral === true) {
-      url = server + "/api/agenda/semestre/";
+      url = server + "/api/agenda/agendaturmasemestre/";
     } else {
       url = server + "/api/agenda/agendaturma";
     }
