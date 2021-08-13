@@ -27,8 +27,8 @@ import {
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    height: 280,
-    overflow: 'scroll',
+    height: 500,
+    overflow: 'auto',
     marginTop: 20,
     backgroundColor: theme.palette.background.paper
   },

@@ -189,15 +189,14 @@ export default function TurmaAluno () {
         />
       </div>
       <div className={classes.root}>
-        <Grid container spacing={3} direction='row' style={{ height: 200 }}>
+        <Grid container spacing={3} direction='row' style={{ height: 150 }}>
           <Grid
             item
             xs={6}
             style={{
               display: 'flex',
               justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginBottom: 70
+              marginBottom: 20
             }}
           >
             <Grid
@@ -253,7 +252,7 @@ export default function TurmaAluno () {
                 )}
               />
               {Turma.length == 0 && (
-                <Typography variant='body2' gutterBottom>
+                <Typography variant='body2' gutterBottom color='textSecondary'>
                   selecione uma turma
                 </Typography>
               )}
@@ -261,15 +260,14 @@ export default function TurmaAluno () {
           </Grid>
         </Grid>
 
-        <Grid container spacing={6} direction='row'>
+        <Grid container spacing={2} direction='row'>
           <Grid
             item
             xs={6}
             style={{
               display: 'flex',
               justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginBottom: 20
+              marginBottom: 5
             }}
           >
             <Typography variant='h6' component='h6'>
@@ -287,9 +285,13 @@ export default function TurmaAluno () {
               marginBottom: 20
             }}
           >
-            {Turma.length > 0 && (
+            {Turma.length > 0 ? (
               <Typography variant='h6' component='h6'>
                 {TurmaDesc}
+              </Typography>
+            ) : (
+              <Typography variant='h6' component='h6' color='textSecondary'>
+                Nenhuma turma selecionada
               </Typography>
             )}
           </Grid>
@@ -305,27 +307,17 @@ export default function TurmaAluno () {
             <CheckboxListAluno disabled={promiseInProgress} />
           </Grid>
           <Grid item lg={2}>
-            <Grid
-              container
-              style={{
-                direction: 'column',
-                display: 'flex',
-                justifyContent: 'flex-start'
-              }}
-            >
-              <Grid
-                item
-                lg={12}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}
-              >
+            <Grid container direction='column' spacing={3}>
+              <Grid item lg={12}></Grid>
+              <Grid item lg={12}></Grid>
+              <Grid item lg={12}></Grid>
+              <Grid item lg={12}></Grid>
+              <Grid item>
                 <IconButton onClick={EnturmaAluno} disabled={promiseInProgress}>
                   <ArrowForwardIosIcon />
                 </IconButton>
               </Grid>
-              <Grid item lg={12}>
+              <Grid item>
                 <IconButton
                   onClick={DesenturmaAluno}
                   disabled={promiseInProgress}

@@ -31,8 +31,8 @@ import Aluno from './aluno'
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    height: 280,
-    overflow: 'scroll',
+    height: 500,
+    overflow: 'auto',
     marginTop: 20,
     backgroundColor: theme.palette.background.paper
   },
@@ -179,15 +179,14 @@ export default function CheckboxListAlunoEnturmado (props) {
 
   return (
     <Grid container spacing={3} direction='column' className={classes.grid}>
-      <Grid container spacing={1} direction='row'>
-        <TextBusca
-          label={'Aluno'}
-          value={AlunoFiltro}
-          onChange={handleAlunoFiltroChange}
-          disabled={promiseInProgress || props.disabled}
-          onClickButton={handleFiltrarAluno}
-        />
-      </Grid>
+      <TextBusca
+        label={'Aluno'}
+        value={AlunoFiltro}
+        onChange={handleAlunoFiltroChange}
+        disabled={promiseInProgress || props.disabled}
+        onClickButton={handleFiltrarAluno}
+      />
+      
       <Paper elevation={3} style={{ marginTop: '10px' }}>
         <List dense className={classes.root}>
           {Alunos.map(aluno => {
