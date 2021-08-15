@@ -103,8 +103,6 @@ export default function DiasDaSemana() {
             label="Domingo"
           />
         </FormGroup>
-
-        {/* <FormHelperText>Be careful</FormHelperText> */}
       </FormControl>
     </div>
   );

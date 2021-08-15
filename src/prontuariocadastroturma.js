@@ -84,11 +84,11 @@ const useStyles = makeStyles((theme) => ({
   divEditor: {},
 }));
 
-export default function ProntuarioCadastro() {
+export default function ProntuarioCadastroTurma() {
   const [professores, setProfessores] = React.useState([]);
   const [Professor, setProfessor] = React.useState("");
   const classes = useStyles();
-  const [Alunos, setAlunos] = React.useState([]);
+  const [Turmas, setTurmas] = React.useState([]);
   const [Aluno, setAluno] = React.useState("");
   const { promiseInProgress } = usePromiseTracker();
   const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
@@ -257,7 +257,7 @@ export default function ProntuarioCadastro() {
     setdataExt("");
     setTextoBarraProgresso("Listando alunos");
 
-    const apiUrl = server + `/api/aluno/identificacao`;
+    const apiUrl = server + `/api/turma/`;
     trackPromise(
       fetch(apiUrl)
         .then((response) => {
@@ -269,7 +269,7 @@ export default function ProntuarioCadastro() {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setAlunos(data);
+          setTurmas(data);
         })
         .catch(function (error) {
           console.log("catch error" + error);
@@ -308,6 +308,7 @@ export default function ProntuarioCadastro() {
     }
     setOpenSuccess({ open: false, vertical: "top", horizontal: "center" });
   };
+
   React.useEffect(() => {
     setTextoBarraProgresso("Carregando prontuário");
     const apiUrl2 = server + `/api/prontuario?idagenda=` + idagendasel;
@@ -382,8 +383,8 @@ export default function ProntuarioCadastro() {
                     SelAluno(idaluno, nomealuno);
                     dispatch(SetIDAgendaSelProntuarioAction(0));
                   }}
-                  options={Alunos.map(
-                    (aluno) => `${aluno.idaluno} - ${aluno.nome}`
+                  options={Turmas.map(
+                    (turma) => `${turma.idturma} - ${turma.turma}`
                   )}
                   getOptionSelected={(option, value) => {
                     return option === value;
@@ -392,7 +393,7 @@ export default function ProntuarioCadastro() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Aluno"
+                      label="Turmas"
                       required
                       autoFocus
                       variant="outlined"

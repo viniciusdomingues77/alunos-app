@@ -13,6 +13,8 @@ import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import ProntuarioCadastro from "./prontuariocadastro";
+import ProntuarioCadastroTurma from "./prontuariocadastroturma";
+import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -81,10 +83,18 @@ export default function Prontuario() {
               icon={<AssignmentIndIcon />}
               {...a11yProps(0)}
             />
+            <Tab
+              label="Prontuário de turma"
+              icon={<AssignmentIndOutlinedIcon />}
+              {...a11yProps(0)}
+            />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} spacing={0} m={0} p={0}>
           <ProntuarioCadastro></ProntuarioCadastro>
+        </TabPanel>
+        <TabPanel value={value} index={1} spacing={0} m={0} p={0}>
+          <ProntuarioCadastroTurma></ProntuarioCadastroTurma>
         </TabPanel>
       </Paper>
     </div>
