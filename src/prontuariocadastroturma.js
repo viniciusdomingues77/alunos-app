@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AgendasAluno from "./gradedatahorario";
+import AgendasTurma from "./gradedatahorarioturma";
 import Grid from "@material-ui/core/Grid";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
@@ -22,7 +23,6 @@ import {
   SetIDAlunoSelProntuarioAction,
   SetIDProfessorSelProntuarioAction,
   SetNomeAlunoSelProntuarioAction,
-  SetFotoSelProntuarioAction,
   SetHoraSelProntuarioAction,
 } from "./ConfigSate";
 import ReactDOM from "react-dom";
@@ -203,6 +203,7 @@ export default function ProntuarioCadastroTurma() {
       DiaporExtenso(data.getDay());
     return dt;
   }
+
   const dispatch = useDispatch();
   const SelAluno = (idaluno, nmaluno) => {
     setTextoBarraProgresso("Carregando agendas do aluno");
@@ -438,7 +439,7 @@ export default function ProntuarioCadastroTurma() {
             </Grid>
           </Grid>
           <Grid item xs={5}>
-            <AgendasAluno
+            <AgendasTurma
               disabled={promiseInProgress}
               setOpenError={setOpenError}
             />
