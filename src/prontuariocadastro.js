@@ -247,11 +247,11 @@ export default function ProntuarioCadastro() {
         })
     );
   };
-  React.useEffect(() => {
-    if (idagendasel == 0) {
-      setdataExt("");
-    }
-  });
+  // React.useEffect(() => {
+  //   if (idagendasel == 0) {
+  //     setdataExt("");
+  //   }
+  // });
 
   React.useEffect(() => {
     setdataExt("");
@@ -295,6 +295,14 @@ export default function ProntuarioCadastro() {
           setOpenError(true);
         })
     );
+    return () => {
+          dispatch(SetIDAgendaSelProntuarioAction(0))
+          dispatch(SetIDAlunoSelProntuarioAction(0))
+          dispatch(SetIDProfessorSelProntuarioAction(0))
+          dispatch(SetNomeAlunoSelProntuarioAction(""))
+          dispatch(SetFotoSelProntuarioAction([]))
+          dispatch(SetHoraSelProntuarioAction(""))
+        }
   }, []);
   const handleCloseError = (event, reason) => {
     if (reason === "clickaway") {
@@ -378,6 +386,10 @@ export default function ProntuarioCadastro() {
                       nomealuno = newValue
                         .substring(newValue.indexOf("-") + 1, newValue.lenght)
                         .trim();
+                    }
+                    if (idaluno == "0")
+                    {
+                        setdataExt("")
                     }
                     SelAluno(idaluno, nomealuno);
                     dispatch(SetIDAgendaSelProntuarioAction(0));

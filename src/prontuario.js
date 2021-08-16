@@ -47,6 +47,7 @@ function TabPanel(props) {
     </div>
   );
 }
+
 export default function Prontuario() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
