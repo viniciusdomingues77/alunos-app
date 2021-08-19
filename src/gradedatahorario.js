@@ -108,6 +108,7 @@ export default function AgendasAluno (props) {
     if (idprofessor) {
       idprofessorsel = idprofessor
     }
+    
     console.log('idaluno ' + idaluno)
     const apiUrl =
       server + `/api/agenda/agendas/` + idaluno + '/' + idprofessorsel
@@ -169,9 +170,10 @@ export default function AgendasAluno (props) {
 
   React.useEffect(() => {
     //LimpaRedux()
-    dispatch(SetIDAlunoSelProntuarioAction(0))
+    //dispatch(SetIDAlunoSelProntuarioAction(0))
     
   }, [])
+  
   React.useEffect(() => {
     CarregaAgendas()
   }, [idaluno])

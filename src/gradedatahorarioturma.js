@@ -80,7 +80,6 @@ export default function AgendasTurma (props) {
     dispatch(SetHoraSelProntuarioTurmaAction(strHora))
   }
 
-
   const CarregaAgendas = () => {
     console.log('carrega agendas')
     var idturmasel = 0
@@ -128,7 +127,7 @@ export default function AgendasTurma (props) {
 
   React.useEffect(() => {
     //LimpaRedux()
-    dispatch(SetIDTurmaSelProntuarioAction(0))
+    //dispatch(SetIDTurmaSelProntuarioAction(0))
   }, [])
 
   React.useEffect(() => {

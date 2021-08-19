@@ -24,11 +24,13 @@ interface ConfigState {
   readonly RemovendoAlunosParaTurma: boolean
   readonly TurmaSelecionada: number
   readonly OpenEventoAgenda: boolean
+  readonly CalendarioAtualizar: boolean
+  readonly ProntuarioAba: number
   readonly EventoAgenda: {
     title: string
     start: Date
     end: Date
-    resourceId: { id: number; origem: string }
+    resourceId: { id: number; origem: string; idident: number }
   }
 }
 
@@ -59,11 +61,13 @@ const initialConfigState: ConfigState = {
   AlunosRemovidosdaTurma: '',
   RemovendoAlunosParaTurma: false,
   OpenEventoAgenda: false,
+  CalendarioAtualizar: true,
+  ProntuarioAba: 0,
   EventoAgenda: {
     title: '',
     start: new Date(),
     end: new Date(),
-    resourceId: { id: 0, origem: '' }
+    resourceId: { id: 0, origem: '', idident: 0 }
   }
 }
 
@@ -215,14 +219,28 @@ export const SetOpenEventoAgendaAction = (open: boolean) =>
 
 export const SETEVENTOAGENDA = 'EventoAgenda'
 export const SetEventoAgendaAction = (agenda: {
-    title: string
-    start: Date
-    end: Date
-    resourceId: { id: number; origem: string }
-  }) =>
+  title: string
+  start: Date
+  end: Date
+  resourceId: { id: number; origem: string; idident: number }
+}) =>
   ({
     type: SETEVENTOAGENDA,
     agenda: agenda
+  } as const)
+
+export const SETCALENDARIOATUALIZAR = 'CalendarioAtualizar'
+export const SetCalendarioAtualizarAction = (atualizar: boolean) =>
+  ({
+    type: SETCALENDARIOATUALIZAR,
+    atualizar: atualizar
+  } as const)
+
+export const SETPRONTUARIOABA = 'ProntuarioAba'
+export const SetProntuarioAbaAction = (aba: number) =>
+  ({
+    type: SETPRONTUARIOABA,
+    aba: aba
   } as const)
 
 type ConfigActions =
@@ -249,6 +267,8 @@ type ConfigActions =
   | ReturnType<typeof SetNomeTurmaSelProntuarioAction>
   | ReturnType<typeof SetOpenEventoAgendaAction>
   | ReturnType<typeof SetEventoAgendaAction>
+  | ReturnType<typeof SetCalendarioAtualizarAction>
+  | ReturnType<typeof SetProntuarioAbaAction>
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
@@ -386,8 +406,19 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
         EventoAgenda: action.agenda
       }
     }
+    case SETCALENDARIOATUALIZAR: {
+      return {
+        ...state,
+        CalendarioAtualizar: action.atualizar
+      }
+    }
+    case SETPRONTUARIOABA: {
+      return {
+        ...state,
+        ProntuarioAba: action.aba
+      }
+    }
   }
-
   return state
 }
 

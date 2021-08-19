@@ -108,6 +108,10 @@ export default function ProntuarioCadastroTurma () {
     EditorState.createEmpty()
   )
 
+  const nmturmasel = useSelector(
+    state => state.configuracoes.NomeTurmaSelProntuario
+  )
+
   const idturmasel = useSelector(
     state => state.configuracoes.IDTurmaSelProntuario
   )
@@ -323,6 +327,10 @@ export default function ProntuarioCadastroTurma () {
     }
     setOpenSuccess({ open: false, vertical: 'top', horizontal: 'center' })
   }
+  
+  React.useEffect(() => {
+    setTurma(nmturmasel)
+  }, [Turmas])
 
   React.useEffect(() => {
     setTextoBarraProgresso('Carregando prontuário')

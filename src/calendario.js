@@ -11,17 +11,46 @@ import {
   AppState,
   store,
   SetOpenEventoAgendaAction,
-  SetEventoAgendaAction
+  SetEventoAgendaAction,
+  SetCalendarioAtualizarAction
 } from './ConfigSate'
 import { useSelector, useDispatch } from 'react-redux'
 import DialogoCalendario from './dialogocalendario'
+import BarraProgressoFixa from './barraprogressofixa'
+import { makeStyles } from '@material-ui/core/styles'
+import Snackbar from '@material-ui/core/Snackbar'
+import { Alert } from '@material-ui/lab'
 const localizer = momentLocalizer(moment)
+
+const useStyles = makeStyles(theme => ({
+  cabecalho: {
+    with: '100%',
+    height: '10px'
+  }
+}))
 
 export default function Calendario () {
   const [Events, setEvents] = React.useState([])
   const [Eventos, setEventos] = React.useState([])
   const dispatch = useDispatch()
+  const classes = useStyles()
+  const CalendarioAtualizar = useSelector(
+    state => state.configuracoes.CalendarioAtualizar
+  )
+  const { promiseInProgress } = usePromiseTracker()
+  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState('')
+  const [openError, setOpenError] = React.useState(false)
+
+  const handleCloseError = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenError(false)
+  }
+
   function CallEvents (dti, dtf) {
+    setTextoBarraProgresso('Listando calendário')
+
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,13 +76,12 @@ export default function Calendario () {
         })
         .catch(function (error) {
           console.log('catch error' + error)
-          // setOpenError(true)
+          setOpenError(true)
         })
     )
   }
 
   React.useEffect(() => {
-    // setTextoBarraProgresso('Listando alunos')
     var dtini = datesUtility.firstVisibleDay(new Date(Date.now()), localizer)
     var dtfim = datesUtility.lastVisibleDay(new Date(Date.now()), localizer)
     console.log(
@@ -62,6 +90,19 @@ export default function Calendario () {
     )
     CallEvents(dtini, dtfim)
   }, [])
+
+  React.useEffect(() => {
+    if (CalendarioAtualizar) {
+      var dtini = datesUtility.firstVisibleDay(new Date(Date.now()), localizer)
+      var dtfim = datesUtility.lastVisibleDay(new Date(Date.now()), localizer)
+      console.log(
+        datesUtility.firstVisibleDay(new Date(Date.now()), localizer),
+        datesUtility.lastVisibleDay(new Date(Date.now()), localizer)
+      )
+      CallEvents(dtini, dtfim)
+      dispatch(SetCalendarioAtualizarAction(false))
+    }
+  }, [CalendarioAtualizar])
 
   React.useEffect(() => {
     console.log('Events ' + Events)
@@ -99,7 +140,7 @@ export default function Calendario () {
       title: title,
       start: dtini,
       end: dtfim,
-      resourceId: { id: value.id, origem: value.origem }
+      resourceId: { id: value.id, origem: value.origem, idident: value.idident }
     })
   }
 
@@ -142,13 +183,20 @@ export default function Calendario () {
 
   return (
     <div>
+      <div className={classes.cabecalho}>
+        <BarraProgressoFixa
+          titulo={TextoBarraProgresso}
+          loading={promiseInProgress}
+        />
+      </div>
+
       <Calendar
         localizer={localizer}
         events={Eventos}
         startAccessor='start'
         endAccessor='end'
         defaultDate={new Date(Date.now())}
-        style={{ height: 500 }}
+        style={{ height: 500, marginTop: 10 }}
         onSelectEvent={(event, SyntheticEvent) => {
           console.log('id event ' + event.resourceId.id)
           console.log('origem ' + event.resourceId.origem)
@@ -159,7 +207,8 @@ export default function Calendario () {
               end: event.end,
               resourceId: {
                 id: event.resourceId.id,
-                origem: event.resourceId.origem
+                origem: event.resourceId.origem,
+                idident: event.resourceId.idident
               }
             })
           )
@@ -172,7 +221,16 @@ export default function Calendario () {
           )
         }}
       />
-      <DialogoCalendario />
+      <DialogoCalendario operError={openError} setOpenError={setOpenError} />
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <Alert onClose={handleCloseError} severity='error'>
+          Não foi possível realizar a operação. Contacte o desenvolvedor
+        </Alert>
+      </Snackbar>
     </div>
   )
 }

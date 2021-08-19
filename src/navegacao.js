@@ -30,6 +30,7 @@ import Prontuario from './prontuario'
 import Home from './home'
 import Turma from './turma'
 import ProntuarioCadastroTurma from './prontuariocadastroturma'
+
 const drawerWidth = 240
 
 const useStyles = makeStyles(theme => ({

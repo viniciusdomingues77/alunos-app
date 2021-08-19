@@ -188,6 +188,7 @@ export default function AgendaLista () {
   const AgendaCancelada = useSelector(
     state => state.configuracoes.AgendaCancelada
   )
+
   function DataparaParametro () {
     return (
       valueDay.getFullYear() +
@@ -203,6 +204,7 @@ export default function AgendaLista () {
       data.getFullYear() + '-' + (data.getMonth() + 1) + '-' + data.getDate()
     )
   }
+
   const handleClose = () => {
     setopenDialogoExc(false)
   }
@@ -352,8 +354,6 @@ export default function AgendaLista () {
     }
   }, [carregaPlanilha])
 
-  
-
   React.useEffect(() => {
     var idaluno = '0'
 
@@ -363,6 +363,7 @@ export default function AgendaLista () {
           idaluno = Aluno.substring(0, Aluno.indexOf('-')).trim()
         }
       }
+
       var idprofessor = '0'
       if (Professor) {
         if (Professor.length > 0) {
