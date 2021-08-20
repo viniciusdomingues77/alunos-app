@@ -26,6 +26,8 @@ interface ConfigState {
   readonly OpenEventoAgenda: boolean
   readonly CalendarioAtualizar: boolean
   readonly ProntuarioAba: number
+  readonly AbrirEnturmacao: boolean
+  readonly DataEnturmacao: Date
   readonly EventoAgenda: {
     title: string
     start: Date
@@ -63,6 +65,8 @@ const initialConfigState: ConfigState = {
   OpenEventoAgenda: false,
   CalendarioAtualizar: true,
   ProntuarioAba: 0,
+  AbrirEnturmacao: false,
+  DataEnturmacao: new Date(),
   EventoAgenda: {
     title: '',
     start: new Date(),
@@ -243,6 +247,20 @@ export const SetProntuarioAbaAction = (aba: number) =>
     aba: aba
   } as const)
 
+export const SETABRIRENTURMACAO = 'AbrirEnturmacao'
+export const SetAbrirEnturmacaoAction = (abrir: boolean) =>
+  ({
+    type: SETABRIRENTURMACAO,
+    abrir: abrir
+  } as const)
+
+export const SETDATAENTURMACAO = 'DataEnturmacao'
+export const SetDataEnturmacaoAction = (data: Date) =>
+  ({
+    type: SETDATAENTURMACAO,
+    data: data
+  } as const)
+
 type ConfigActions =
   | ReturnType<typeof gettingConfigAction>
   | ReturnType<typeof SetIDAgendaSelProntuarioAction>
@@ -269,6 +287,8 @@ type ConfigActions =
   | ReturnType<typeof SetEventoAgendaAction>
   | ReturnType<typeof SetCalendarioAtualizarAction>
   | ReturnType<typeof SetProntuarioAbaAction>
+  | ReturnType<typeof SetAbrirEnturmacaoAction>
+  | ReturnType<typeof SetDataEnturmacaoAction>
 
 const configReducer = (state = initialConfigState, action: ConfigActions) => {
   switch (action.type) {
@@ -416,6 +436,18 @@ const configReducer = (state = initialConfigState, action: ConfigActions) => {
       return {
         ...state,
         ProntuarioAba: action.aba
+      }
+    }
+    case SETABRIRENTURMACAO: {
+      return {
+        ...state,
+        AbrirEnturmacao: action.abrir
+      }
+    }
+    case SETDATAENTURMACAO: {
+      return {
+        ...state,
+        DataEnturmacao: action.data
       }
     }
   }

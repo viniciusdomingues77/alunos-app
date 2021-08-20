@@ -28,9 +28,10 @@ import {
   SetAlunosSelecionadosParaTurmaAction,
   SetTurmaSelecionadaAction,
   RemovendoAlunosParaTurma,
-  SetAlunosRemovendodaTurmaAction
+  SetAlunosRemovendodaTurmaAction,
+  SetAbrirEnturmacaoAction
 } from './ConfigSate'
-
+import DialogoEnturmacaoAluno from './dialogoenturmacao'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -60,6 +61,11 @@ export default function TurmaAluno () {
   const AlunosRemovidosdaTurma = useSelector(
     state => state.configuracoes.AlunosRemovidosdaTurma
   )
+
+  const DataEnturmacao = useSelector(
+    state => state.configuracoes.DataEnturmacao
+  )
+
   const [openError, setOpenError] = React.useState(false)
   const { openErr } = openError
   const handleCloseError = (event, reason) => {
@@ -69,6 +75,7 @@ export default function TurmaAluno () {
     setOpenError(false)
   }
   const dispatch = useDispatch()
+
   React.useEffect(() => {
     setTextoBarraProgresso('Listando turmas')
     dispatch(SetTurmaSelecionadaAction(0))
@@ -93,6 +100,12 @@ export default function TurmaAluno () {
     )
   }, [])
 
+  React.useEffect(() => {}, [DataEnturmacao])
+
+  const DialogoEnturmaAluno = () => {
+    dispatch(SetAbrirEnturmacaoAction(true))
+  }
+
   const EnturmaAluno = () => {
     if (Turma.length == 0) {
       return
@@ -100,6 +113,7 @@ export default function TurmaAluno () {
     if (AlunosSelecionadosParaTurma.length == 0) {
       return
     }
+
     let Alunos = []
     if (AlunosSelecionadosParaTurma.toString().indexOf(',') > -1) {
       Alunos = AlunosSelecionadosParaTurma.toString().split(',')
@@ -349,6 +363,7 @@ export default function TurmaAluno () {
           Não foi possível realizar a operação. Contacte o desenvolvedor
         </Alert>
       </Snackbar>
+      <DialogoEnturmacaoAluno />
     </React.Fragment>
   )
 }
