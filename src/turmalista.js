@@ -283,21 +283,23 @@ export default function TurmaLista() {
                       </TableCell>
                       <TableCell align="left">{row.numalunos} alunos</TableCell>
                       <TableCell style={{ width: 60 }} align="left">
-                        <IconButton
-                          color="primary"
-                          aria-label="Remove Aluno"
-                          component="span"
-                          disabled={promiseInProgress}
-                          onClick={() =>
-                            handleClickOpen(
-                              row.idturma,
-                              row.turma,
-                              row.numalunos
-                            )
-                          }
-                        >
-                          <DeleteForeverIcon />
-                        </IconButton>
+                        {row.numagendas == 0 && (
+                          <IconButton
+                            color="primary"
+                            aria-label="Remove Aluno"
+                            component="span"
+                            disabled={promiseInProgress}
+                            onClick={() =>
+                              handleClickOpen(
+                                row.idturma,
+                                row.turma,
+                                row.numalunos
+                              )
+                            }
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
