@@ -50,7 +50,8 @@ export default function Calendario() {
 
   function CallEvents(dti, dtf) {
     setTextoBarraProgresso("Listando calendário");
-
+    console.log("dti " + dti);
+    console.log("dtf " + dtf);
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -159,10 +160,11 @@ export default function Calendario() {
     var hora = dtjs.getHours();
     var minuto = dtjs.getMinutes();
     var segundo = dtjs.getSeconds();
-
+    mes = mes + 1;
     if (dia.toString().length == 1) {
       dia = "0" + dia;
     }
+
     if (mes.toString().length == 1) {
       mes = "0" + mes;
     }
@@ -181,6 +183,8 @@ export default function Calendario() {
 
     var datacc =
       dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto + ":" + segundo;
+
+    console.log("dtc " + datacc);
 
     return datacc;
   }
