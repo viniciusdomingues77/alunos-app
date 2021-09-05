@@ -340,6 +340,8 @@ export default function Agendamento() {
     }
 
     var idaluno = Aluno.substring(0, Aluno.indexOf("-")).trim();
+    var aluno = Aluno.substring(Aluno.indexOf("-") + 1, Aluno.length).trim();
+
     var idprofessor = Professor.substring(0, Professor.indexOf("-")).trim();
     console.log("idaluno " + idaluno);
     console.log("idprofessor " + idprofessor);
@@ -351,6 +353,7 @@ export default function Agendamento() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         idaluno: idaluno,
+        aluno: aluno,
         idprofessor: idprofessor,
         data: selectedDate,
         hora: selectedHour,
@@ -574,7 +577,7 @@ export default function Agendamento() {
               fullWidth
               value={Valor}
               onChange={handleValorChange}
-              disabled={Aluno.length == 0 || promiseInProgress}
+              disabled={true}
             />
           </Grid>
           <Grid item xs={2}></Grid>

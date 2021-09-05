@@ -1,20 +1,20 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import Checkbox from '@material-ui/core/Checkbox'
-import Avatar from '@material-ui/core/Avatar'
-import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
-import { usePromiseTracker, trackPromise } from 'react-promise-tracker'
-import FindInPageIcon from '@material-ui/icons/FindInPage'
-import { server } from './server'
-import Button from '@material-ui/core/Button'
-import { useSelector, useDispatch } from 'react-redux'
-import TextBusca from './textbusca'
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Checkbox from "@material-ui/core/Checkbox";
+import Avatar from "@material-ui/core/Avatar";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import FindInPageIcon from "@material-ui/icons/FindInPage";
+import { server } from "./server";
+import Button from "@material-ui/core/Button";
+import { useSelector, useDispatch } from "react-redux";
+import TextBusca from "./textbusca";
 import {
   action,
   AppState,
@@ -23,174 +23,176 @@ import {
   SetSelecionandoAlunosParaTurmaAction,
   SetAlunosRemovidosdaTurmaAction,
   SetAlunosRemovendodaTurmaAction,
-  SetTurmaSelecionadaAction
-} from './ConfigSate'
-import Paper from '@material-ui/core/Paper'
-import Aluno from './aluno'
+  SetTurmaSelecionadaAction,
+} from "./ConfigSate";
+import Paper from "@material-ui/core/Paper";
+import Aluno from "./aluno";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     height: 500,
-    overflow: 'auto',
+    overflow: "auto",
     marginTop: 20,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   grid: {
-    width: '100%',
-    backgroundColor: theme.palette.background.paper
-  }
-}))
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
 
-export default function CheckboxListAlunoEnturmado (props) {
-  const classes = useStyles()
-  const [checked, setChecked] = React.useState([])
+export default function CheckboxListAlunoEnturmado(props) {
+  const classes = useStyles();
+  const [checked, setChecked] = React.useState([]);
 
-  const [AlunoFiltro, setAlunoFiltro] = React.useState('')
-  const { promiseInProgress } = usePromiseTracker()
-  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState('')
-  const [Alunos, setAlunos] = React.useState([])
+  const [AlunoFiltro, setAlunoFiltro] = React.useState("");
+  const { promiseInProgress } = usePromiseTracker();
+  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
+  const [Alunos, setAlunos] = React.useState([]);
 
   const SelecionandoAlunosParaTurma = useSelector(
-    state => state.configuracoes.SelecionandoAlunosParaTurma
-  )
+    (state) => state.configuracoes.SelecionandoAlunosParaTurma
+  );
   const RemovendoAlunosParaTurma = useSelector(
-    state => state.configuracoes.RemovendoAlunosParaTurma
-  )
+    (state) => state.configuracoes.RemovendoAlunosParaTurma
+  );
   const IDTurmaSelecionada = useSelector(
-    state => state.configuracoes.TurmaSelecionada
-  )
+    (state) => state.configuracoes.TurmaSelecionada
+  );
 
-  const handleAlunoFiltroChange = e => {
-    setAlunoFiltro(e.currentTarget.value)
-  }
+  const handleAlunoFiltroChange = (e) => {
+    setAlunoFiltro(e.currentTarget.value);
+  };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push(value)
+      newChecked.push(value);
     } else {
-      newChecked.splice(currentIndex, 1)
+      newChecked.splice(currentIndex, 1);
     }
-    setChecked(newChecked)
-    dispatch(SetAlunosRemovidosdaTurmaAction(newChecked))
-  }
+    setChecked(newChecked);
+    dispatch(SetAlunosRemovidosdaTurmaAction(newChecked));
+  };
 
   const handleFiltrarAluno = () => {
-    setTextoBarraProgresso('Listando alunos')
-    let apiUrl = ''
+    setTextoBarraProgresso("Listando alunos");
+    let apiUrl = "";
     if (AlunoFiltro.length > 0) {
       apiUrl =
         server +
-        '/api/aluno/identificacaocomfotocomturmacomnome/' +
+        "/api/aluno/identificacaocomfotocomturmacomnome/" +
         IDTurmaSelecionada +
-        '/' +
-        AlunoFiltro
+        "/" +
+        AlunoFiltro;
     } else {
       apiUrl =
-        server + '/api/aluno/identificacaocomfotocomturma/' + IDTurmaSelecionada
+        server +
+        "/api/aluno/identificacaocomfotocomturma/" +
+        IDTurmaSelecionada;
     }
     trackPromise(
       fetch(apiUrl)
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
-            throw Error(response.statusText)
+            throw Error(response.statusText);
           }
-          return response
+          return response;
         })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data)
-          setAlunos(data)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAlunos(data);
         })
         .catch(function (error) {
           //console.log("catch error" + error);
           //setOpenError(true);
         })
-    )
-  }
+    );
+  };
 
-  function CarregaAlunos () {
+  function CarregaAlunos() {
     if (IDTurmaSelecionada == 0) {
-      setAlunos([])
-      return
+      setAlunos([]);
+      return;
     }
 
-    setTextoBarraProgresso('Listando alunos da turma')
+    setTextoBarraProgresso("Listando alunos da turma");
 
     const apiUrl =
-      server + `/api/aluno/identificacaocomfotocomturma/` + IDTurmaSelecionada
+      server + `/api/aluno/identificacaocomfotocomturma/` + IDTurmaSelecionada;
     trackPromise(
       fetch(apiUrl)
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
-            throw Error(response.statusText)
+            throw Error(response.statusText);
           }
-          return response
+          return response;
         })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data)
-          setAlunos(data)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAlunos(data);
         })
         .catch(function (error) {
           //console.log("catch error" + error);
           //setOpenError(true);
         })
-    )
+    );
   }
 
   React.useEffect(() => {
-    dispatch(SetAlunosRemovendodaTurmaAction(false))
-    dispatch(SetAlunosRemovidosdaTurmaAction(''))
+    dispatch(SetAlunosRemovendodaTurmaAction(false));
+    dispatch(SetAlunosRemovidosdaTurmaAction(""));
     return () => {
-      dispatch(SetTurmaSelecionadaAction(0))
-    }
+      dispatch(SetTurmaSelecionadaAction(0));
+    };
     // CarregaAlunos();
-  }, [])
+  }, []);
 
   React.useEffect(() => {
     if (SelecionandoAlunosParaTurma) {
-      CarregaAlunos()
-      dispatch(SetSelecionandoAlunosParaTurmaAction(false))
+      CarregaAlunos();
+      dispatch(SetSelecionandoAlunosParaTurmaAction(false));
     }
-  }, [SelecionandoAlunosParaTurma])
+  }, [SelecionandoAlunosParaTurma]);
 
   React.useEffect(() => {
     if (RemovendoAlunosParaTurma) {
-      CarregaAlunos()
-      dispatch(SetAlunosRemovendodaTurmaAction(false))
-      dispatch(SetAlunosRemovidosdaTurmaAction(''))
-      setChecked([])
+      CarregaAlunos();
+      dispatch(SetAlunosRemovendodaTurmaAction(false));
+      dispatch(SetAlunosRemovidosdaTurmaAction(""));
+      setChecked([]);
     }
-  }, [RemovendoAlunosParaTurma])
+  }, [RemovendoAlunosParaTurma]);
 
   React.useEffect(() => {
     if (IDTurmaSelecionada > 0) {
-      CarregaAlunos()
+      CarregaAlunos();
     } else {
-      setAlunos([])
+      setAlunos([]);
     }
-  }, [IDTurmaSelecionada])
+  }, [IDTurmaSelecionada]);
 
   return (
-    <Grid container spacing={3} direction='column' className={classes.grid}>
+    <Grid container spacing={3} direction="column" className={classes.grid}>
       <TextBusca
-        label={'Aluno'}
+        label={"Aluno"}
         value={AlunoFiltro}
         onChange={handleAlunoFiltroChange}
         disabled={promiseInProgress || props.disabled}
         onClickButton={handleFiltrarAluno}
       />
-      
-      <Paper elevation={3} style={{ marginTop: '10px' }}>
+
+      <Paper elevation={3} style={{ marginTop: "10px" }}>
         <List dense className={classes.root}>
-          {Alunos.map(aluno => {
-            const labelId = `checkbox-list-secondary-label-${aluno.idaluno}`
+          {Alunos.map((aluno) => {
+            const labelId = `checkbox-list-secondary-label-${aluno.idaluno}`;
             return (
               <ListItem
                 key={aluno.idaluno}
@@ -206,18 +208,18 @@ export default function CheckboxListAlunoEnturmado (props) {
                 />
                 <ListItemSecondaryAction>
                   <Checkbox
-                    edge='end'
+                    edge="end"
                     onChange={handleToggle(aluno.idaluno)}
                     checked={checked.indexOf(aluno.idaluno) !== -1}
-                    inputProps={{ 'aria-labelledby': labelId + aluno.idaluno }}
+                    inputProps={{ "aria-labelledby": labelId + aluno.idaluno }}
                     disabled={promiseInProgress || props.disabled}
                   />
                 </ListItemSecondaryAction>
               </ListItem>
-            )
+            );
           })}
         </List>
       </Paper>
     </Grid>
-  )
+  );
 }
