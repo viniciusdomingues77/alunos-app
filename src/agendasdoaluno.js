@@ -99,6 +99,7 @@ export default function HistoricoAgendasAluno(props) {
   };
 
   const handleClickCancelaAgendaConfirmacao = () => {
+    
     dispatch(SetAgendaCanceladaAction(false));
     var idsstr = select.toString();
     var ids = idsstr.split(",");
