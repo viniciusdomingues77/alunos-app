@@ -27,9 +27,11 @@ import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import Aluno from "./aluno";
 import Agenda from "./agenda";
 import Prontuario from "./prontuario";
+import Financeiro from './financeiro'
 import Home from "./home";
 import Turma from "./turma";
 import ProntuarioCadastroTurma from "./prontuariocadastroturma";
+import AttachMoneyOutlinedIcon from '@material-ui/icons/AttachMoneyOutlined';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -194,7 +196,19 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText primary="Prontuario" />
             </ListItem>
+            <ListItem
+              button
+              key={"financeiro"}
+              component={Link}
+              to={"/financeiro"}
+            >
+              <ListItemIcon>
+                <AttachMoneyOutlinedIcon></AttachMoneyOutlinedIcon>
+              </ListItemIcon>
+              <ListItemText primary="Financeiro" />
+            </ListItem>
           </List>
+          
         </Drawer>
 
         <main className={classes.content}>
@@ -205,6 +219,7 @@ export default function MiniDrawer() {
             <Route path="/turma" render={() => <Turma />} />
             <Route path="/agenda" render={() => <Agenda />} />
             <Route path="/prontuario" render={() => <Prontuario />} />
+            <Route path="/financeiro" render={() => <Financeiro />} />
           </Switch>
         </main>
       </BrowserRouter>
