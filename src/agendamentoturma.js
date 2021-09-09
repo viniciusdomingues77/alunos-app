@@ -311,13 +311,12 @@ export default function AgendamentoTurma() {
       if (SubmitSuccess > 0) {
         setOpenSuccess({ open: true, vertical: "top", horizontal: "center" });
       } else {
-        if (SubmitSuccess == -1) {
+        if (SubmitSuccess == -1 || SubmitSuccess == -666) {
           setModalTexto("Este horário já se encontra ocupado");
           setModalTitulo("Problemas no agendamento");
           setopenModal(true);
         }
       }
-
       //ClearFields()
     }
   }, [promiseInProgress]);
@@ -400,7 +399,7 @@ export default function AgendamentoTurma() {
         frasediasdasemana +
         " às " +
         hora +
-        " para os próximos seis meses (180 dias). Confirma?";
+        " para os próximos seis meses. Confirma?";
     } else {
       var msg =
         "A turma será agendada a partir de " +
@@ -455,8 +454,9 @@ export default function AgendamentoTurma() {
           return response;
         })
         .then((response) => response.json())
-        .then((d) => setSubmitSuccess(d))
-
+        .then((d) => {
+          setSubmitSuccess(d);
+        })
         .catch(function (error) {
           console.log("catch error" + error);
           setSubmitSuccess(0);
@@ -596,7 +596,7 @@ export default function AgendamentoTurma() {
               <KeyboardDatePicker
                 margin="normal"
                 id="date-picker-dialog"
-                label="Data"
+                label="Data de início"
                 format="dd/MM/yyyy"
                 value={selectedDate}
                 onChange={handleDateChange}
