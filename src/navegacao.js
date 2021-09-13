@@ -208,7 +208,6 @@ export default function MiniDrawer() {
               <ListItemText primary="Financeiro" />
             </ListItem>
           </List>
-          
         </Drawer>
 
         <main className={classes.content}>
