@@ -28,6 +28,7 @@ import MoneyOffRoundedIcon from "@material-ui/icons/MoneyOffRounded";
 import CardMembershipIcon from "@material-ui/icons/CardMembership";
 import Recebimentos from "./recebimentos";
 import Lancamentos from "./lancamentos";
+import Extrato from "./extrato";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -98,7 +99,7 @@ export default function Financeiro() {
               {...a11yProps(0)}
             />
             <Tab
-              label="Pagamentos"
+              label="Lançamentos"
               icon={<MoneyOffRoundedIcon />}
               {...a11yProps(0)}
             />
@@ -115,7 +116,9 @@ export default function Financeiro() {
         <TabPanel value={value} index={1} spacing={0} m={0} p={0}>
           <Lancamentos />
         </TabPanel>
-        <TabPanel value={value} index={2}></TabPanel>
+        <TabPanel value={value} index={2}>
+          <Extrato />
+        </TabPanel>
       </Paper>
     </div>
   );
