@@ -246,6 +246,7 @@ export default function Agendamento() {
       //ClearFields()
     }
   }, [promiseInProgress]);
+
   function ValidaCampos() {
     var camposinvalidos = false;
     if (!Aluno) {

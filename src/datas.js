@@ -19,6 +19,37 @@ export function ConvertDataJSParaDataExtensoComDiadaSemana(data) {
   return dt;
 }
 
+export function DiaDaSemana(date) {
+  var numdiasemana = date.getDay();
+  var diasemana = "";
+  switch (numdiasemana) {
+    case 0:
+      diasemana = "Domingo";
+      break;
+    case 1:
+      diasemana = "Segunda feira";
+      break;
+    case 2:
+      diasemana = "Terça feira";
+      break;
+    case 3:
+      diasemana = "Quarta feira";
+      break;
+    case 4:
+      diasemana = "Quinta feira";
+      break;
+    case 5:
+      diasemana = "Sexta feira";
+      break;
+    case 6:
+      diasemana = "Sabado";
+      break;
+
+    default:
+  }
+  return diasemana;
+}
+
 export function DiaSemana(datajs) {
   var dia = datajs.getDay();
   switch (dia) {
