@@ -15,15 +15,15 @@ const bull = (
   </Box>
 )
 
-export default function CreditoCard (props) {
+export default function DebitoCard (props) {
   return (
     <Card sx={{ minWidth: 175 }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
-          Crédito
+          Débito
         </Typography>
         <Typography variant='h5' component='div'>
-          R$ <span style={{color:"green"}}>{props.credito}</span>
+          R$ <span style={{ color: 'red' }}>{props.debito}</span>
         </Typography>
       </CardContent>
     </Card>
