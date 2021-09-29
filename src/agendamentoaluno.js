@@ -235,6 +235,7 @@ export default function Agendamento() {
     if (!promiseInProgress) {
       if (SubmitSuccess > 0) {
         setOpenSuccess({ open: true, vertical: "top", horizontal: "center" });
+        setSubmitSuccess(0);
       } else {
         if (SubmitSuccess == -1) {
           setModalTexto("Este horário já se encontra ocupado");
@@ -329,6 +330,7 @@ export default function Agendamento() {
     setopenDialogoConf(true);
   };
   const HandleSaveClick = () => {
+    
     setSubmitSuccess(0);
     setOpenError(false);
     setopenAlert(false);

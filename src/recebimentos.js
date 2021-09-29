@@ -137,7 +137,7 @@ export default function Recebimentos() {
               </Grid>
               <Grid item xs={11} style={{ marginTop: 5 }}>
                 {ConvertDataJSParaDataExtensoComDiadaSemana(
-                  GeratDataJS(recebimento.ano, recebimento.mes, recebimento.dia)
+                  GeratDataJS(recebimento.ano, recebimento.mes - 1, recebimento.dia)
                 )}
               </Grid>
             </Grid>

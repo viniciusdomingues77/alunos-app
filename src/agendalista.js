@@ -849,31 +849,7 @@ export default function AgendaLista() {
                           </IconButton>
                         )}
                       </TableCell>
-                      {/* <TableCell style={{ width: 60 }} align='left'>
-                        {row.cancelado == 0 && (
-                          <IconButton
-                            color='primary'
-                            aria-label='Remove Agenda'
-                            component='span'
-                            disabled={promiseInProgress || carregaPlanilha}
-                            onClick={() => {
-                              setopenDialogoExc(true)
-                              setvalueIDAgendaExclusao(row.idagenda)
-                              settextoExc(
-                                'Confirma a exclusão da aula às ' +
-                                  row.strhora +
-                                  ' agendado para o aluno ' +
-                                  row.aluno +
-                                  ' com o professor ' +
-                                  row.professor +
-                                  ' ? '
-                              )
-                            }}
-                          >
-                            <DeleteForeverIcon />
-                          </IconButton>
-                        )}
-                      </TableCell> */}
+              
                     </TableRow>
                   ))}
 

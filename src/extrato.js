@@ -140,7 +140,7 @@ export default function Extrato () {
               </Grid>
               <Grid item xs={11} style={{ marginTop: 5 }}>
                 {ConvertDataJSParaDataExtensoComDiadaSemana(
-                  GeratDataJS(lanc.ano, lanc.mes, lanc.dia)
+                  GeratDataJS(lanc.ano, lanc.mes - 1, lanc.dia)
                 )}
               </Grid>
             </Grid>
