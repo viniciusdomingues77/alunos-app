@@ -25,11 +25,20 @@ import {
 } from "./datas";
 import { server } from "./server";
 import CheckIcon from "@material-ui/icons/Check";
+import CardValor from "./cardvalor";
+import BarraProgressoFixa from "./barraprogressofixa";
+import { Alert } from "@material-ui/lab";
+import Snackbar from "@material-ui/core/Snackbar";
+
 const TAX_RATE = 0.07;
 
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
+  },
+  cabecalho: {
+    with: "100%",
+    height: "10px",
   },
 });
 
@@ -66,6 +75,39 @@ export default function Recebimentos() {
   const [selectedDateIni, setSelectedDateIni] = React.useState(new Date());
   const [selectedDateFim, setSelectedDateFim] = React.useState(new Date());
   const [Recebimentos, setRecebimentos] = React.useState([]);
+  const [TextoBarraProgresso, setTextoBarraProgresso] = React.useState("");
+
+  React.useLayoutEffect(() => {
+    if (!promiseInProgress) {
+      if (SubmitSuccess) {
+        setOpenSuccess({ open: true, vertical: "top", horizontal: "center" });
+        setSubmitSuccess(false);
+      }
+    }
+  }, [promiseInProgress]);
+
+  const [openSuccess, setOpenSuccess] = React.useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+
+  const [openError, setOpenError] = React.useState(false);
+  const [textError, settextError] = React.useState("");
+  const [SubmitSuccess, setSubmitSuccess] = React.useState(false);
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSuccess({ open: false, vertical: "top", horizontal: "center" });
+  };
 
   const handleDateIniChange = (date) => {
     setSelectedDateIni(date);
@@ -73,10 +115,13 @@ export default function Recebimentos() {
   const handleDateFimChange = (date) => {
     setSelectedDateFim(date);
   };
+  const { vertical, horizontal, open } = openSuccess;
+  const { openErr } = openError;
 
   React.useEffect(() => {}, []);
 
   function Receber(idlancamento) {
+    setTextoBarraProgresso("Cadastrando aluno");
     const apiUrl = server + `/api/financeiro/receber/` + idlancamento;
     trackPromise(
       fetch(apiUrl)
@@ -90,15 +135,18 @@ export default function Recebimentos() {
         .then((data) => {
           console.log(data);
           CarregaRecebimentos();
+          setSubmitSuccess(true);
         })
         .catch(function (error) {
           console.log("catch error" + error);
-          //setOpenError(true);
+          setOpenError(true);
+          setSubmitSuccess(false);
         })
     );
   }
 
   function CarregaRecebimentos() {
+    setTextoBarraProgresso("Carregando recebimentos");
     const apiUrl =
       server +
       `/api/financeiro/recebimentos/` +
@@ -121,7 +169,7 @@ export default function Recebimentos() {
         })
         .catch(function (error) {
           console.log("catch error" + error);
-          //setOpenError(true);
+          setOpenError(true);
         })
     );
   }
@@ -137,7 +185,11 @@ export default function Recebimentos() {
               </Grid>
               <Grid item xs={11} style={{ marginTop: 5 }}>
                 {ConvertDataJSParaDataExtensoComDiadaSemana(
-                  GeratDataJS(recebimento.ano, recebimento.mes - 1, recebimento.dia)
+                  GeratDataJS(
+                    recebimento.ano,
+                    recebimento.mes - 1,
+                    recebimento.dia
+                  )
                 )}
               </Grid>
             </Grid>
@@ -154,6 +206,7 @@ export default function Recebimentos() {
                   color="primary"
                   href="#outlined-buttons"
                   onClick={() => Receber(rec.idlancamento)}
+                  disabled={promiseInProgress}
                 >
                   <Typography variant="caption">Receber</Typography>
                 </Button>
@@ -168,6 +221,12 @@ export default function Recebimentos() {
 
   return (
     <React.Fragment>
+      <div className={classes.cabecalho}>
+        <BarraProgressoFixa
+          titulo={TextoBarraProgresso}
+          loading={promiseInProgress}
+        />
+      </div>
       <Grid container spacing={3}>
         <Grid item xs={4}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -202,20 +261,54 @@ export default function Recebimentos() {
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid item xs={2} style={{ marginTop: 22 }}>
-          <Button variant="contained" onClick={CarregaRecebimentos}>
+          <Button
+            variant="contained"
+            onClick={CarregaRecebimentos}
+            disabled={promiseInProgress}
+          >
             Exibir
           </Button>
         </Grid>
       </Grid>
+      <Grid container spacing={3} style={{ marginTop: 20 }}>
+        <Grid item xs={4}>
+          {Recebimentos.recebimentos && (
+            <CardValor
+              titulo={"Recebido"}
+              cor={"#02D700"}
+              valor={Recebimentos.recebido}
+            />
+          )}
+        </Grid>
+        <Grid item xs={4}>
+          {Recebimentos.recebimentos && (
+            <CardValor
+              titulo={"Em aberto"}
+              cor={"#F07A00"}
+              valor={Recebimentos.emAberto}
+            />
+          )}
+        </Grid>
+        <Grid item xs={4}>
+          {Recebimentos.recebimentos && (
+            <CardValor
+              titulo={"Total período"}
+              cor={"#0384F1"}
+              valor={Recebimentos.totalPeriodo}
+            />
+          )}
+        </Grid>
+      </Grid>
+
       <Grid container spacing={3} style={{ marginTop: 20 }}>
         <Grid item xs={12}>
           <div style={{ height: 800, overflow: "auto" }}>
             <TableContainer>
               <Table className={classes.table} aria-label="spanning table">
                 <TableBody>
-                  {Recebimentos && (
+                  {Recebimentos.recebimentos && (
                     <ListaDataRecebimentos
-                      recebimentos={Recebimentos}
+                      recebimentos={Recebimentos.recebimentos}
                     ></ListaDataRecebimentos>
                   )}
                 </TableBody>
@@ -224,6 +317,26 @@ export default function Recebimentos() {
           </div>
         </Grid>
       </Grid>
+
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <Alert onClose={handleCloseError} severity="error">
+          Não foi possível realizar a operação. Erro ´{textError}´
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        <Alert onClose={handleClose} severity="success">
+          Operação realizada com sucesso!
+        </Alert>
+      </Snackbar>
     </React.Fragment>
   );
 }

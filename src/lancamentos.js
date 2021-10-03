@@ -62,7 +62,7 @@ export default function Lancamentos() {
   const [DiaSemanaExt, setDiaSemanaExt] = React.useState("");
   const [SubmitSuccess, setSubmitSuccess] = React.useState(false);
   const [openError, setOpenError] = React.useState(false);
-
+  const [textError, settextError] = React.useState("");
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setDiaSemanaExt(DiaDaSemana(date));
@@ -99,6 +99,13 @@ export default function Lancamentos() {
       return;
     }
     setOpenSuccess({ open: false, vertical: "top", horizontal: "center" });
+  };
+
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
   };
 
   function handleLancamentoError() {
@@ -299,6 +306,15 @@ export default function Lancamentos() {
       >
         <Alert onClose={handleClose} severity="success">
           Operação realizada com sucesso!
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <Alert onClose={handleCloseError} severity="error">
+          Não foi possível realizar a operação. Erro ´{textError}´
         </Alert>
       </Snackbar>
     </React.Fragment>
